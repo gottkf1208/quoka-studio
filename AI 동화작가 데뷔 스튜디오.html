@@ -882,6 +882,9 @@ const LINKS = [
 ];
 
 /* ═══════════ 상태 저장 ═══════════ */
+/* 책장 API 주소 — GitHub Pages 미러 등 다른 곳에서 열려도 원본 서버(Higgsfield)의 공유 책장을 그대로 쓴다 */
+const QK_API = location.hostname.endsWith('higgsfield.app') ? '' : 'https://quoka-fairytale-studio.higgsfield.app';
+
 let S = {ans:{}, done:{}, events:{}, att:{}, cur:1};
 try{ const raw = localStorage.getItem('quokka_studio_v1'); if(raw) S = Object.assign(S, JSON.parse(raw)); }catch(e){}
 
@@ -1012,7 +1015,7 @@ function renderHome(){
 async function homeShelfLoad(){
   try{
     if(shelfPosts===null){
-      const r = await fetch('/api/bookshelf/list');
+      const r = await fetch(QK_API+'/api/bookshelf/list');
       const j = await r.json();
       if(j.ok) shelfPosts = j.posts; else return;
     }
@@ -1715,7 +1718,7 @@ function renderShelf(){
 
 async function shelfLoad(){
   try{
-    const r = await fetch('/api/bookshelf/list');
+    const r = await fetch(QK_API+'/api/bookshelf/list');
     const j = await r.json();
     shelfPosts = j.ok ? j.posts : Object.assign([], {error:true});
   }catch(e){ shelfPosts = Object.assign([], {error:true}); }
@@ -1744,7 +1747,7 @@ async function shelfUpload(){
     const fd = new FormData();
     fd.append('file', f); fd.append('type', type); fd.append('penname', pen);
     fd.append('title', title); fd.append('msg', msg); fd.append('color', shelfColor); fd.append('pin', pin);
-    const r = await fetch('/api/bookshelf/upload', {method:'POST', body:fd});
+    const r = await fetch(QK_API+'/api/bookshelf/upload', {method:'POST', body:fd});
     const j = await r.json();
     if(!j.ok) throw new Error(j.code);
     shelfUpOpen = false; shelfPosts = null;
@@ -1778,8 +1781,8 @@ function shelfOpen(id){
     <div class="sm-pen">글 · ${esc(p.penname)} 작가 · 👀 <span id="smViews">${p.views||0}</span>번 꺼내 봤어요 ${total>0?`· 응원 ${total}개`:''}</div>
     ${p.msg?`<div class="sm-msg">${esc(p.msg)}</div>`:''}
     ${p.type==='reading'
-      ? `<audio controls preload="metadata" src="/api/bookshelf/file/${p.id}"></audio>`
-      : `<img class="bm" src="/api/bookshelf/file/${p.id}" alt="${esc(p.title)}" loading="lazy">`}
+      ? `<audio controls preload="metadata" src="${QK_API}/api/bookshelf/file/${p.id}"></audio>`
+      : `<img class="bm" src="${QK_API}/api/bookshelf/file/${p.id}" alt="${esc(p.title)}" loading="lazy">`}
     <div class="rx-row">
       <button class="rx" id="rx_clap" onclick="shelfReact('${p.id}','clap')">👏 박수 <b id="rxn_clap">${p.clap||0}</b></button>
       <button class="rx" id="rx_heart" onclick="shelfReact('${p.id}','heart')">💛 감동 <b id="rxn_heart">${p.heart||0}</b></button>
@@ -1823,7 +1826,7 @@ async function shelfCountView(p){
   const guard = 'qshelf_v_'+p.id;
   try{ if(localStorage.getItem(guard)) return; }catch(e){}
   try{
-    const r = await fetch('/api/bookshelf/view', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({id:p.id})});
+    const r = await fetch(QK_API+'/api/bookshelf/view', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({id:p.id})});
     const j = await r.json();
     if(j.ok){
       try{ localStorage.setItem(guard,'1'); }catch(e){}
@@ -1836,7 +1839,7 @@ async function shelfCountView(p){
 async function shelfLoadComments(id){
   const box = document.getElementById('cmList'); if(!box) return;
   try{
-    const r = await fetch('/api/bookshelf/comments?post='+id);
+    const r = await fetch(QK_API+'/api/bookshelf/comments?post='+id);
     const j = await r.json();
     if(!j.ok) throw 0;
     const cnt = document.getElementById('cmCount'); if(cnt) cnt.textContent = j.comments.length ? j.comments.length+'개' : '';
@@ -1853,7 +1856,7 @@ async function shelfComment(postId, cardIdx, btn){
   if(!text) return;
   if(btn) btn.disabled = true;
   try{
-    const r = await fetch('/api/bookshelf/comments', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({post_id:postId, penname:pen, text})});
+    const r = await fetch(QK_API+'/api/bookshelf/comments', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({post_id:postId, penname:pen, text})});
     const j = await r.json();
     if(!j.ok) throw new Error(j.code);
     shelfLoadComments(postId);
@@ -1868,7 +1871,7 @@ async function shelfCommentDel(cid, postId){
   const pin = prompt('감상평을 지우려면 이 작품의 삭제 비밀번호(숫자 4자리)를 입력하세요.');
   if(pin===null) return;
   try{
-    const r = await fetch('/api/bookshelf/comment-remove', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({id:cid, pin:String(pin).trim()})});
+    const r = await fetch(QK_API+'/api/bookshelf/comment-remove', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({id:cid, pin:String(pin).trim()})});
     const j = await r.json();
     if(j.ok){ shelfLoadComments(postId); toast('감상평을 지웠어요'); }
     else toast(j.code==='wrong_pin'?'비밀번호가 맞지 않아요':'지우지 못했어요');
@@ -1881,7 +1884,7 @@ async function shelfReact(id, kind){
   const btn = document.getElementById('rx_'+kind);
   if(btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); }
   try{
-    const r = await fetch('/api/bookshelf/react', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({id, kind})});
+    const r = await fetch(QK_API+'/api/bookshelf/react', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({id, kind})});
     const j = await r.json();
     if(j.ok){
       try{ localStorage.setItem(guard,'1'); }catch(e){}
@@ -1895,7 +1898,7 @@ async function shelfDelete(id){
   const pin = prompt('이 작품을 올릴 때 정한 삭제 비밀번호(숫자 4자리)를 입력하세요.');
   if(pin===null) return;
   try{
-    const r = await fetch('/api/bookshelf/remove', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({id, pin:String(pin).trim()})});
+    const r = await fetch(QK_API+'/api/bookshelf/remove', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({id, pin:String(pin).trim()})});
     const j = await r.json();
     if(j.ok){
       const m=document.getElementById('shelfModal'); if(m) m.remove();
