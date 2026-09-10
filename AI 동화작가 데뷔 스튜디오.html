@@ -884,6 +884,9 @@ const LINKS = [
 /* ═══════════ 상태 저장 ═══════════ */
 /* 책장 API 주소 — GitHub Pages 미러 등 다른 곳에서 열려도 원본 서버(Higgsfield)의 공유 책장을 그대로 쓴다 */
 const QK_API = location.hostname.endsWith('higgsfield.app') ? '' : 'https://quoka-fairytale-studio.higgsfield.app';
+/* GitHub Pages 미러에는 공유 책장 서버가 없어 책장 기능 전체를 숨긴다 */
+const QK_SHELF = location.hostname.endsWith('higgsfield.app');
+if(!QK_SHELF) document.querySelectorAll('.nav-btn[data-v="shelf"]').forEach(b=>b.remove());
 
 let S = {ans:{}, done:{}, events:{}, att:{}, cur:1};
 try{ const raw = localStorage.getItem('quokka_studio_v1'); if(raw) S = Object.assign(S, JSON.parse(raw)); }catch(e){}
@@ -927,6 +930,7 @@ function doneCount(){ return LESSONS.filter(l=>S.done[l.n]).length; }
 let CURV = 'home';
 const ORDER = ['home','lesson','book','shelf','cal','links'];
 function go(v, opt){
+  if(v==='shelf' && !QK_SHELF) v = 'home';
   const back = ORDER.indexOf(v) < ORDER.indexOf(CURV);
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('show','back'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('on', b.dataset.v===v));
@@ -1013,6 +1017,7 @@ function renderHome(){
   homeShelfLoad();
 }
 async function homeShelfLoad(){
+  if(!QK_SHELF) return;
   try{
     if(shelfPosts===null){
       const r = await fetch(QK_API+'/api/bookshelf/list');
@@ -1096,6 +1101,8 @@ function renderLesson(){
         ${w.note?`<p class="ws-note" style="margin-top:11px">${w.note}</p>`:''}</div>`;
     }
     if(w.t==='link'){
+      w = Object.assign({}, w, {items: w.items.filter(it=>QK_SHELF || !(it.go||'').includes('shelf'))});
+      if(!w.items.length) return '';
       return `<div class="ws-card"><h4>${w.h}</h4>${w.items.map(it=>`
         ${it.p?`<p class="ws-note" style="margin:0 0 11px">${it.p}</p>`:''}
         ${it.go

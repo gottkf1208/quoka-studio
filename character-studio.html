@@ -837,6 +837,13 @@ g("upGo").addEventListener("click", async ()=>{
   setInterval(report, 700);
   report();
 })();
+
+/* GitHub Pages 미러에는 공유 책장 서버가 없어 책장 올리기 카드를 숨긴다 */
+if(!location.hostname.endsWith('higgsfield.app')){
+  document.querySelectorAll('.ov').forEach(o=>{
+    if(o.textContent.includes('작가들의 책장')){ const c=o.closest('.card'); if(c) c.style.display='none'; }
+  });
+}
 </script>
 </body>
 </html>

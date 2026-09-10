@@ -532,6 +532,12 @@
     setInterval(report, 700);
     report();
   })();
+
+/* GitHub Pages 미러에는 공유 책장 서버가 없어 책장 올리기 UI를 숨긴다 */
+if(!location.hostname.endsWith('higgsfield.app')){
+  const _sb=document.getElementById('shelfBtn'); if(_sb) _sb.style.display='none';
+  const _up=document.getElementById('upPanel'); if(_up) _up.style.display='none';
+}
 </script>
 </body>
 </html>
