@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>운영자 페이지 — 작가들의 책장</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --c-bg:#EFEDE7; --c-ink:#3D434C; --c-sub:#7A766C;
+  --c-mist:#AEC6D6; --c-mist-d:#3E5C6E;
+  --c-sage:#BFD0B7; --c-sage-d:#4F6645;
+  --c-lilac:#CBBFDC; --c-lilac-d:#5A4E75;
+  --c-peach:#E8D2C1; --c-peach-d:#8A634A;
+  --c-butter:#ECE1BE; --c-butter-d:#82743F;
+  --c-accent:#FF5757; --c-accent-d:#B81E1E;
+  --line:rgba(61,67,76,.10);
+  --field:#FBFAF7;
+  --shadow-sm:0 1px 2px rgba(61,67,76,.04), 0 6px 18px rgba(61,67,76,.05);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Pretendard Variable',Pretendard,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  background:var(--c-bg); color:var(--c-ink);
+  font-size:15px; line-height:1.6; letter-spacing:-.01em;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input{font-family:inherit;color:var(--c-ink)}
+.ov{font-size:11.5px;font-weight:800;letter-spacing:.16em;color:var(--c-sub)}
+.wrap{max-width:880px;margin:0 auto;padding:34px 22px 60px}
+h1{font-size:26px;font-weight:900;letter-spacing:-.04em;margin-top:6px}
+.rule{width:48px;height:5px;border-radius:3px;background:var(--c-accent);margin:12px 0 8px}
+.sub{font-size:13.5px;color:var(--c-sub)}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);padding:22px 24px;margin-top:16px}
+.gate{display:flex;gap:9px}
+.gate input{flex:1;background:var(--field);border:1px solid var(--line);border-radius:12px;padding:12px 15px;font-size:15px;outline:none}
+.gate input:focus{border-color:var(--c-ink)}
+.btn{background:var(--c-ink);color:#fff;font-weight:800;font-size:14px;padding:12px 22px;border-radius:12px;transition:opacity .15s}
+.btn:hover{opacity:.88}
+.btn.coral{background:var(--c-accent);box-shadow:0 5px 14px rgba(255,87,87,.22)}
+.btn.ghost{background:#fff;color:var(--c-ink);border:1px solid var(--line)}
+.msg{font-size:13px;font-weight:700;margin-top:10px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.stat{flex:1;min-width:100px;background:var(--field);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.stat b{display:block;font-size:22px;font-weight:900}
+.stat span{font-size:12px;color:var(--c-sub)}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.toolbar .spacer{flex:1}
+.row{
+  display:flex;align-items:center;gap:11px;padding:11px 4px;border-bottom:1px solid var(--line);
+}
+.row:last-child{border-bottom:none}
+.tpill{flex-shrink:0;min-width:96px;text-align:center;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:800}
+.row .ti{flex:1;min-width:0}
+.row .ti b{display:block;font-size:14px;letter-spacing:-.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .ti span{font-size:12px;color:var(--c-sub)}
+.row .nums{flex-shrink:0;font-size:12px;color:var(--c-sub);text-align:right}
+.row .del{flex-shrink:0;color:var(--c-sub);font-size:12.5px;font-weight:800;padding:6px 12px;border-radius:999px;border:1px solid var(--line);transition:all .15s}
+.row .del:hover{color:#fff;background:var(--c-accent);border-color:var(--c-accent)}
+.empty{text-align:center;color:var(--c-sub);padding:40px 0;font-size:14px}
+a.back{color:var(--c-sub);font-size:13px;font-weight:700;text-decoration:none}
+a.back:hover{color:var(--c-ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="ov">TEACHER ONLY · 운영자 페이지</span>
+  <h1>작가들의 책장 관리</h1>
+  <div class="rule"></div>
+  <p class="sub">게시물 삭제와 책장 초기화는 되돌릴 수 없어요. 신중하게! · <a class="back" href="studio.html#shelf">← 스튜디오로 돌아가기</a></p>
+
+  <div class="card" id="gateCard">
+    <div class="gate">
+      <input type="password" id="keyIn" placeholder="운영자 키를 입력하세요" onkeydown="if(event.key==='Enter')login()">
+      <button class="btn" onclick="login()">입장</button>
+    </div>
+    <div class="msg" id="gateMsg"></div>
+  </div>
+
+  <div id="panel" style="display:none">
+    <div class="card">
+      <div class="stats" id="stats"></div>
+      <div class="toolbar">
+        <button class="btn ghost" onclick="load()">↺ 새로고침</button>
+        <span class="spacer"></span>
+        <button class="btn coral" onclick="resetAll()">⚠️ 책장 전체 초기화</button>
+      </div>
+      <div id="list"><div class="empty">불러오는 중…</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TYPE_ICO = {reading:'🎙️', bookmark:'🔖', cover:'🎨', character:'🦸', emotion:'💛'};
+const TYPE_LABEL = {reading:'낭독', bookmark:'책갈피', cover:'표지', character:'캐릭터', emotion:'감정동화'};
+const TYPE_LESSON = {character:4, emotion:3, cover:12, bookmark:14, reading:15};
+const TYPE_ORDER = ['character','emotion','cover','bookmark','reading'];
+const TINT = {reading:['#F7E7DB','#8A634A'], bookmark:['#EBE5F3','#5A4E75'], cover:['#E3ECF2','#3E5C6E'], character:['#F4EEDB','#82743F'], emotion:['#E4EDDF','#4F6645']};
+const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+let KEY = sessionStorage.getItem('qadmin_key') || '';
+
+async function api(action, extra){
+  const r = await fetch('/api/bookshelf/admin', {
+    method:'POST', headers:{'content-type':'application/json'},
+    body: JSON.stringify(Object.assign({key:KEY, action}, extra||{}))
+  });
+  return r.json();
+}
+
+async function login(){
+  KEY = document.getElementById('keyIn').value.trim();
+  const m = document.getElementById('gateMsg');
+  if(!KEY){ m.textContent='키를 입력하세요.'; m.style.color='var(--c-accent-d)'; return; }
+  m.textContent='확인 중…'; m.style.color='var(--c-sub)';
+  const j = await api('list').catch(()=>null);
+  if(j && j.ok){
+    sessionStorage.setItem('qadmin_key', KEY);
+    document.getElementById('gateCard').style.display='none';
+    document.getElementById('panel').style.display='block';
+    renderList(j.posts);
+  }else{
+    m.textContent = (j && j.code==='wrong_key') ? '키가 맞지 않습니다.' : '연결하지 못했습니다.';
+    m.style.color='var(--c-accent-d)';
+  }
+}
+
+async function load(){
+  const j = await api('list').catch(()=>null);
+  if(j && j.ok) renderList(j.posts);
+}
+
+function renderList(posts){
+  const stats = document.getElementById('stats');
+  const counts = {};
+  posts.forEach(p=>counts[p.type]=(counts[p.type]||0)+1);
+  stats.innerHTML = `<div class="stat"><b>${posts.length}</b><span>전체 작품</span></div>` +
+    TYPE_ORDER.map(t=>`<div class="stat"><b>${counts[t]||0}</b><span>${TYPE_ICO[t]} ${TYPE_LABEL[t]}</span></div>`).join('');
+
+  const sorted = [...posts].sort((a,b)=>{
+    const oa = TYPE_ORDER.indexOf(a.type), ob = TYPE_ORDER.indexOf(b.type);
+    return (oa-ob) || (b.created_at-a.created_at);
+  });
+  const box = document.getElementById('list');
+  box.innerHTML = sorted.length ? sorted.map(p=>{
+    const tint = TINT[p.type]||TINT.bookmark;
+    const d = new Date(p.created_at);
+    return `<div class="row">
+      <span class="tpill" style="background:${tint[0]};color:${tint[1]}">${TYPE_ICO[p.type]||''} ${TYPE_LABEL[p.type]||p.type} · ${TYPE_LESSON[p.type]||'?'}차시</span>
+      <div class="ti"><b>${esc(p.title)}</b><span>${esc(p.penname)} · ${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}${p.msg?' · '+esc(p.msg):''}</span></div>
+      <div class="nums">응원 ${(p.clap||0)+(p.heart||0)+(p.party||0)} · 👀 ${p.views||0} · 💬 ${p.cmts||0}</div>
+      <button class="del" onclick="del('${p.id}', this)">삭제</button>
+    </div>`;
+  }).join('') : '<div class="empty">책장이 비어 있어요.</div>';
+}
+
+async function del(id, btn){
+  if(!confirm('이 작품을 책장에서 삭제할까요? (감상평도 함께 삭제되며 되돌릴 수 없어요)')) return;
+  btn.textContent='삭제 중…'; btn.disabled=true;
+  const j = await api('remove', {id}).catch(()=>null);
+  if(j && j.ok) load();
+  else { alert('삭제하지 못했습니다.'); btn.textContent='삭제'; btn.disabled=false; }
+}
+
+async function resetAll(){
+  const t = prompt('책장의 모든 작품·감상평이 영구 삭제됩니다.\n계속하려면 "초기화"라고 입력하세요.');
+  if(t !== '초기화') return;
+  const j = await api('reset').catch(()=>null);
+  if(j && j.ok){ alert(`초기화 완료 (${j.removed}개 작품 삭제)`); load(); }
+  else alert('초기화하지 못했습니다.');
+}
+
+if(KEY){ document.getElementById('keyIn').value = KEY; login(); }
+</script>
+</body>
+</html>

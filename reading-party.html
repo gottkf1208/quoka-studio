@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>15차시 · 출간 파티 — 내 목소리로 읽기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  :root{
+    --c-bg:#EFEDE7; --c-ink:#3D434C; --c-sub:#7A766C;
+    --c-mist:#AEC6D6; --c-mist-d:#3E5C6E;
+    --c-sage:#BFD0B7; --c-sage-d:#4F6645;
+    --c-lilac:#CBBFDC; --c-lilac-d:#5A4E75;
+    --c-peach:#E8D2C1; --c-peach-d:#8A634A;
+    --c-butter:#ECE1BE; --c-butter-d:#82743F;
+    --c-accent:#FF5757; --c-accent-d:#B81E1E;
+    --line:rgba(61,67,76,.10);
+    --field:#FBFAF7;
+    --shadow-sm:0 1px 2px rgba(61,67,76,.04), 0 6px 18px rgba(61,67,76,.05);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:'Pretendard Variable',Pretendard,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+    background:var(--c-bg);
+    color:var(--c-ink);
+    line-height:1.65;
+    letter-spacing:-.01em;
+    -webkit-font-smoothing:antialiased;
+  }
+  .ov{font-size:11.5px;font-weight:800;letter-spacing:.16em;color:var(--c-sub)}
+  .wrap{ max-width:720px; margin:0 auto; padding:22px 20px 50px; }
+
+  .hero{
+    text-align:center;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:26px 20px 24px;
+    box-shadow:var(--shadow-sm);
+    margin-bottom:16px;
+  }
+  h1{ margin:6px 0 0; font-size:27px; font-weight:900; letter-spacing:-.04em; }
+  .hero .rule{ width:44px;height:4px;border-radius:3px;background:var(--c-accent);margin:12px auto; }
+  .sub{ font-size:14.5px; color:var(--c-sub); }
+  .steps{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
+  .step{ padding:6px 14px; border-radius:999px; font-size:12.5px; font-weight:800; }
+  .step.s1{ background:color-mix(in srgb,var(--c-peach) 45%,#fff); color:var(--c-peach-d); }
+  .step.s2{ background:color-mix(in srgb,var(--c-butter) 45%,#fff); color:var(--c-butter-d); }
+  .step.s3{ background:color-mix(in srgb,var(--c-sage) 45%,#fff); color:var(--c-sage-d); }
+
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:24px 26px;
+    margin-bottom:14px;
+    box-shadow:var(--shadow-sm);
+  }
+  h2{
+    font-size:17px; font-weight:800; letter-spacing:-.02em;
+    margin:0 0 6px; display:flex; align-items:center; gap:8px;
+  }
+  .big{ font-size:14.5px; color:var(--c-sub); margin:0 0 6px; }
+
+  .timer{
+    font-size:40px; text-align:center; margin:16px 0;
+    font-weight:900; letter-spacing:-.02em; color:var(--c-accent);
+    font-variant-numeric:tabular-nums;
+  }
+  .btns{ display:flex; gap:9px; flex-wrap:wrap; justify-content:center; }
+  button{
+    border:none; border-radius:12px;
+    padding:13px 20px; font-size:14.5px; font-weight:800;
+    cursor:pointer; min-width:150px;
+    font-family:inherit;
+    transition:transform .15s, background .15s, opacity .15s;
+  }
+  button:active{ transform:scale(.97); }
+  button:disabled{ opacity:.35; cursor:not-allowed; }
+  .primary{ background:var(--c-accent); color:#fff; box-shadow:0 6px 16px rgba(255,87,87,.22); }
+  .primary:hover:not(:disabled){ background:#F04A4A; }
+  .secondary{ background:#fff; color:var(--c-ink); border:1px solid var(--line); }
+  .secondary:hover:not(:disabled){ background:var(--field); }
+  .success{ background:var(--c-sage-d); color:#fff; }
+  .danger{ background:var(--c-ink); color:#fff; }
+
+  textarea{
+    width:100%;
+    min-height:130px;
+    font-size:15.5px;
+    line-height:1.75;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:var(--field);
+    color:var(--c-ink);
+    padding:14px 16px;
+    resize:vertical;
+    outline:none;
+    font-family:inherit;
+    transition:border-color .2s;
+  }
+  textarea:focus{ border-color:var(--c-ink); }
+  textarea::placeholder, input::placeholder{ color:#BDB9AE; }
+
+  audio{ width:100%; margin-top:14px; }
+  .status{
+    text-align:center; font-size:13.8px; margin-top:12px;
+    font-weight:700; color:var(--c-sub);
+  }
+  .note{
+    margin-top:14px;
+    background:color-mix(in srgb,var(--c-butter) 30%,#fff);
+    border-radius:12px;
+    padding:13px 16px;
+    font-size:13.5px;
+    line-height:1.6;
+    color:#565c66;
+  }
+  .note b{ color:var(--c-butter-d); }
+
+  /* 피드백 문장틀 */
+  .row-line{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .row-line:last-child{border-bottom:none}
+  .tag{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:76px;padding:5px 12px;border-radius:8px;font-size:12.5px;font-weight:800;flex-shrink:0;
+    background:color-mix(in srgb,var(--c-lilac) 34%,#fff);color:var(--c-lilac-d);
+  }
+  .row-line input{
+    flex:1;border:none;background:transparent;padding:5px 4px;font-size:15px;outline:none;
+    border-bottom:1.5px solid transparent;transition:border-color .2s;min-width:0;
+    font-family:inherit;color:var(--c-ink);
+  }
+  .row-line input:focus{border-bottom-color:var(--c-ink)}
+
+  /* 무엇이 자랐을까 */
+  .q-row{padding:12px 0;border-bottom:1px solid var(--line)}
+  .q-row:last-child{border-bottom:none;padding-bottom:2px}
+  .q-top{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap}
+  .q-fixed{font-size:14px;font-weight:700;color:var(--c-ink);letter-spacing:-.02em;line-height:1.5}
+  .q-input{
+    width:100%;background:var(--field);border:1px solid var(--line);border-radius:10px;
+    padding:10px 13px;font-size:14.5px;outline:none;transition:border-color .2s;
+    font-family:inherit;color:var(--c-ink);
+  }
+  .q-input:focus{border-color:var(--c-ink)}
+
+  .cheer{ text-align:center; }
+  .cheer .qmark{ font-size:38px; }
+  .cheer h2{ justify-content:center; }
+  .cheer .big{ margin-top:4px; }
+
+  /* 책장 올리기 */
+  .shelf-open{ background:var(--c-ink); color:#fff; }
+  .up-wrap{ display:none; margin-top:16px; border-top:1px solid var(--line); padding-top:18px; }
+  .up-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+  @media(max-width:640px){.up-grid{grid-template-columns:1fr}}
+  .up-field label{display:block;font-size:12px;font-weight:800;color:var(--c-sub);margin-bottom:5px;letter-spacing:.04em}
+  .up-field input{
+    width:100%;background:var(--field);border:1px solid var(--line);border-radius:10px;
+    padding:10px 13px;font-size:14.5px;outline:none;transition:border-color .2s;
+    font-family:inherit;color:var(--c-ink);box-sizing:border-box;
+  }
+  .up-field input:focus{border-color:var(--c-ink)}
+  .color-row{display:flex;gap:7px;flex-wrap:wrap}
+  .csw{width:26px;height:26px;border-radius:9px;cursor:pointer;border:2px solid transparent;transition:all .15s}
+  .csw.on{border-color:var(--c-ink);transform:scale(1.12)}
+  .up-actions{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap}
+  .up-go{
+    border:0;cursor:pointer;padding:12px 24px;border-radius:12px;min-width:0;
+    background:var(--c-accent);color:#fff;font-family:inherit;font-size:14.5px;font-weight:800;
+    box-shadow:0 6px 16px rgba(255,87,87,.22);
+  }
+  .up-go:disabled{opacity:.5;cursor:wait}
+  .up-out{font-size:13px;font-weight:700}
+  .up-out a{color:var(--c-sage-d)}
+  .safe-note{font-size:12.5px;color:var(--c-sub);margin-top:10px}
+  #autoSave{
+    position:fixed;right:14px;bottom:14px;z-index:60;pointer-events:none;
+    background:var(--c-ink);color:#fff;font-size:12px;font-weight:800;
+    padding:7px 14px;border-radius:999px;opacity:0;transition:opacity .25s;
+  }
+  #autoSave.show{opacity:.92}
+
+  footer{
+    text-align:center;
+    padding:6px 0 10px;
+    color:var(--c-sub);
+    font-size:12px;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="hero">
+    <span class="ov">TAKEOFF · 15차시 출간 파티</span>
+    <h1>내 목소리로 읽는 출간 파티</h1>
+    <div class="rule"></div>
+    <div class="sub">내 목소리로 읽고 · 들어보고 · 친구와 마음을 나눠요!</div>
+    <div class="steps">
+      <div class="step s1">① 내 목소리로 읽기</div>
+      <div class="step s2">② 들어보기</div>
+      <div class="step s3">③ 공감 피드백 나누기</div>
+    </div>
+  </div>
+
+  <!-- 녹음 -->
+  <div class="card">
+    <h2>🎙️ 내 목소리로 읽기</h2>
+    <p class="big">동화에서 가장 마음에 드는 부분을 10~30초 정도 또박또박 읽어 보세요.</p>
+
+    <div class="timer" id="timer">00:00</div>
+
+    <div class="btns">
+      <button class="primary" id="startBtn">녹음 시작</button>
+      <button class="danger" id="stopBtn" disabled>녹음 끝내기</button>
+    </div>
+
+    <div class="status" id="status">준비되면 녹음 시작을 눌러 주세요.</div>
+
+    <audio id="audio" controls></audio>
+
+    <div class="btns" style="margin-top:14px;">
+      <button class="secondary" id="redoBtn" disabled>다시 녹음하기</button>
+      <button class="success" id="saveBtn" disabled>녹음 저장하기</button>
+    </div>
+
+    <div class="note">
+      처음 사용할 때는 브라우저가 <b>마이크 사용 허용</b>을 물어봅니다. "허용"을 눌러 주세요.
+    </div>
+
+    <div class="btns" style="margin-top:14px;">
+      <button class="shelf-open" id="shelfOpenBtn" disabled>📚 작가들의 책장에 올리기</button>
+    </div>
+
+    <div class="up-wrap" id="upPanel">
+      <div class="up-grid">
+        <div class="up-field"><label>필명 (실명 금지!)</label><input type="text" id="upPen" maxlength="20" placeholder="예: 한로운 작가"></div>
+        <div class="up-field"><label>작품 제목</label><input type="text" id="upTitle" maxlength="40" placeholder="예: 작게, 시작 — 3장면 낭독"></div>
+        <div class="up-field" style="grid-column:1/-1"><label>한 줄 소개</label><input type="text" id="upMsg" maxlength="100" placeholder="예: 주인공이 처음 용기를 내는 장면이에요. 들어 주세요!"></div>
+        <div class="up-field"><label>책등 색깔</label><div class="color-row" id="colorRow"></div></div>
+        <div class="up-field"><label>삭제 비밀번호 (숫자 4자리 — 꼭 기억!)</label><input type="password" id="upPin" maxlength="4" inputmode="numeric" placeholder="0000"></div>
+      </div>
+      <div class="up-actions">
+        <button class="up-go" id="upGo" type="button">책장에 꽂기</button>
+        <span class="up-out" id="upOut"></span>
+      </div>
+      <p class="safe-note">🔒 실명·친구 이름은 넣지 않아요. 올린 낭독은 우리 반 모두가 들을 수 있어요.</p>
+    </div>
+  </div>
+
+  <!-- 텍스트 읽기 -->
+  <div class="card">
+    <h2>✏️ 읽어 주세요</h2>
+    <p class="big">녹음이 어렵다면 동화의 한 부분을 입력해 보세요. 컴퓨터가 따뜻한 목소리로 읽어 줍니다.</p>
+
+    <textarea id="textInput" placeholder="예: 어느 날 작은 여우는 반짝이는 별을 따라 숲속으로 걸어갔어요..."></textarea>
+
+    <div class="btns" style="margin-top:14px;">
+      <button class="primary" id="speakBtn">읽어 주세요</button>
+      <button class="secondary" id="pauseBtn">멈춤</button>
+      <button class="danger" id="stopSpeakBtn">중지</button>
+    </div>
+
+    <div class="status" id="speakStatus">텍스트를 입력하고 읽어 주세요 버튼을 눌러 보세요.</div>
+  </div>
+
+  <!-- 공감 피드백 -->
+  <div class="card">
+    <h2>💌 공감 피드백 문장틀 — 점수 대신 마음</h2>
+    <p class="big">친구의 낭독을 듣고, 마음이 담긴 한 문장을 선물해요.</p>
+    <div class="row-line"><span class="tag">친구에게</span><input id="fb1" placeholder="나는 네 이야기에서 __ 장면이 가장 마음에 남았어"></div>
+    <div class="row-line"><span class="tag">느낀 마음</span><input id="fb2" placeholder="그 부분에서 __ 한 마음이 느껴졌어. 데뷔 축하해!"></div>
+  </div>
+
+  <!-- 무엇이 자랐을까 -->
+  <div class="card">
+    <h2>🌱 AI동화작가 프로젝트, 무엇이 자랐을까</h2>
+    <p class="big">아래 질문에 내가 생각하는 답을 자유롭게 적어 보세요.</p>
+    <div class="q-row">
+      <div class="q-top"><span class="tag" style="background:color-mix(in srgb,var(--c-peach) 40%,#fff);color:var(--c-peach-d)">감정 표현</span><span class="q-fixed">"진짜 짜증나!" → 구체적인 감정표현으로 바꾸면?</span></div>
+      <input class="q-input" id="g1" placeholder="내가 생각한 답을 자유롭게 적어 보세요">
+    </div>
+    <div class="q-row">
+      <div class="q-top"><span class="tag" style="background:color-mix(in srgb,var(--c-mist) 40%,#fff);color:var(--c-mist-d)">AI 활용</span><span class="q-fixed">AI 답을 그대로? → AI를 어떻게 사용해야 할까요?</span></div>
+      <input class="q-input" id="g2" placeholder="내가 생각한 답을 자유롭게 적어 보세요">
+    </div>
+    <div class="q-row">
+      <div class="q-top"><span class="tag" style="background:color-mix(in srgb,var(--c-sage) 40%,#fff);color:var(--c-sage-d)">공동체</span><span class="q-fixed">나 혼자 쓰기 → 다함께 협력하여 작가가 되는 방법은?</span></div>
+      <input class="q-input" id="g3" placeholder="내가 생각한 답을 자유롭게 적어 보세요">
+    </div>
+  </div>
+
+  <!-- 응원 -->
+  <div class="card cheer">
+    <div class="qmark">🎉</div>
+    <h2>오늘의 동화작가, 데뷔를 축하해요!</h2>
+    <p class="big">한 번에 완벽하게 읽지 않아도 괜찮아요.<br>
+    여러 번 읽으며 더 좋은 이야기를 만들어 가는 것이 진짜 작가의 모습이에요!</p>
+  </div>
+
+  <footer>
+    브라우저만으로 실행되는 동화 낭독 프로그램 · 쿼카 AI융합교육연구회
+  </footer>
+
+</div>
+
+<script>
+/* ═══════ 스튜디오 저장소 연동 ═══════ */
+const ST_KEY='quokka_studio_v1', LKEY='l15';
+function stAll(){ try{ return JSON.parse(localStorage.getItem(ST_KEY))||{} }catch(e){ return {} } }
+function stGet(){ const S=stAll(); return (S.ans&&S.ans[LKEY])||{} }
+function stSet(kv){ try{ const S=stAll(); S.ans=S.ans||{}; S.ans[LKEY]=Object.assign(S.ans[LKEY]||{},kv); localStorage.setItem(ST_KEY,JSON.stringify(S)); flashSave(); }catch(e){} }
+const _svBadge = document.createElement('div'); _svBadge.id='autoSave'; _svBadge.textContent='✓ 자동 저장됨';
+let _svT;
+function flashSave(){
+  if(!_svBadge.isConnected && document.body) document.body.appendChild(_svBadge);
+  _svBadge.classList.add('show');
+  clearTimeout(_svT); _svT = setTimeout(()=>_svBadge.classList.remove('show'), 1200);
+}
+{
+  const a=stGet();
+  ["fb1","fb2","g1","g2","g3"].forEach(k=>{
+    const el=document.getElementById(k);
+    el.value=a[k]||"";
+    el.addEventListener("input",()=>stSet({[k]:el.value}));
+  });
+}
+
+/* ═══════ 녹음 ═══════ */
+let mediaRecorder;
+let audioChunks = [];
+let audioBlob = null;
+let audioUrl = null;
+
+let timerInterval;
+let seconds = 0;
+
+const timer = document.getElementById("timer");
+const status = document.getElementById("status");
+
+const startBtn = document.getElementById("startBtn");
+const stopBtn = document.getElementById("stopBtn");
+const redoBtn = document.getElementById("redoBtn");
+const saveBtn = document.getElementById("saveBtn");
+const audio = document.getElementById("audio");
+
+function formatTime(s){
+  const m = String(Math.floor(s/60)).padStart(2,"0");
+  const sec = String(s%60).padStart(2,"0");
+  return `${m}:${sec}`;
+}
+
+function startTimer(){
+  seconds = 0;
+  timer.textContent = "00:00";
+  timerInterval = setInterval(()=>{
+    seconds++;
+    timer.textContent = formatTime(seconds);
+  },1000);
+}
+
+function stopTimer(){
+  clearInterval(timerInterval);
+}
+
+startBtn.onclick = async () => {
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+
+    mediaRecorder = new MediaRecorder(stream);
+    audioChunks = [];
+
+    mediaRecorder.ondataavailable = e => {
+      if(e.data.size > 0) audioChunks.push(e.data);
+    };
+
+    mediaRecorder.onstop = () => {
+      audioBlob = new Blob(audioChunks,{type:"audio/webm"});
+      if(audioUrl) URL.revokeObjectURL(audioUrl);
+      audioUrl = URL.createObjectURL(audioBlob);
+      audio.src = audioUrl;
+
+      status.textContent = "녹음이 완료되었어요! 들어보세요 🎧";
+      redoBtn.disabled = false;
+      saveBtn.disabled = false;
+      document.getElementById("shelfOpenBtn").disabled = false;
+    };
+
+    mediaRecorder.start();
+    startTimer();
+
+    status.textContent = "녹음 중이에요... 천천히 읽어 보세요 🎙️";
+
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+
+  }catch(err){
+    alert("마이크 사용이 허용되지 않았어요.");
+  }
+};
+
+stopBtn.onclick = () => {
+  mediaRecorder.stop();
+  stopTimer();
+
+  startBtn.disabled = false;
+  stopBtn.disabled = true;
+};
+
+redoBtn.onclick = () => {
+  audio.src = "";
+  audioBlob = null;
+  if(audioUrl) URL.revokeObjectURL(audioUrl);
+  audioUrl = null;
+
+  timer.textContent = "00:00";
+  status.textContent = "다시 녹음할 준비가 되었어요 😊";
+
+  redoBtn.disabled = true;
+  saveBtn.disabled = true;
+  document.getElementById("shelfOpenBtn").disabled = true;
+  document.getElementById("upPanel").style.display = "none";
+};
+
+saveBtn.onclick = () => {
+  if(!audioBlob) return;
+
+  const a = document.createElement("a");
+  a.href = audioUrl;
+  a.download = "내_동화_낭독.webm";
+  a.click();
+};
+
+/* ═══════ 텍스트 읽기 ═══════ */
+const textInput = document.getElementById("textInput");
+const speakBtn = document.getElementById("speakBtn");
+const pauseBtn = document.getElementById("pauseBtn");
+const stopSpeakBtn = document.getElementById("stopSpeakBtn");
+const speakStatus = document.getElementById("speakStatus");
+
+let currentUtterance = null;
+
+function getKoreanVoice(){
+  const voices = speechSynthesis.getVoices();
+  return voices.find(v => v.lang.includes("ko")) || voices[0];
+}
+
+speechSynthesis.onvoiceschanged = () => {};
+
+speakBtn.onclick = () => {
+  const text = textInput.value.trim();
+
+  if(!text){
+    alert("읽을 글을 입력해 주세요.");
+    return;
+  }
+
+  speechSynthesis.cancel();
+
+  currentUtterance = new SpeechSynthesisUtterance(text);
+  currentUtterance.lang = "ko-KR";
+  currentUtterance.rate = 0.95;
+  currentUtterance.pitch = 1.0;
+  currentUtterance.voice = getKoreanVoice();
+
+  currentUtterance.onstart = () => {
+    speakStatus.textContent = "읽어 주는 중이에요 🔊";
+  };
+
+  currentUtterance.onend = () => {
+    speakStatus.textContent = "끝까지 잘 읽어 주었어요 🌟";
+  };
+
+  speechSynthesis.speak(currentUtterance);
+};
+
+pauseBtn.onclick = () => {
+  if(speechSynthesis.speaking && !speechSynthesis.paused){
+    speechSynthesis.pause();
+    speakStatus.textContent = "잠시 멈췄어요 ⏸️";
+    pauseBtn.textContent = "계속";
+  }else if(speechSynthesis.paused){
+    speechSynthesis.resume();
+    speakStatus.textContent = "다시 읽는 중이에요 🔊";
+    pauseBtn.textContent = "멈춤";
+  }
+};
+
+stopSpeakBtn.onclick = () => {
+  speechSynthesis.cancel();
+  speakStatus.textContent = "읽기를 중지했어요 😊";
+  pauseBtn.textContent = "멈춤";
+};
+
+/* ═══════ 작가들의 책장에 올리기 ═══════ */
+function stGetK(k){ const S=stAll(); return (S.ans&&S.ans[k])||{} }
+const SHELF_COLORS = ["#AEC6D6","#BFD0B7","#CBBFDC","#E8D2C1","#ECE1BE","#F2B8B8","#BFD9DD","#D9CBB8"];
+let shelfColor = SHELF_COLORS[3];
+const colorRow = document.getElementById("colorRow");
+function renderColors(){
+  colorRow.innerHTML = SHELF_COLORS.map(c =>
+    `<span class="csw ${c===shelfColor?'on':''}" style="background:${c}" data-c="${c}"></span>`).join("");
+  colorRow.querySelectorAll(".csw").forEach(s =>
+    s.addEventListener("click", () => { shelfColor = s.dataset.c; renderColors(); }));
+}
+renderColors();
+
+document.getElementById("shelfOpenBtn").addEventListener("click", () => {
+  const p = document.getElementById("upPanel");
+  const show = p.style.display !== "block";
+  p.style.display = show ? "block" : "none";
+  if(show){
+    const pen = document.getElementById("upPen");
+    if(!pen.value) pen.value = stGetK('l1').penname || "";
+    p.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+});
+
+let uploading = false;
+document.getElementById("upGo").addEventListener("click", async () => {
+  if(uploading) return;
+  const out = document.getElementById("upOut");
+  const say = (t, ok) => { out.innerHTML = t; out.style.color = ok ? "var(--c-sage-d)" : "var(--c-accent-d)"; };
+  if(!audioBlob) return say("먼저 낭독을 녹음해 주세요!");
+  const pen = document.getElementById("upPen").value.trim();
+  const title = document.getElementById("upTitle").value.trim();
+  const msg = document.getElementById("upMsg").value.trim();
+  const pin = document.getElementById("upPin").value.trim();
+  if(!pen || !title) return say("필명과 제목을 적어 주세요!");
+  if(!/^\d{4}$/.test(pin)) return say("삭제 비밀번호는 숫자 4자리예요!");
+  if(audioBlob.size > 8*1024*1024) return say("녹음이 너무 길어요. 30초 정도로 다시 녹음해 볼까요?");
+  uploading = true;
+  const go = document.getElementById("upGo");
+  go.disabled = true; say("책장에 꽂는 중…", true);
+  try{
+    const fd = new FormData();
+    fd.append("file", new File([audioBlob], "낭독.webm", { type: audioBlob.type || "audio/webm" }));
+    fd.append("type", "reading");
+    fd.append("penname", pen);
+    fd.append("title", title);
+    fd.append("msg", msg);
+    fd.append("color", shelfColor);
+    fd.append("pin", pin);
+    const r = await fetch("/api/bookshelf/upload", { method: "POST", body: fd });
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.code);
+    say('책장에 꽂혔어요! 🎉 <a href="studio.html#shelf" target="_top">작가들의 책장 보러 가기 →</a>', true);
+  }catch(e){
+    say(e.message==="bad_words" ? "앗, 고운 말로 바꿔 볼까요? 필명·제목·소개를 다시 봐 주세요." : "올리지 못했어요. 온라인 스튜디오에서 열었는지, 인터넷 연결을 확인해 주세요.");
+  }
+  go.disabled = false;
+  uploading = false;
+});
+
+/* 부모(스튜디오)에 실제 높이를 알려 하단 여백 없이 맞추기 */
+(function(){
+  if(window.parent === window) return;
+  let t, lastH = 0;
+  function report(){
+    clearTimeout(t);
+    t = setTimeout(()=>{
+      /* scrollHeight는 iframe이 크면 그 값을 돌려줘 줄어들지 않는다 —
+         실제 콘텐츠의 바닥 좌표를 직접 잰다 (fixed 요소 제외) */
+      let max = 0;
+      for(const el of document.body.children){
+        const cs = getComputedStyle(el);
+        if(cs.position === 'fixed' || cs.display === 'none') continue;
+        const r = el.getBoundingClientRect();
+        max = Math.max(max, r.bottom + window.scrollY + (parseFloat(cs.marginBottom)||0));
+      }
+      const h = Math.ceil(max + (parseFloat(getComputedStyle(document.body).paddingBottom)||0));
+      if(h > 100 && Math.abs(h - lastH) > 2){ lastH = h; parent.postMessage({qkFrameH: h}, '*'); }
+    }, 80);
+  }
+  new MutationObserver(report).observe(document.documentElement, {childList:true, subtree:true, attributes:true});
+  addEventListener('load', report);
+  addEventListener('resize', report);
+  setInterval(report, 700);
+  report();
+})();
+</script>
+
+</body>
+</html>

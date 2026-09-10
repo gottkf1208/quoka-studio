@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>내 목소리 체크리스트 · AI 동화작가 데뷔 스튜디오</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* ── 컬러 토큰 (donghwa-studio 동일) ───────────────── */
+:root{
+  --c-bg:#EFEDE7; --c-ink:#3D434C; --c-sub:#7A766C;
+  --c-mist:#AEC6D6; --c-mist-d:#3E5C6E;
+  --c-sage:#BFD0B7; --c-sage-d:#4F6645;
+  --c-lilac:#CBBFDC; --c-lilac-d:#5A4E75;
+  --c-peach:#E8D2C1; --c-peach-d:#8A634A;
+  --c-butter:#ECE1BE; --c-butter-d:#82743F;
+  --c-accent:#FF5757; --c-accent-d:#B81E1E;
+  --c-cobalt:#2E5BFF;
+  --line:rgba(61,67,76,.10);
+  --card-r:18px;
+  --shadow:0 1px 2px rgba(61,67,76,.04), 0 14px 36px rgba(61,67,76,.07);
+  --shadow-sm:0 1px 2px rgba(61,67,76,.04), 0 6px 18px rgba(61,67,76,.05);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Pretendard Variable',Pretendard,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  background:var(--c-bg); color:var(--c-ink);
+  font-size:16px; line-height:1.65; letter-spacing:-0.01em;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit;font-size:15px;color:var(--c-ink)}
+main{max-width:920px;margin:0 auto;padding:34px 24px 100px}
+
+.ov{font-size:11.5px;font-weight:800;letter-spacing:.16em;color:var(--c-sub)}
+h2.sec{font-size:27px;font-weight:900;letter-spacing:-.035em;margin:6px 0 6px}
+p.sec-sub{color:var(--c-sub);margin-bottom:22px;font-size:15px}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:4px 13px;border-radius:999px;font-size:12.5px;font-weight:800}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+
+/* ── 단계 표시 ─────────────────────────── */
+.seg-wrap{display:flex;gap:5px;margin-bottom:8px}
+.seg{flex:1;height:4px;border-radius:99px;background:#DDDACF;transition:background .25s}
+.seg.on{background:var(--c-accent)}
+.seg.done{background:var(--c-sage-d)}
+.seg-label{text-align:right;font-size:12.5px;color:var(--c-sub);font-weight:700;margin-bottom:20px}
+
+/* ── 카드 ──────────────────────────────── */
+.ws-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--card-r);
+  box-shadow:var(--shadow-sm);padding:26px 28px;margin-bottom:16px;
+}
+.ws-card[hidden]{display:none}
+.ws-card h4{font-size:15.5px;font-weight:800;margin-bottom:14px;letter-spacing:-.02em}
+
+label.fld{display:block;font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--c-sub);margin:0 0 8px}
+input.line,select.line{
+  width:100%;background:#FBFAF7;border:1px solid var(--line);border-radius:11px;
+  padding:11px 14px;font-size:15px;outline:none;transition:border-color .2s;
+}
+input.line:focus,select.line:focus{border-color:var(--c-ink)}
+input::placeholder,textarea::placeholder{color:#BDB9AE}
+.big-ta{
+  width:100%;min-height:220px;border:1px solid var(--line);background:#FBFAF7;border-radius:12px;
+  padding:16px 18px;font-size:15.5px;line-height:1.8;outline:none;resize:vertical;transition:border-color .2s;
+}
+.big-ta.med{min-height:100px; padding:12px 14px;}
+.big-ta:focus{border-color:var(--c-ink)}
+
+/* ── 카테고리 블록 ─────────────────────── */
+.cat-block{margin-bottom:20px}
+.cat-block:last-of-type{margin-bottom:0}
+.cat-head{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.cat-num{
+  min-width:26px;height:26px;border-radius:8px;color:#fff;font-weight:900;font-size:12.5px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.cat-title{font-size:14.5px;font-weight:800}
+.cat-title small{display:block;font-size:12.5px;font-weight:600;color:var(--c-sub);margin-top:1px}
+
+/* ── 체크 항목 ──────────────────────────── */
+.chk-row{display:flex;flex-direction:column;gap:8px}
+.chk-item{
+  display:flex;align-items:center;gap:11px;background:#FBFAF7;border:1px solid var(--line);
+  border-radius:12px;padding:12px 14px;text-align:left;transition:all .15s;width:100%;
+}
+.chk-item:hover{border-color:var(--c-ink)}
+.chk-box{
+  width:21px;height:21px;border-radius:7px;border:1.5px solid #C9C5BA;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:transparent;
+  transition:all .15s;
+}
+.chk-item.sel{border-color:var(--c-sage-d);background:color-mix(in srgb,var(--c-sage) 10%,#fff)}
+.chk-item.sel .chk-box{background:var(--c-sage-d);border-color:var(--c-sage-d);color:#fff}
+.chk-item span.lbl{font-size:14.5px;font-weight:600}
+
+.chk-item.final{border:1.5px dashed var(--c-accent-d);background:color-mix(in srgb,var(--c-accent) 6%,#fff)}
+.chk-item.final.sel{border-style:solid;background:color-mix(in srgb,var(--c-accent) 10%,#fff)}
+.chk-item.final .chk-box{border-color:var(--c-accent-d)}
+.chk-item.final.sel .chk-box{background:var(--c-accent-d);border-color:var(--c-accent-d)}
+
+/* ── 버튼 ──────────────────────────────── */
+.cta{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--c-accent);color:#fff;font-weight:800;font-size:15.5px;
+  padding:13px 26px;border-radius:12px;
+  transition:transform .15s, box-shadow .15s, background .15s;
+  box-shadow:0 6px 16px rgba(255,87,87,.25);
+}
+.cta:hover{transform:translateY(-1px);background:#F04A4A}
+.cta.ghost{background:#fff;color:var(--c-ink);box-shadow:none;border:1px solid var(--line)}
+.cta.ghost:hover{background:#FBFAF7}
+.les-foot{display:flex;align-items:center;gap:10px;margin-top:24px;flex-wrap:wrap}
+.les-foot .spacer{flex:1}
+.msg{font-size:13.5px;font-weight:700;color:var(--c-sage-d);min-height:20px;margin-top:12px}
+.msg.warn{color:var(--c-accent-d)}
+
+/* ── 진행률 ─────────────────────────────── */
+.progress{position:sticky;top:0;z-index:5;background:var(--c-bg);padding:14px 0 12px;margin-bottom:14px}
+.pbar{height:8px;border-radius:99px;background:#DDDACF;overflow:hidden}
+.pbar i{display:block;height:100%;border-radius:99px;background:var(--c-ink);transition:width .3s}
+.ptext{font-size:12.5px;font-weight:800;color:var(--c-sub);margin-bottom:7px}
+
+/* ── 결과 ──────────────────────────────── */
+.tally{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.tally div{flex:1;min-width:100px;background:#FBFAF7;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+.tally b{font-size:23px;font-weight:900;display:block;letter-spacing:-.02em}
+.tally span{font-size:12px;color:var(--c-sub);font-weight:700}
+.tg{font-weight:800;white-space:nowrap;font-size:13px}
+.tg.a{color:var(--c-lilac-d)}
+
+.rev-summary{
+  background:#FBFAF7;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:11px;
+}
+.rev-summary strong.lab{display:block;font-size:12px;font-weight:800;letter-spacing:.05em;margin-bottom:2px;}
+.rev-summary .before-txt{color:var(--c-sub);margin-bottom:10px;}
+.rev-summary .after-txt{font-weight:600;margin-bottom:10px;}
+.rev-summary .reason-txt{color:var(--c-butter-d);}
+.review-list{list-style:none;margin:10px 0 0;padding:0}
+.review-list li{display:flex;align-items:center;gap:9px;padding:8px 0;font-size:14px;border-top:1px solid var(--line)}
+.review-list li:first-child{border-top:none}
+.review-list .ico{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0;color:#fff}
+.review-list .ico.on{background:var(--c-sage-d)}
+.review-list .ico.off{background:#C9C5BA}
+.review-list .cat-tag{font-size:11px;font-weight:800;color:var(--c-sub);min-width:64px;flex-shrink:0}
+
+.tip-box{background:color-mix(in srgb,var(--c-butter) 30%,#fff);border-radius:12px;padding:14px 16px;margin-top:16px;font-size:13.8px;line-height:1.65;color:#565c66}
+.tip-box b{display:block;font-size:11.5px;letter-spacing:.14em;color:var(--c-butter-d);margin-bottom:5px}
+
+@media (max-width:720px){
+  main{padding:24px 16px 80px}
+  h2.sec{font-size:23px}
+  .ws-card{padding:20px 18px}
+}
+@media print{
+  .no-print,.les-foot,.progress,.seg-wrap,.seg-label,.ws-card:not(#p2){display:none!important}
+  body{background:#fff}
+  .ws-card{box-shadow:none;border:none;padding:0; margin:0;}
+}
+</style>
+</head>
+<body>
+<main>
+
+  <div class="seg-wrap no-print">
+    <div class="seg on" id="g1"></div>
+    <div class="seg" id="g2"></div>
+  </div>
+  <div class="seg-label no-print" id="segLabel">1 / 2 단계</div>
+
+  <span class="pill no-print" style="background:var(--c-butter);color:var(--c-butter-d)">
+    <span class="dot" style="background:var(--c-butter-d)"></span>활동 · 내 목소리 체크리스트
+  </span>
+  <h2 class="sec no-print">내 목소리 체크리스트</h2>
+  <p class="sec-sub no-print">완성한 글이 <b style="color:var(--c-ink)">진짜 내 목소리</b>로 쓰였는지 네 가지 기준으로 점검해요.<br>체크가 안 된 항목이 있어도 괜찮아요. 그중 하나만 골라 문장을 고쳐 보면 됩니다.</p>
+
+  <!-- ══════════ 1단계: 체크리스트 + 한 군데 고치기 ══════════ -->
+  <section class="ws-card" id="p1">
+    <h4>1. 체크리스트로 점검하기</h4>
+
+    <label class="fld" for="title">동화 제목 (선택)</label>
+    <input class="line" type="text" id="title" placeholder="예: 달빛 우체통" style="margin-bottom:24px">
+
+    <div id="checklist-wrap"></div>
+
+    <div class="progress">
+      <div class="ptext" id="ptext">체크한 항목 0 / 13</div>
+      <div class="pbar"><i id="pbar-fill" style="width:0%"></i></div>
+    </div>
+
+    <h4 style="margin-top:8px;">2. 한 군데만 고쳐 봅시다</h4>
+    <p style="font-size:14.5px;color:var(--c-sub);margin-bottom:18px;">
+      체크가 안 된 항목 하나만 골라서 문장 한 개를 고칩니다.
+    </p>
+
+    <div style="background:#FBFAF7; padding:18px; border-radius:14px; border:1px solid var(--line);">
+      <label class="fld" for="fix-target">어떤 항목을 고칠까요?</label>
+      <select class="line" id="fix-target" style="margin-bottom:18px;"></select>
+
+      <label class="fld">고치기 전 문장</label>
+      <textarea class="big-ta med" id="before-text" placeholder="예: 그녀는 매우 슬펐다."></textarea>
+
+      <label class="fld" style="margin-top:16px; color:var(--c-sage-d);">고친 문장</label>
+      <textarea class="big-ta med" id="after-text" style="border-color:var(--c-sage-d);" placeholder="예: 아이는 아무 말도 못 하고 눈물만 뚝뚝 흘렸다."></textarea>
+
+      <label class="fld" style="margin-top:16px;">고친 까닭</label>
+      <input class="line" type="text" id="reason-text" placeholder="예: 슬프다는 말 대신 행동으로 보여주고 싶어서">
+    </div>
+
+    <div class="les-foot">
+      <span class="spacer"></span>
+      <button class="cta" onclick="finish()">체크리스트 완성하기 →</button>
+    </div>
+    <p class="msg" id="m3"></p>
+  </section>
+
+  <!-- ══════════ 2단계: 결과 ══════════ -->
+  <section class="ws-card" id="p2" hidden>
+    <h4 class="no-print">3. 내 목소리 체크리스트 완성</h4>
+    <h2 class="sec" id="print-title" style="display:none; text-align:center; margin-bottom:20px;">내 목소리 체크리스트</h2>
+    <p style="font-size:14.5px;color:var(--c-sub);margin-bottom:16px;" class="no-print">
+      이 체크리스트는 내 글이 <b style="color:var(--c-ink)">진짜 내 목소리</b>로 쓰였는지 스스로 점검한 기록이에요.
+    </p>
+
+    <div id="tally" class="tally no-print">
+      <div><b class="tg a" id="t-cnt">0</b><span>체크한 항목</span></div>
+      <div><b class="tg a" id="t-total">13</b><span>전체 항목</span></div>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="tip-box no-print">
+      <b>꼭 저장하세요</b>
+      창을 닫으면 지금 적은 내용은 사라집니다. <b style="display:inline;letter-spacing:0;font-size:13.8px;color:#565c66">복사하기</b> 또는 <b style="display:inline;letter-spacing:0;font-size:13.8px;color:#565c66">파일로 내려받기</b>를 눌러 선생님께 제출하거나 기록장 등에 옮겨 두세요.
+    </div>
+
+    <div class="les-foot no-print">
+      <button class="cta" onclick="copyResult()">복사하기</button>
+      <button class="cta ghost" onclick="download()">파일로 내려받기</button>
+      <button class="cta ghost" onclick="doPrint()">인쇄하기</button>
+      <span class="spacer"></span>
+      <button class="cta ghost" onclick="go(1)">← 다시 점검하기</button>
+    </div>
+    <p class="msg" id="m4"></p>
+  </section>
+
+</main>
+
+<script>
+/* ── 체크리스트 데이터 ── */
+const CATEGORIES = [
+  { key:'voice', color:'mist-d', title:'1. 말투', sub:'이건 내가 쓰는 말인가?', items:[
+    '내가 평소에 쓰는 말인가?',
+    '소리 내어 읽었을 때 어색한 곳은 없는가?',
+    '뜻을 모르고 그냥 넣은 어려운 낱말은 없는가?'
+  ]},
+  { key:'char', color:'sage-d', title:'2. 인물', sub:'주인공에게 어울리는 말인가?', items:[
+    '주인공 나이에 맞는 말인가?',
+    '앞에서 쓰던 말투와 지금 말투가 같은가?',
+    '다른 인물과 말투가 구별되는가?'
+  ]},
+  { key:'emotion', color:'peach-d', title:'3. 감정', sub:'마음이 진짜처럼 느껴지는가?', items:[
+    '감정이 너무 부풀려져 있지 않은가?',
+    "'슬펐다'라고 쓰는 대신, 그때의 행동이나 모습으로 보여주었는가?",
+    '마음이 바뀐 까닭이 글 안에 나와 있는가?'
+  ]},
+  { key:'ai', color:'lilac-d', title:'4. AI 흔적', sub:'AI 말투가 남아 있지 않은가?', items:[
+    '갑자기 어른스러워지는 문장은 없는가?',
+    '교훈을 설명하듯 알려주는 문장은 없는가?',
+    '이 문장이 어디서 왔는지 말할 수 있는가?'
+  ]}
+];
+const FINAL_ITEM = '친구가 읽고 "○○이가 쓴 글 같다"고 말해줄 것 같은가?';
+
+let checks = {};   // key: "catIdx_itemIdx" or "final" -> bool
+let TOTAL = CATEGORIES.reduce((s,c)=>s+c.items.length,0) + 1;
+let step = 1;
+
+/* ── 체크리스트 렌더링 ── */
+function buildChecklist() {
+  const wrap = document.getElementById('checklist-wrap');
+  let h = '';
+  CATEGORIES.forEach((cat, ci) => {
+    h += '<div class="cat-block">'
+      + '<div class="cat-head">'
+      +   '<div class="cat-num" style="background:var(--c-'+cat.color+')">'+(ci+1)+'</div>'
+      +   '<div class="cat-title">'+cat.title+' <small>'+cat.sub+'</small></div>'
+      + '</div>'
+      + '<div class="chk-row">';
+    cat.items.forEach((txt, ii) => {
+      const id = ci+'_'+ii;
+      h += '<button class="chk-item" type="button" data-key="'+id+'" onclick="toggleCheck(this)">'
+        +   '<span class="chk-box">✓</span><span class="lbl">'+txt+'</span>'
+        + '</button>';
+    });
+    h += '</div></div>';
+  });
+  h += '<div class="cat-block">'
+    + '<div class="cat-head"><div class="cat-title" style="color:var(--c-accent-d);">마지막 한 줄</div></div>'
+    + '<div class="chk-row">'
+    +   '<button class="chk-item final" type="button" data-key="final" onclick="toggleCheck(this)">'
+    +     '<span class="chk-box">✓</span><span class="lbl">'+FINAL_ITEM+'</span>'
+    +   '</button>'
+    + '</div></div>';
+  wrap.innerHTML = h;
+}
+
+function buildFixTarget() {
+  const sel = document.getElementById('fix-target');
+  let h = '';
+  CATEGORIES.forEach((cat) => {
+    h += '<optgroup label="'+cat.title+' — '+cat.sub+'">';
+    cat.items.forEach(txt => { h += '<option>'+txt+'</option>'; });
+    h += '</optgroup>';
+  });
+  h += '<optgroup label="마지막 한 줄"><option>'+FINAL_ITEM+'</option></optgroup>';
+  sel.innerHTML = h;
+}
+
+/* ── 체크 토글 ── */
+function toggleCheck(btn) {
+  const key = btn.dataset.key;
+  checks[key] = !checks[key];
+  btn.classList.toggle('sel', checks[key]);
+  updateProgress();
+}
+
+function updateProgress() {
+  const cnt = Object.values(checks).filter(Boolean).length;
+  document.getElementById('ptext').textContent = '체크한 항목 ' + cnt + ' / ' + TOTAL;
+  document.getElementById('pbar-fill').style.width = Math.round(cnt / TOTAL * 100) + '%';
+}
+
+/* ── 완성하기 ── */
+function finish() {
+  const before = document.getElementById('before-text').value.trim();
+  const after = document.getElementById('after-text').value.trim();
+  const reason = document.getElementById('reason-text').value.trim();
+  const target = document.getElementById('fix-target').value;
+
+  if (!before || !after) {
+    say('m3', '고치기 전/후 문장을 모두 입력해 주세요.', true);
+    return;
+  }
+  if (!reason) {
+    say('m3', '고친 까닭을 적어 주세요.', true);
+    return;
+  }
+
+  const cnt = Object.values(checks).filter(Boolean).length;
+  document.getElementById('t-cnt').textContent = cnt;
+  document.getElementById('t-total').textContent = TOTAL;
+
+  let h = '';
+  CATEGORIES.forEach((cat, ci) => {
+    h += '<div style="margin-bottom:14px;">'
+      + '<div style="font-size:13px;font-weight:800;color:var(--c-'+cat.color+');margin-bottom:4px;">'+cat.title+' — '+cat.sub+'</div>'
+      + '<ul class="review-list">';
+    cat.items.forEach((txt, ii) => {
+      const on = !!checks[ci+'_'+ii];
+      h += '<li><span class="ico '+(on?'on':'off')+'">'+(on?'✓':'')+'</span>'+esc(txt)+'</li>';
+    });
+    h += '</ul></div>';
+  });
+  const finalOn = !!checks['final'];
+  h += '<div style="margin-bottom:18px;">'
+    + '<div style="font-size:13px;font-weight:800;color:var(--c-accent-d);margin-bottom:4px;">마지막 한 줄</div>'
+    + '<ul class="review-list"><li><span class="ico '+(finalOn?'on':'off')+'">'+(finalOn?'✓':'')+'</span>'+esc(FINAL_ITEM)+'</li></ul>'
+    + '</div>';
+
+  h += '<div class="rev-summary">'
+    + '<strong class="lab" style="color:var(--c-sub);">고친 항목</strong>'
+    + '<div class="before-txt" style="font-size:13.5px;font-weight:700;margin-bottom:12px;">'+esc(target)+'</div>'
+    + '<strong class="lab" style="color:var(--c-sub);">고치기 전</strong>'
+    + '<div class="before-txt">'+esc(before).replace(/\n/g,'<br>')+'</div>'
+    + '<strong class="lab" style="color:var(--c-sage-d);">고친 문장</strong>'
+    + '<div class="after-txt">'+esc(after).replace(/\n/g,'<br>')+'</div>'
+    + '<strong class="lab" style="color:var(--c-butter-d);">고친 까닭</strong>'
+    + '<div class="reason-txt">'+esc(reason)+'</div>'
+    + '</div>';
+
+  document.getElementById('result').innerHTML = h;
+  go(2);
+}
+
+function makeText() {
+  let title = document.getElementById('title').value.trim() || '(없음)';
+  const cnt = Object.values(checks).filter(Boolean).length;
+  let t = '내 목소리 체크리스트\n';
+  t += '내 동화 제목: ' + title + '\n';
+  t += '체크한 항목: ' + cnt + ' / ' + TOTAL + '\n';
+  t += '--------------------------------------\n\n';
+
+  CATEGORIES.forEach((cat, ci) => {
+    t += cat.title + ' — ' + cat.sub + '\n';
+    cat.items.forEach((txt, ii) => {
+      t += '[' + (checks[ci+'_'+ii] ? 'O' : ' ') + '] ' + txt + '\n';
+    });
+    t += '\n';
+  });
+  t += '마지막 한 줄\n';
+  t += '[' + (checks['final'] ? 'O' : ' ') + '] ' + FINAL_ITEM + '\n\n';
+
+  t += '--------------------------------------\n';
+  t += '한 군데만 고쳐 봅시다\n';
+  t += '- 고친 항목: ' + document.getElementById('fix-target').value + '\n';
+  t += '- 고치기 전: ' + document.getElementById('before-text').value.trim() + '\n';
+  t += '- 고친 문장: ' + document.getElementById('after-text').value.trim() + '\n';
+  t += '- 고친 까닭: ' + document.getElementById('reason-text').value.trim() + '\n';
+  return t;
+}
+
+function copyResult() {
+  copy(makeText(), 'm4', '체크리스트 내용을 복사했습니다. 원하는 곳에 붙여넣으세요.');
+}
+
+function download() {
+  const name = (document.getElementById('title').value.trim() || '내동화') + '_내목소리체크리스트.txt';
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([makeText()], {type: 'text/plain;charset=utf-8'}));
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  say('m4', '파일을 내려받았습니다.');
+}
+
+function doPrint() {
+  const titleEl = document.getElementById('title').value.trim();
+  const printTitle = document.getElementById('print-title');
+  printTitle.style.display = 'block';
+  if (titleEl) {
+    printTitle.innerHTML = '내 목소리 체크리스트 <span style="display:block; font-size:18px; color:var(--c-sub); font-weight:700; margin-top:6px;">동화 제목: ' + esc(titleEl) + '</span>';
+  } else {
+    printTitle.innerHTML = '내 목소리 체크리스트';
+  }
+  window.print();
+  printTitle.style.display = 'none';
+}
+
+/* ── 공통 유틸 ── */
+function go(n) {
+  step = n;
+  [1, 2].forEach(i => {
+    const sec = document.getElementById('p'+i);
+    if(sec) sec.hidden = (i !== n);
+    const g = document.getElementById('g'+i);
+    if(g) g.className = 'seg' + (i === n ? ' on' : (i < n ? ' done' : ''));
+  });
+  document.getElementById('segLabel').textContent = n + ' / 2 단계';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function say(id, msg, warn) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'msg' + (warn ? ' warn' : '');
+  setTimeout(() => { if(el.textContent === msg) el.textContent = ''; }, 4500);
+}
+
+function copy(text, id, msg) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => say(id, msg)).catch(() => fallbackCopy(text, id, msg));
+  } else {
+    fallbackCopy(text, id, msg);
+  }
+}
+
+function fallbackCopy(text, id, msg) {
+  const t = document.createElement('textarea');
+  t.value = text;
+  document.body.appendChild(t);
+  t.select();
+  document.execCommand('copy');
+  t.remove();
+  say(id, msg);
+}
+
+function esc(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+buildChecklist();
+buildFixTarget();
+updateProgress();
+
+window.addEventListener('beforeunload', e => {
+  if (Object.values(checks).some(Boolean) && step !== 2) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+
+/* 부모(스튜디오)에 실제 높이를 알려 하단 여백 없이 맞추기 */
+(function(){
+  if(window.parent === window) return;
+  let t, lastH = 0;
+  function report(){
+    clearTimeout(t);
+    t = setTimeout(()=>{
+      let max = 0;
+      for(const el of document.body.children){
+        const cs = getComputedStyle(el);
+        if(cs.position === 'fixed' || cs.display === 'none') continue;
+        const r = el.getBoundingClientRect();
+        max = Math.max(max, r.bottom + window.scrollY + (parseFloat(cs.marginBottom)||0));
+      }
+      const h = Math.ceil(max + (parseFloat(getComputedStyle(document.body).paddingBottom)||0));
+      if(h > 100 && Math.abs(h - lastH) > 2){ lastH = h; parent.postMessage({qkFrameH: h}, '*'); }
+    }, 80);
+  }
+  new MutationObserver(report).observe(document.documentElement, {childList:true, subtree:true, attributes:true});
+  addEventListener('load', report);
+  addEventListener('resize', report);
+  setInterval(report, 700);
+  report();
+})();
+</script>
+</body>
+</html>

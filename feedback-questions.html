@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI에게 물어볼 질문 고르기 · AI 동화작가 데뷔 스튜디오</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* ── 컬러 토큰 (donghwa-studio 동일) ───────────────── */
+:root{
+  --c-bg:#EFEDE7; --c-ink:#3D434C; --c-sub:#7A766C;
+  --c-mist:#AEC6D6; --c-mist-d:#3E5C6E;
+  --c-sage:#BFD0B7; --c-sage-d:#4F6645;
+  --c-lilac:#CBBFDC; --c-lilac-d:#5A4E75;
+  --c-peach:#E8D2C1; --c-peach-d:#8A634A;
+  --c-butter:#ECE1BE; --c-butter-d:#82743F;
+  --c-accent:#FF5757; --c-accent-d:#B81E1E;
+  --c-cobalt:#2E5BFF;
+  --line:rgba(61,67,76,.10);
+  --card-r:18px;
+  --shadow:0 1px 2px rgba(61,67,76,.04), 0 14px 36px rgba(61,67,76,.07);
+  --shadow-sm:0 1px 2px rgba(61,67,76,.04), 0 6px 18px rgba(61,67,76,.05);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Pretendard Variable',Pretendard,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  background:var(--c-bg); color:var(--c-ink);
+  font-size:16px; line-height:1.65; letter-spacing:-0.01em;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea{font-family:inherit;font-size:15px;color:var(--c-ink)}
+main{max-width:920px;margin:0 auto;padding:34px 24px 100px}
+
+.ov{font-size:11.5px;font-weight:800;letter-spacing:.16em;color:var(--c-sub)}
+h2.sec{font-size:27px;font-weight:900;letter-spacing:-.035em;margin:6px 0 6px}
+p.sec-sub{color:var(--c-sub);margin-bottom:22px;font-size:15px}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:4px 13px;border-radius:999px;font-size:12.5px;font-weight:800}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+
+/* ── 카드 ──────────────────────────────── */
+.ws-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--card-r);
+  box-shadow:var(--shadow-sm);padding:26px 28px;margin-bottom:16px;
+}
+.ws-card h4{font-size:15.5px;font-weight:800;margin-bottom:14px;letter-spacing:-.02em}
+
+label.fld{display:block;font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--c-sub);margin:0 0 8px}
+input.line{
+  width:100%;background:#FBFAF7;border:1px solid var(--line);border-radius:11px;
+  padding:11px 14px;font-size:15px;outline:none;transition:border-color .2s;
+}
+input.line:focus{border-color:var(--c-ink)}
+input::placeholder,textarea::placeholder{color:#BDB9AE}
+.mini-ta{
+  width:100%;min-height:92px;border:1px solid var(--line);background:#FBFAF7;border-radius:11px;
+  padding:12px 14px;font-size:15px;line-height:1.7;outline:none;resize:vertical;transition:border-color .2s;
+}
+.mini-ta:focus{border-color:var(--c-ink)}
+
+/* ── 버튼 ──────────────────────────────── */
+.cta{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--c-accent);color:#fff;font-weight:800;font-size:15.5px;
+  padding:13px 26px;border-radius:12px;
+  transition:transform .15s, box-shadow .15s, background .15s;
+  box-shadow:0 6px 16px rgba(255,87,87,.25);
+}
+.cta:hover{transform:translateY(-1px);background:#F04A4A}
+.cta.ghost{background:#fff;color:var(--c-ink);box-shadow:none;border:1px solid var(--line)}
+.cta.ghost:hover{background:#FBFAF7}
+.cta.done{background:color-mix(in srgb,var(--c-sage) 45%,#fff);color:var(--c-sage-d);box-shadow:none}
+.les-foot{display:flex;align-items:center;gap:10px;margin-top:24px;flex-wrap:wrap}
+.les-foot .spacer{flex:1}
+.msg{font-size:13.5px;font-weight:700;color:var(--c-sage-d);min-height:20px;margin-top:12px}
+.msg.warn{color:var(--c-accent-d)}
+
+/* ── 질문 뱅크 ─────────────────────────── */
+.qgroup{margin-bottom:18px}
+.qgroup .gh{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.qgroup .gh b{font-size:14px;font-weight:800;letter-spacing:-.02em}
+.pills-wrap{display:flex;flex-wrap:wrap;gap:8px}
+.e-pill{
+  padding:8px 16px;border-radius:999px;font-size:14px;font-weight:700;text-align:left;
+  background:#fff;border:1px solid var(--line);color:var(--c-sub);transition:all .15s;
+}
+.e-pill:hover{border-color:var(--c-ink);color:var(--c-ink)}
+.e-pill.sel{background:var(--c-ink);border-color:var(--c-ink);color:#fff}
+.e-pill.sel::before{content:'✓ '}
+
+.basket{background:#FBFAF7;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:6px}
+.basket .bh{display:flex;align-items:center;margin-bottom:9px}
+.basket .bh b{font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--c-sub)}
+.basket .cnt{margin-left:auto;font-size:12.5px;font-weight:800;color:var(--c-accent)}
+.basket ol{margin:0;padding-left:20px;font-size:14.5px;line-height:1.9}
+.basket li button{color:var(--c-sub);font-size:12px;margin-left:8px}
+.basket li button:hover{color:var(--c-accent-d)}
+.basket .empty{color:#BDB9AE;font-size:14px}
+
+@media (max-width:720px){
+  main{padding:24px 16px 80px}
+  h2.sec{font-size:23px}
+  .ws-card{padding:20px 18px}
+}
+@media print{
+  .no-print,.les-foot{display:none!important}
+  body{background:#fff}
+  .ws-card{box-shadow:none;border:none;padding:0}
+}
+</style>
+</head>
+<body>
+<main>
+
+  <span class="pill" style="background:var(--c-peach);color:var(--c-peach-d)">
+    <span class="dot" style="background:var(--c-peach-d)"></span>활동 1 · 질문 고르기
+  </span>
+  <h2 class="sec">AI에게 물어볼 질문 고르기</h2>
+  <p class="sec-sub">가는 말이 자세해야 오는 말도 자세합니다. 궁금한 질문을 골라 담고, AI 보조작가에게 물어보세요.</p>
+
+  <section class="ws-card" id="p1">
+    <h4>1. AI에게 물어볼 질문 고르기</h4>
+
+    <label class="fld" for="title">내 동화 제목</label>
+    <input class="line" type="text" id="title" placeholder="예: 달빛 우체통">
+
+    <p style="font-size:14.5px;color:var(--c-sub);margin:22px 0 14px;">
+      <b style="color:var(--c-ink)">궁금한 질문을 눌러서 담아</b> 보세요. 2~3개면 충분합니다.
+    </p>
+
+    <div id="qbank"></div>
+
+    <label class="fld" for="mine" style="margin-top:20px">직접 만든 질문 (한 줄에 하나씩, 여러 개를 한 번에 담을 수 있어요)</label>
+    <textarea class="mini-ta" id="mine" placeholder="루아가 갑자기 웃는 게 이상하지 않나요?&#10;할머니가 왜 화났는지 알 수 있나요?"></textarea>
+    <button class="cta ghost" style="margin-top:10px;font-size:14px;padding:10px 18px" onclick="addMine()">↓ 한 번에 담기</button>
+
+    <div class="basket" style="margin-top:20px">
+      <div class="bh"><b>내 질문 바구니</b><span class="cnt" id="qcnt">0개</span></div>
+      <ol id="picked"></ol>
+      <p class="empty" id="emptyMsg">아직 담은 질문이 없습니다.</p>
+    </div>
+
+    <div class="les-foot">
+      <button class="cta" id="saveQ" onclick="saveQuestions()">질문 저장하고 복사하기</button>
+      <button class="cta ghost" id="goChat" hidden>AI 보조작가 열기 ↗</button>
+    </div>
+    <p class="msg" id="m1"></p>
+  </section>
+
+</main>
+
+<script>
+/* ───────────────────────────────────────────────
+   선생님 설정: MIZOU 챗봇 주소를 아래 따옴표 안에 넣으면
+   'AI 보조작가 열기' 버튼이 나타납니다.
+   ─────────────────────────────────────────────── */
+const MIZOU_URL = "";
+
+const QUESTIONS = [
+  ["주인공은 어떤 사람인지", "--c-mist-d", [
+    "주인공이 어떤 성격인지 글에서 느껴지나요?",
+    "주인공 나이에 맞는 말투인가요?",
+    "주인공이 하는 행동이 그 아이답게 느껴지나요?",
+    "주인공 말고 다른 인물도 살아 있는 것 같나요?"
+  ]],
+  ["마음과 감정", "--c-accent-d", [
+    "주인공의 마음이 바뀌는 게 자연스러운가요?",
+    "화가 났다가 슬퍼지는 게 갑작스럽지 않나요?",
+    "감정을 말로만 설명한 곳이 있나요?",
+    "읽는 사람이 주인공 마음에 같이 빠져들 수 있을까요?"
+  ]],
+  ["이야기 흐름", "--c-sage-d", [
+    "이 사건이 너무 빨리 해결되지 않나요?",
+    "이 장면이 꼭 있어야 할까요?",
+    "이야기가 지루해지는 곳이 있나요?",
+    "앞뒤가 안 맞는 부분이 있나요?"
+  ]],
+  ["시작과 끝", "--c-lilac-d", [
+    "첫 문장이 다음이 궁금해지게 하나요?",
+    "결말이 앞부분 사건이랑 자연스럽게 이어지나요?",
+    "끝이 너무 갑자기 끝나지 않나요?",
+    "제목이 이야기와 어울리나요?"
+  ]],
+  ["장면이 보이는지", "--c-peach-d", [
+    "이 장면이 머릿속에 그려지나요?",
+    "어디에서 벌어지는 일인지 알 수 있나요?",
+    "더 자세히 보여주면 좋을 장면은 어디인가요?",
+    "설명이 너무 길어서 답답한 곳이 있나요?"
+  ]],
+  ["문장과 표현", "--c-butter-d", [
+    "같은 말이 자꾸 반복되는 곳이 있나요?",
+    "너무 긴 문장이 있나요?",
+    "무슨 뜻인지 헷갈리는 문장이 있나요?",
+    "대화가 진짜 사람이 말하는 것처럼 들리나요?"
+  ]]
+];
+
+let picked=[], qSaved=false;
+
+/* ── 질문 뱅크 ── */
+function buildBank(){
+  const box=document.getElementById("qbank");
+  QUESTIONS.forEach(([name,color,list])=>{
+    const g=document.createElement("div"); g.className="qgroup";
+    g.innerHTML='<div class="gh"><span class="dot" style="background:var('+color+')"></span><b>'+name+'</b></div>';
+    const row=document.createElement("div"); row.className="pills-wrap";
+    list.forEach(q=>{
+      const b=document.createElement("button");
+      b.className="e-pill"; b.type="button"; b.textContent=q;
+      b.onclick=()=>toggleQ(q,b);
+      row.appendChild(b);
+    });
+    g.appendChild(row); box.appendChild(g);
+  });
+}
+function toggleQ(q,btn){
+  const i=picked.indexOf(q);
+  if(i>=0){picked.splice(i,1); btn.classList.remove("sel");}
+  else{picked.push(q); btn.classList.add("sel");}
+  unsave(); drawBasket();
+}
+function addMine(){
+  const el=document.getElementById("mine");
+  const lines=el.value.split("\n").map(s=>s.trim()).filter(s=>s.length>=2);
+  if(!lines.length){say("m1","질문을 한 줄에 하나씩 적어 주세요.",true); return;}
+  lines.forEach(l=>{ if(!picked.includes(l)) picked.push(l); });
+  el.value=""; unsave(); drawBasket();
+  say("m1",lines.length+"개를 담았습니다.");
+}
+function drawBasket(){
+  const ol=document.getElementById("picked"); ol.innerHTML="";
+  picked.forEach((q,i)=>{
+    const li=document.createElement("li");
+    li.textContent=q;
+    const x=document.createElement("button");
+    x.type="button"; x.textContent="빼기";
+    x.onclick=()=>{ removeQ(i); };
+    li.appendChild(x); ol.appendChild(li);
+  });
+  document.getElementById("emptyMsg").hidden=picked.length>0;
+  document.getElementById("qcnt").textContent=picked.length+"개";
+}
+function removeQ(i){
+  const q=picked[i]; picked.splice(i,1);
+  document.querySelectorAll("#qbank .e-pill").forEach(b=>{ if(b.textContent===q) b.classList.remove("sel"); });
+  unsave(); drawBasket();
+}
+function unsave(){
+  if(!qSaved) return;
+  qSaved=false;
+  const b=document.getElementById("saveQ");
+  b.classList.remove("done"); b.textContent="질문 저장하고 복사하기";
+}
+function saveQuestions(){
+  if(!picked.length){ say("m1","질문을 먼저 골라 주세요.",true); return; }
+  const t="내 동화를 읽고 아래 질문에 답해 주세요.\n\n"
+    +picked.map((q,i)=>(i+1)+") "+q).join("\n")
+    +"\n\n답할 때는 제안 하나마다 줄을 바꾸고 [제안 1], [제안 2] 처럼 번호를 붙여 주세요.\n\n--- 내 동화 ---\n";
+  copy(t,"m1","질문 "+picked.length+"개를 저장하고 복사했습니다. 붙여넣은 뒤 내 동화를 이어서 붙여넣으세요.");
+  qSaved=true;
+  const b=document.getElementById("saveQ");
+  b.classList.add("done"); b.textContent="✓ 질문 "+picked.length+"개 저장됨";
+}
+
+/* ── 공통 ── */
+function say(id,msg,warn){
+  const el=document.getElementById(id);
+  el.textContent=msg; el.className="msg"+(warn?" warn":"");
+  setTimeout(()=>{ if(el.textContent===msg) el.textContent=""; },4500);
+}
+function copy(text,id,msg){
+  navigator.clipboard.writeText(text).then(()=>say(id,msg)).catch(()=>{
+    const t=document.createElement("textarea");
+    t.value=text; document.body.appendChild(t); t.select();
+    document.execCommand("copy"); t.remove(); say(id,msg);
+  });
+}
+
+window.addEventListener("beforeunload",e=>{
+  if(picked.length){ e.preventDefault(); e.returnValue=""; }
+});
+
+buildBank(); drawBasket();
+if(MIZOU_URL){
+  const b=document.getElementById("goChat");
+  b.hidden=false; b.onclick=()=>window.open(MIZOU_URL,"_blank");
+}
+
+/* 부모(스튜디오)에 실제 높이를 알려 하단 여백 없이 맞추기 */
+(function(){
+  if(window.parent === window) return;
+  let t, lastH = 0;
+  function report(){
+    clearTimeout(t);
+    t = setTimeout(()=>{
+      let max = 0;
+      for(const el of document.body.children){
+        const cs = getComputedStyle(el);
+        if(cs.position === 'fixed' || cs.display === 'none') continue;
+        const r = el.getBoundingClientRect();
+        max = Math.max(max, r.bottom + window.scrollY + (parseFloat(cs.marginBottom)||0));
+      }
+      const h = Math.ceil(max + (parseFloat(getComputedStyle(document.body).paddingBottom)||0));
+      if(h > 100 && Math.abs(h - lastH) > 2){ lastH = h; parent.postMessage({qkFrameH: h}, '*'); }
+    }, 80);
+  }
+  new MutationObserver(report).observe(document.documentElement, {childList:true, subtree:true, attributes:true});
+  addEventListener('load', report);
+  addEventListener('resize', report);
+  setInterval(report, 700);
+  report();
+})();
+</script>
+</body>
+</html>

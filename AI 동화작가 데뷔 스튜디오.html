@@ -1,0 +1,2020 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 동화작가 데뷔 스튜디오 · 쿼카연구회</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* ── 컬러 토큰 (컬러차트 · 60/30/10) ───────
+   60% 포그 그레이 바탕 · 30% 파스텔 면 · 10% 일렉트릭 코랄 */
+:root{
+  --c-bg:#EFEDE7; --c-ink:#3D434C; --c-sub:#7A766C;
+  --c-mist:#AEC6D6; --c-mist-d:#3E5C6E;
+  --c-sage:#BFD0B7; --c-sage-d:#4F6645;
+  --c-lilac:#CBBFDC; --c-lilac-d:#5A4E75;
+  --c-peach:#E8D2C1; --c-peach-d:#8A634A;
+  --c-butter:#ECE1BE; --c-butter-d:#82743F;
+  --c-accent:#FF5757; --c-accent-d:#B81E1E;
+  --c-cobalt:#2E5BFF;
+  --line:rgba(61,67,76,.10);
+  --card-r:18px;
+  --shadow:0 1px 2px rgba(61,67,76,.04), 0 14px 36px rgba(61,67,76,.07);
+  --shadow-sm:0 1px 2px rgba(61,67,76,.04), 0 6px 18px rgba(61,67,76,.05);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Pretendard Variable',Pretendard,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  background:var(--c-bg); color:var(--c-ink);
+  font-size:16px; line-height:1.65; letter-spacing:-0.01em;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit;font-size:15px;color:var(--c-ink)}
+img{display:block}
+.ov{font-size:11.5px;font-weight:800;letter-spacing:.16em;color:var(--c-sub)}
+
+/* ── 헤더 ─────────────────────────────── */
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(239,237,231,.86); backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line);
+}
+.hd-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:13px 24px}
+.logo{display:flex;align-items:center;gap:11px;cursor:pointer}
+.logo img{width:34px;height:34px;border-radius:50%;border:2px solid #fff;box-shadow:var(--shadow-sm)}
+.logo b{font-size:16px;letter-spacing:-.02em}
+.logo span{font-size:12px;color:var(--c-sub);letter-spacing:0}
+nav{margin-left:auto;display:flex;gap:22px;flex-wrap:wrap}
+.nav-btn{position:relative;padding:6px 0;font-size:14.5px;font-weight:700;color:var(--c-sub);transition:color .18s}
+.nav-btn:hover{color:var(--c-ink)}
+.nav-btn.on{color:var(--c-ink)}
+.nav-btn.on::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:3px;border-radius:3px;background:var(--c-accent)}
+
+/* ── 레이아웃 공통 ─────────────────────── */
+main{max-width:1200px;margin:0 auto;padding:30px 24px 48px}
+.view{display:none}
+.view.show{display:block;animation:slideIn .38s cubic-bezier(.22,.9,.36,1)}
+@keyframes slideIn{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:translateX(0)}}
+.view.show.back{animation:slideBack .38s cubic-bezier(.22,.9,.36,1)}
+@keyframes slideBack{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:translateX(0)}}
+
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--card-r);box-shadow:var(--shadow-sm);padding:26px 28px}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:4px 13px;border-radius:999px;font-size:12.5px;font-weight:800;letter-spacing:.01em}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.cta{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--c-accent);color:#fff;font-weight:800;font-size:15.5px;
+  padding:13px 26px;border-radius:12px;
+  transition:transform .15s, box-shadow .15s, background .15s;
+  box-shadow:0 6px 16px rgba(255,87,87,.25);
+}
+.cta:hover{transform:translateY(-1px);background:#F04A4A}
+.cta.ghost{background:#fff;color:var(--c-ink);box-shadow:none;border:1px solid var(--line)}
+.cta.ghost:hover{background:#FBFAF7}
+.cta.done{background:color-mix(in srgb,var(--c-sage) 45%,#fff);color:var(--c-sage-d);box-shadow:none}
+h2.sec{font-size:27px;font-weight:900;letter-spacing:-.035em;margin-bottom:6px}
+p.sec-sub{color:var(--c-sub);margin-bottom:24px;font-size:15px}
+
+/* 쿼카 */
+.qk{border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:var(--shadow)}
+.qk-float{animation:floaty 5.5s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.blob-bg{position:absolute;border-radius:50%;pointer-events:none}
+
+/* ── 홈 ───────────────────────────────── */
+.hero{
+  position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);
+  border-radius:24px;box-shadow:var(--shadow);
+  padding:56px 52px 48px;margin-bottom:28px;
+}
+.hero .b1{width:230px;height:230px;background:var(--c-mist);opacity:.28;top:-90px;right:-60px}
+.hero .b2{width:130px;height:130px;background:var(--c-sage);opacity:.25;bottom:-50px;right:210px}
+.hero .b3{width:70px;height:70px;background:var(--c-lilac);opacity:.22;top:52px;right:330px}
+.hero-tag{background:var(--c-peach);color:var(--c-peach-d);margin-bottom:18px}
+.hero h1{font-size:42px;font-weight:900;letter-spacing:-.045em;line-height:1.22}
+.hero .rule{width:56px;height:5px;border-radius:3px;background:var(--c-accent);margin:18px 0 16px}
+.hero .sub{font-size:16.5px;color:var(--c-sub);margin-bottom:28px;max-width:540px}
+.hero-qk{position:absolute;right:70px;top:50%;transform:translateY(-50%);width:180px;height:180px}
+.hero-principles{display:flex;gap:12px;flex-wrap:wrap}
+.pr-chip{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 18px;font-size:13.5px;max-width:350px;color:var(--c-sub)}
+.pr-chip b{display:flex;align-items:center;gap:8px;margin-bottom:3px;font-size:14.5px;color:var(--c-ink)}
+
+.home-grid{display:grid;grid-template-columns:1fr 336px;gap:22px;align-items:start}
+.stage-block{margin-bottom:26px}
+.stage-head{display:flex;align-items:baseline;gap:10px;margin-bottom:11px;padding-left:2px}
+.stage-head .ov b{color:var(--c-ink)}
+.stage-head span.rng{font-size:12.5px;color:var(--c-sub)}
+.lesson-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.lcard{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:15px 17px;display:flex;align-items:center;gap:13px;cursor:pointer;
+  transition:transform .16s, box-shadow .16s;text-align:left;
+}
+.lcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.lnum{
+  min-width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:14px;
+}
+.lcard .lt{font-weight:700;font-size:14.5px;letter-spacing:-.02em;line-height:1.35}
+.lcard .ls{font-size:12.5px;color:var(--c-sub)}
+.lcard .chk{margin-left:auto;font-size:14px;font-weight:900;color:var(--c-sage-d)}
+
+.side-card{background:#fff;border:1px solid var(--line);border-radius:var(--card-r);box-shadow:var(--shadow-sm);padding:22px 24px;margin-bottom:16px}
+.side-card h3{font-size:15.5px;font-weight:800;margin-bottom:12px;letter-spacing:-.02em}
+.progress-ring{display:flex;align-items:center;gap:16px}
+.pr-num{font-size:32px;font-weight:900;letter-spacing:-.03em}
+.pr-num small{font-size:14px;color:var(--c-sub);font-weight:600}
+.bar{height:8px;border-radius:99px;background:var(--c-bg);overflow:hidden;flex:1}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--c-ink);transition:width .5s}
+.quick-links{display:flex;flex-direction:column}
+.ql{
+  display:flex;align-items:center;gap:10px;padding:11px 2px;font-size:14px;font-weight:600;
+  color:var(--c-ink);text-decoration:none;border-bottom:1px solid var(--line);transition:color .15s;
+}
+.ql:last-child{border-bottom:none}
+.ql:hover{color:var(--c-accent-d)}
+.ql::after{content:'↗';margin-left:auto;font-size:13px;color:var(--c-sub)}
+.att-big{
+  width:100%;margin-top:14px;background:var(--c-ink);color:#fff;
+  font-weight:800;font-size:15px;padding:14px;border-radius:12px;transition:all .15s;
+}
+.att-big:hover{transform:translateY(-1px)}
+.att-big.did{background:color-mix(in srgb,var(--c-sage) 40%,#fff);color:var(--c-sage-d)}
+
+/* ── 차시 실습 ─────────────────────────── */
+.les-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.helper-badge{
+  margin-left:auto;background:#fff;border:1px solid var(--line);
+  padding:7px 15px;border-radius:999px;font-size:13px;font-weight:800;
+  display:inline-flex;align-items:center;gap:8px;
+}
+/* 차시 번호 내비게이션 */
+.lnav-wrap{
+  background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);
+  padding:12px 16px 13px;margin:10px 0 18px;
+}
+.lnav-head{display:flex;align-items:baseline;gap:10px;margin-bottom:9px}
+.lnav-cap{font-size:12px;color:var(--c-sub)}
+.lnav{display:flex;gap:6px;flex-wrap:wrap}
+.lnav-chip{
+  position:relative;width:40px;height:40px;border-radius:12px;
+  font-size:13.5px;font-weight:800;letter-spacing:-.02em;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .14s, box-shadow .14s;
+}
+.lnav-chip:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+.lnav-chip.cur{
+  background:var(--c-accent);color:#fff;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--c-accent) 25%,#fff), 0 4px 10px rgba(255,87,87,.3);
+}
+.lnav-chip i{
+  position:absolute;top:-5px;right:-5px;font-style:normal;
+  width:16px;height:16px;border-radius:50%;background:var(--c-sage-d);color:#fff;
+  font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;
+  border:1.5px solid #fff;
+}
+.lnav-chip.cur i{background:#fff;color:var(--c-sage-d)}
+@media(max-width:640px){.lnav-chip{width:35px;height:35px;font-size:12.5px;border-radius:10px}}
+.les-grid{display:grid;grid-template-columns:1fr 400px;gap:22px;align-items:start}
+.les-head h2{font-size:31px;font-weight:900;letter-spacing:-.04em;line-height:1.25;margin-top:6px}
+.les-head .sub2{color:var(--c-sub);font-size:15.5px;margin-top:4px}
+.goals{margin:16px 0 22px;display:flex;flex-direction:column;gap:6px}
+.goals div{display:flex;gap:10px;font-size:14px;color:#565c66}
+.goals div::before{content:'—';color:var(--c-sub);flex-shrink:0}
+.ws-card{background:#fff;border:1px solid var(--line);border-radius:var(--card-r);box-shadow:var(--shadow-sm);padding:24px 26px;margin-bottom:14px}
+.ws-card h4{font-size:15.5px;font-weight:800;margin-bottom:14px;letter-spacing:-.02em}
+.tag{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:76px;padding:5px 12px;border-radius:8px;font-size:12.5px;font-weight:800;flex-shrink:0;
+}
+.row-line{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.row-line:last-child{border-bottom:none}
+.row-line input{
+  flex:1;border:none;background:transparent;padding:5px 4px;font-size:15px;outline:none;
+  border-bottom:1.5px solid transparent;transition:border-color .2s;line-height:1.55;
+}
+.row-line input:focus{border-bottom-color:var(--c-ink)}
+.row-line input::placeholder,.big-ta::placeholder,.pair-grid textarea::placeholder,.triage-inputs input::placeholder{color:#BDB9AE}
+.pills-wrap{display:flex;flex-wrap:wrap;gap:8px}
+.e-pill{
+  padding:8px 18px;border-radius:999px;font-size:14px;font-weight:700;
+  background:#fff;border:1px solid var(--line);color:var(--c-sub);transition:all .15s;
+}
+.e-pill:hover{border-color:var(--c-ink);color:var(--c-ink)}
+.e-pill.sel{background:var(--c-ink);border-color:var(--c-ink);color:#fff}
+.big-ta{
+  width:100%;min-height:240px;border:1px solid var(--line);background:#FBFAF7;border-radius:12px;
+  padding:16px 18px;font-size:15.5px;line-height:1.8;outline:none;resize:vertical;transition:border-color .2s;
+}
+.big-ta:focus{border-color:var(--c-ink)}
+.ta-meta{display:flex;align-items:center;gap:12px;margin-top:10px;font-size:13px;color:var(--c-sub)}
+.timer-btn{background:#fff;border:1px solid var(--line);color:var(--c-ink);font-weight:800;padding:7px 16px;border-radius:999px;font-size:13px}
+.timer-btn.run{background:var(--c-accent);border-color:var(--c-accent);color:#fff}
+.radio-cards{display:grid;gap:9px}
+.r-card{
+  display:flex;gap:13px;align-items:flex-start;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .15s;text-align:left;width:100%;
+}
+.r-card:hover{border-color:#B9B5AA}
+.r-card.sel{border-color:var(--c-ink);box-shadow:inset 0 0 0 1px var(--c-ink)}
+.r-card .rdot{width:18px;height:18px;border-radius:50%;border:2px solid #C9C5BA;flex-shrink:0;margin-top:3px;transition:all .15s}
+.r-card.sel .rdot{border-color:var(--c-ink);background:var(--c-ink);box-shadow:inset 0 0 0 3.5px #fff}
+.r-card b{font-size:15px}
+.r-card p{font-size:13.5px;color:var(--c-sub);margin-top:2px}
+.check-list{display:flex;flex-direction:column;gap:8px}
+.ck{
+  display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);
+  border-radius:11px;padding:12px 15px;cursor:pointer;font-size:14.5px;font-weight:600;
+  transition:all .15s;text-align:left;width:100%;
+}
+.ck:hover{border-color:#B9B5AA}
+.ck .box{width:20px;height:20px;border-radius:6px;border:1.5px solid #C9C5BA;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;transition:all .15s;margin-top:2px}
+.ck.sel .box{background:var(--c-ink);border-color:var(--c-ink)}
+.pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.pair-grid .ph-head{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--c-sub);padding-bottom:7px}
+.pair-grid textarea{
+  width:100%;background:#FBFAF7;border:1px solid var(--line);border-radius:11px;padding:11px 13px;
+  font-size:14.5px;outline:none;resize:none;min-height:68px;line-height:1.6;margin-bottom:10px;transition:border-color .2s;
+}
+.pair-grid textarea:focus{border-color:var(--c-ink)}
+.triage-row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
+.triage-row:last-child{border:none}
+.triage-inputs{flex:1;display:flex;flex-direction:column;gap:6px}
+.triage-inputs input{background:#FBFAF7;border:1px solid var(--line);border-radius:9px;padding:9px 13px;font-size:14.5px;outline:none;transition:border-color .2s}
+.triage-inputs input:focus{border-color:var(--c-ink)}
+
+/* 5차시 얼개 점검 도우미 */
+.fk-note{font-size:13.5px;color:var(--c-sub);margin-bottom:12px;line-height:1.6}
+.fk-note b{color:var(--c-ink)}
+.fk-row{padding:13px 0;border-bottom:1px solid var(--line)}
+.fk-row:last-of-type{border-bottom:none}
+.fk-top{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap}
+.fk-hint{font-size:12.5px;color:var(--c-sub);font-weight:600}
+.fk-ta{width:100%;min-height:58px;background:#FBFAF7;border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-size:14.5px;line-height:1.65;outline:none;resize:vertical;transition:border-color .2s;font-family:inherit;color:var(--c-ink)}
+.fk-ta:focus{border-color:var(--c-ink)}
+.fk-ta::placeholder{color:#BDB9AE}
+.fk-act{margin-top:8px}
+.fk-check{background:#fff;border:1px solid var(--line);color:var(--c-ink);font-weight:800;padding:7px 16px;border-radius:999px;font-size:13px;transition:all .15s}
+.fk-check:hover{border-color:var(--c-ink)}
+.fb-box{margin-top:10px;border-radius:12px;padding:13px 15px;font-size:13.8px;line-height:1.65}
+.fb-box.lv-A{background:color-mix(in srgb,var(--c-sage) 28%,#fff);color:var(--c-sage-d)}
+.fb-box.lv-B{background:color-mix(in srgb,var(--c-butter) 34%,#fff);color:var(--c-butter-d)}
+.fb-box.lv-C{background:color-mix(in srgb,var(--c-accent) 8%,#fff);color:var(--c-accent-d)}
+.lv-badge{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.02em;padding:3px 11px;border-radius:999px;color:#fff;margin-bottom:7px}
+.lv-badge.lv-A{background:var(--c-sage-d)}
+.lv-badge.lv-B{background:var(--c-butter-d)}
+.lv-badge.lv-C{background:var(--c-accent)}
+.fk-dec{display:flex;gap:7px;margin-top:11px}
+.dec-btn{flex:1;max-width:150px;padding:7px 10px;font-size:12.5px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--c-sub);font-weight:800;transition:all .15s}
+.dec-btn:hover{border-color:var(--c-ink);color:var(--c-ink)}
+.dec-btn.keep.on{background:var(--c-sage-d);border-color:var(--c-sage-d);color:#fff}
+.dec-btn.fix.on{background:var(--c-accent);border-color:var(--c-accent);color:#fff}
+.fk-limit{margin-top:13px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--c-sub);line-height:1.6}
+.fk-limit b{color:var(--c-ink)}
+
+/* 공용 노트 · 15차시 질문형 입력 */
+.ws-note{font-size:13px;color:var(--c-sub);line-height:1.6}
+.q-row{padding:12px 0;border-bottom:1px solid var(--line)}
+.q-row:last-child{border-bottom:none;padding-bottom:2px}
+.q-fixed{font-size:14px;font-weight:700;color:var(--c-ink);letter-spacing:-.02em;line-height:1.5}
+.q-input{width:100%;margin-top:9px;background:#FBFAF7;border:1px solid var(--line);border-radius:10px;padding:10px 13px;font-size:14.5px;outline:none;transition:border-color .2s}
+.q-input:focus{border-color:var(--c-ink)}
+
+/* 6차시 장면 카드 · 점검 기록표 */
+.scene-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:700px){.scene-grid{grid-template-columns:1fr}}
+.scene-card{background:#FBFAF7;border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.scene-head{display:flex;align-items:center;margin-bottom:8px}
+.scene-head b{font-size:13.5px;letter-spacing:-.02em}
+.scene-del{margin-left:auto;color:var(--c-sub);font-size:13px;padding:2px 6px;border-radius:6px}
+.scene-del:hover{color:var(--c-accent-d)}
+.scene-line{display:flex;align-items:center;gap:9px;padding:4px 0}
+.scene-lab{flex:0 0 62px;font-size:12.5px;font-weight:800;color:var(--c-sub)}
+.scene-line input{flex:1;background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 11px;font-size:13.8px;outline:none;min-width:0;transition:border-color .2s}
+.scene-line input:focus{border-color:var(--c-ink)}
+.add-row-btn{width:100%;background:#fff;border:1.5px dashed #C9C5BA;color:var(--c-sub);font-weight:800;font-size:13.5px;padding:11px;border-radius:12px;transition:all .15s}
+.add-row-btn:hover{border-color:var(--c-ink);color:var(--c-ink)}
+.ct-grid{display:grid;grid-template-columns:104px 1fr 1fr;gap:7px;margin-bottom:12px}
+.ct-head{font-size:11.5px;font-weight:800;letter-spacing:.04em;color:var(--c-sub);padding:2px 4px}
+.ct-grid input{background:#FBFAF7;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:13.8px;outline:none;min-width:0;transition:border-color .2s}
+.ct-grid input:focus{border-color:var(--c-ink)}
+@media(max-width:700px){.ct-grid{grid-template-columns:80px 1fr 1fr}}
+
+/* AI 도우미 패널 */
+.doumi{background:#fff;border:1px solid var(--line);border-radius:var(--card-r);box-shadow:var(--shadow-sm);padding:22px 24px;position:sticky;top:82px}
+.doumi-head{display:flex;align-items:center;gap:11px;margin-bottom:16px}
+.doumi-head img{width:42px;height:42px}
+.doumi-head b{font-size:15.5px}
+.doumi-head span{display:block;font-size:12.5px;color:var(--c-sub)}
+.doumi-head .mini{margin-left:auto;font-size:12px;font-weight:800;color:var(--c-accent)}
+.bubble{
+  background:#FBFAF7;border-left:3px solid var(--c-cobalt);border-radius:4px 12px 12px 4px;
+  padding:11px 15px;font-size:14px;margin-bottom:9px;line-height:1.6;
+}
+.bubble.me{
+  background:color-mix(in srgb,var(--c-accent) 8%,#fff);border:none;border-radius:12px;
+  color:var(--c-accent-d);margin-left:36px;text-align:right;font-weight:600;
+}
+.prompt-box{background:#FBFAF7;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:14px}
+.prompt-box .pb-head{display:flex;align-items:center;margin-bottom:8px}
+.prompt-box .pb-head b{font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--c-sub)}
+.copy-btn{margin-left:auto;font-size:12px;font-weight:800;background:var(--c-ink);color:#fff;padding:5px 14px;border-radius:999px}
+.copy-btn:active{transform:scale(.95)}
+.prompt-box pre{white-space:pre-wrap;font-family:inherit;font-size:13.8px;line-height:1.65;color:#565c66}
+.tip-box{background:color-mix(in srgb,var(--c-butter) 30%,#fff);border-radius:12px;padding:14px 16px;margin-top:12px;font-size:13.8px;line-height:1.65;color:#565c66}
+.tip-box b{display:block;font-size:11.5px;letter-spacing:.14em;color:var(--c-butter-d);margin-bottom:5px}
+.doumi-note{border-top:1px solid var(--line);margin-top:16px;padding-top:13px;font-size:13.5px;color:var(--c-sub);line-height:1.6}
+.quiz-box{margin-top:14px}
+.quiz-q{background:#FBFAF7;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.quiz-q .qq{font-size:14px;font-weight:800;margin-bottom:9px}
+.quiz-opt{display:block;width:100%;text-align:left;font-size:13.5px;padding:8px 12px;border-radius:9px;background:#fff;border:1px solid var(--line);margin-bottom:6px;transition:all .15s}
+.quiz-opt:hover{border-color:#B9B5AA}
+.quiz-opt.ok{background:color-mix(in srgb,var(--c-sage) 45%,#fff);border-color:var(--c-sage-d);color:var(--c-sage-d);font-weight:800}
+.quiz-opt.no{background:color-mix(in srgb,var(--c-accent) 8%,#fff);border-color:var(--c-accent);color:var(--c-accent-d)}
+.quiz-ex{font-size:13px;color:var(--c-sage-d);padding:6px 4px 0;display:none;font-weight:600}
+.les-foot{display:flex;align-items:center;gap:12px;margin-top:26px}
+.les-foot .spacer{flex:1}
+
+/* ── 캘린더 ────────────────────────────── */
+.cal-grid-wrap{display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start}
+.cal-head{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.cal-head h3{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.cal-nav{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);font-size:15px;font-weight:800;transition:all .15s}
+.cal-nav:hover{background:#FBFAF7}
+.cal-table{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-dow{text-align:center;font-size:11.5px;font-weight:800;letter-spacing:.08em;color:var(--c-sub);padding:6px 0}
+.cal-cell{
+  min-height:88px;background:#FBFAF7;border:1px solid var(--line);border-radius:11px;
+  padding:7px 9px;cursor:pointer;transition:all .15s;position:relative;
+}
+.cal-cell:hover{border-color:#B9B5AA}
+.cal-cell.other{opacity:.4}
+.cal-cell.today .d{color:#fff;background:var(--c-ink);width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center}
+.cal-cell.seld{border-color:var(--c-accent);box-shadow:inset 0 0 0 1px var(--c-accent)}
+.cal-cell .d{font-size:12.5px;font-weight:800}
+.cal-cell .d.sun{color:var(--c-accent-d)}
+.cal-cell .att-dot{position:absolute;top:8px;right:9px;width:16px;height:16px;border-radius:50%;background:var(--c-sage-d);color:#fff;font-size:9.5px;display:flex;align-items:center;justify-content:center;font-weight:900}
+.ev{font-size:11px;font-weight:700;border-radius:5px;padding:2px 7px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.day-panel h4{font-size:15.5px;font-weight:800;margin-bottom:12px}
+.day-panel .ev-line{display:flex;align-items:center;gap:8px;background:#FBFAF7;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:14px;margin-bottom:7px}
+.day-panel .ev-line button{margin-left:auto;color:var(--c-sub);font-size:13px}
+.add-ev{display:flex;gap:8px;margin-top:10px}
+.add-ev input{flex:1;background:#FBFAF7;border:1px solid var(--line);border-radius:10px;padding:10px 13px;outline:none;font-size:14px}
+.add-ev input:focus{border-color:var(--c-ink)}
+.add-ev button{background:var(--c-ink);color:#fff;border-radius:10px;padding:0 16px;font-weight:800;font-size:14px}
+.att-stats{display:flex;gap:10px;margin-top:4px}
+.att-stat{flex:1;background:#FBFAF7;border:1px solid var(--line);border-radius:12px;padding:13px;text-align:center}
+.att-stat b{font-size:23px;font-weight:900;display:block;letter-spacing:-.02em}
+.att-stat span{font-size:12px;color:var(--c-sub)}
+
+/* ── 작가들의 책장 ─────────────────────── */
+.shelf-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.shelf-top .spacer{flex:1}
+.shelf-wall{
+  background:linear-gradient(180deg, color-mix(in srgb,var(--c-peach) 16%,#fff), color-mix(in srgb,var(--c-butter) 13%,#fff));
+  border:1px solid var(--line);border-radius:var(--card-r);box-shadow:var(--shadow-sm);
+  padding:10px 24px 26px;
+}
+.shelf-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));
+  grid-auto-rows:156px;column-gap:7px;row-gap:0;align-items:end;
+  background:repeating-linear-gradient(180deg, transparent 0 146px, color-mix(in srgb,var(--c-peach) 52%,#fff) 146px 156px);
+}
+.spine{
+  position:relative;align-self:end;margin-bottom:10px;min-width:0;
+  border:none;border-radius:4px 8px 8px 4px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:9px 2px 7px;
+  box-shadow:inset -3px 0 0 rgba(61,67,76,.12), inset 2px 0 0 rgba(255,255,255,.4), 0 2px 5px rgba(61,67,76,.14);
+  transition:transform .16s, box-shadow .16s;
+}
+.spine:hover{transform:translateY(-9px);box-shadow:inset -3px 0 0 rgba(61,67,76,.12), inset 2px 0 0 rgba(255,255,255,.4), 0 12px 18px rgba(61,67,76,.2)}
+.spine .st{
+  writing-mode:vertical-rl;font-size:11.5px;font-weight:800;letter-spacing:.02em;
+  color:rgba(43,48,56,.85);max-height:92px;overflow:hidden;line-height:1.2;
+}
+.spine .se{font-size:11px;margin-top:5px}
+.spine .sdeco{width:62%;height:3px;border-radius:2px;background:rgba(255,255,255,.6);margin-top:4px;flex-shrink:0}
+.shelf-sec + .shelf-sec{margin-top:22px}
+.shelf-sec-head{display:flex;align-items:center;gap:9px;padding:4px 2px 10px}
+.shelf-sec-head b{font-size:14.5px;letter-spacing:-.02em}
+.ssh-ico{font-size:15px}
+.ssh-les{font-size:11.5px;font-weight:800;color:#fff;background:var(--c-ink);border-radius:999px;padding:2px 10px}
+.ssh-cnt{font-size:12px;color:var(--c-sub);font-weight:700;margin-left:auto}
+.spine .sn{
+  position:absolute;top:-7px;left:50%;transform:translateX(-50%);
+  min-width:17px;height:17px;padding:0 4px;border-radius:999px;
+  background:#fff;color:var(--c-ink);font-size:9.5px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--line);box-shadow:0 1px 3px rgba(61,67,76,.18);
+}
+.e-pill .fn{font-style:normal;font-size:10.5px;font-weight:900;background:rgba(61,67,76,.08);border-radius:999px;padding:1px 7px;margin-left:3px}
+.e-pill.sel .fn{background:rgba(255,255,255,.25)}
+.shelf-empty{text-align:center;padding:60px 20px;color:var(--c-sub);font-size:14.5px;line-height:1.8}
+.shelf-empty b{color:var(--c-ink)}
+.shelf-note{margin-top:12px;font-size:12.5px;color:var(--c-sub);text-align:center}
+
+/* 업로드 패널 */
+.up-panel{background:#fff;border:1px solid var(--line);border-radius:var(--card-r);box-shadow:var(--shadow-sm);padding:22px 24px;margin-bottom:16px}
+.up-panel h3{font-size:15.5px;font-weight:800;margin-bottom:12px;letter-spacing:-.02em}
+.up-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+@media(max-width:700px){.up-grid{grid-template-columns:1fr}}
+.up-field label{display:block;font-size:12px;font-weight:800;color:var(--c-sub);margin-bottom:5px;letter-spacing:.04em}
+.up-field input[type=text],.up-field input[type=password]{
+  width:100%;background:#FBFAF7;border:1px solid var(--line);border-radius:10px;
+  padding:10px 13px;font-size:14.5px;outline:none;transition:border-color .2s;
+}
+.up-field input:focus{border-color:var(--c-ink)}
+.up-file{
+  display:flex;align-items:center;gap:10px;background:#FBFAF7;border:1.5px dashed #C9C5BA;
+  border-radius:12px;padding:12px 14px;cursor:pointer;font-size:13.5px;font-weight:700;color:var(--c-sub);
+  transition:all .15s;
+}
+.up-file:hover{border-color:var(--c-ink);color:var(--c-ink)}
+.up-file input{display:none}
+.color-row{display:flex;gap:7px;flex-wrap:wrap}
+.csw{width:26px;height:26px;border-radius:9px;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.csw.on{border-color:var(--c-ink);transform:scale(1.12)}
+.up-actions{display:flex;gap:9px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.up-msg{font-size:13px;font-weight:700}
+
+/* 작품 모달 */
+.shelf-modal{position:fixed;inset:0;background:rgba(61,67,76,.44);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:90;padding:18px}
+.sm-card{
+  background:#fff;border-radius:20px;max-width:540px;width:100%;max-height:88vh;overflow:auto;
+  padding:26px 28px;box-shadow:var(--shadow);
+  animation:smpop .28s cubic-bezier(.22,.9,.36,1);
+}
+@keyframes smpop{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+.sm-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sm-top .x{margin-left:auto;font-size:15px;color:var(--c-sub);padding:4px 8px;border-radius:8px}
+.sm-top .x:hover{color:var(--c-ink);background:#FBFAF7}
+.sm-card h3{font-size:22px;font-weight:900;letter-spacing:-.03em;line-height:1.3;margin-bottom:4px}
+.sm-pen{font-size:13.5px;color:var(--c-sub);font-weight:700;margin-bottom:12px}
+.sm-msg{background:#FBFAF7;border-left:3px solid var(--c-mist);border-radius:4px 12px 12px 4px;padding:11px 15px;font-size:14px;margin-bottom:14px;line-height:1.6}
+.sm-card audio{width:100%;margin-bottom:6px}
+.sm-card img.bm{width:100%;border-radius:14px;border:1px solid var(--line);margin-bottom:6px}
+.rx-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.rx{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#FBFAF7;border:1px solid var(--line);border-radius:999px;
+  padding:8px 16px;font-size:14px;font-weight:800;transition:all .15s;
+}
+.rx:hover{border-color:var(--c-ink)}
+.rx.hit{animation:rxb .4s ease}
+@keyframes rxb{30%{transform:scale(1.25)}}
+.sm-foot{display:flex;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--c-sub)}
+.sm-del{margin-left:auto;color:var(--c-sub);font-size:12.5px;font-weight:700;padding:4px 8px;border-radius:8px}
+.sm-del:hover{color:var(--c-accent-d);background:color-mix(in srgb,var(--c-accent) 6%,#fff)}
+.sm-card{position:relative}
+.sm-arrow{
+  position:absolute;top:46%;width:38px;height:38px;border-radius:50%;
+  background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-sm);
+  font-size:20px;font-weight:800;color:var(--c-ink);
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.sm-arrow.prev{left:-8px}
+.sm-arrow.next{right:-8px}
+.sm-arrow:hover:not(:disabled){transform:scale(1.1);border-color:var(--c-ink)}
+.sm-arrow:disabled{opacity:.25;cursor:default}
+.type-row{display:flex;gap:7px;flex-wrap:wrap}
+
+/* 감상평 */
+.cm-wrap{margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+.cm-head{font-size:13.5px;font-weight:800;margin-bottom:9px}
+.cm-head span{color:var(--c-sub);font-weight:700;font-size:12px}
+.cm-list{display:flex;flex-direction:column;gap:6px;max-height:190px;overflow:auto;margin-bottom:10px}
+.cm-item{
+  display:flex;align-items:baseline;gap:8px;
+  background:#FBFAF7;border:1px solid var(--line);border-radius:10px;
+  padding:8px 12px;font-size:13.5px;line-height:1.5;
+}
+.cm-item b{flex-shrink:0;font-size:12.5px;color:var(--c-mist-d)}
+.cm-item span{flex:1;word-break:break-word}
+.cm-x{color:#C9C5BA;font-size:11px;padding:2px 4px;border-radius:6px;flex-shrink:0}
+.cm-x:hover{color:var(--c-accent-d)}
+.cm-empty,.cm-loading{font-size:12.5px;color:var(--c-sub);padding:4px 2px}
+.cm-form{display:flex;gap:8px;align-items:center;margin-bottom:9px}
+.cm-form .cm-lab{flex-shrink:0;font-size:12px;font-weight:800;color:var(--c-sub)}
+.cm-form input{flex:1;min-width:0;background:#FBFAF7;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13.5px;outline:none;transition:border-color .2s}
+.cm-form input:focus{border-color:var(--c-ink)}
+.cm-cards{display:flex;flex-wrap:wrap;gap:6px}
+.cm-card{
+  background:#fff;border:1px solid var(--line);border-radius:999px;
+  padding:7px 13px;font-size:12.5px;font-weight:700;color:#565c66;transition:all .15s;
+}
+.cm-card:hover{border-color:var(--c-ink);color:var(--c-ink);transform:translateY(-1px)}
+.cm-card:disabled{opacity:.5}
+
+/* 홈 신간 */
+.hs-row{display:flex;align-items:center;gap:9px;padding:9px 2px;border-bottom:1px solid var(--line);font-size:13.5px;cursor:pointer}
+.hs-row:last-of-type{border-bottom:none}
+.hs-row:hover b{color:var(--c-accent-d)}
+.hs-row .hs-ico{flex-shrink:0}
+.hs-row b{font-weight:700;letter-spacing:-.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hs-row span{margin-left:auto;flex-shrink:0;font-size:12px;color:var(--c-sub)}
+
+/* ── 꿀팁 / 링크 ───────────────────────── */
+.tip-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.masonry{columns:3;column-gap:14px}
+.tipcard{
+  break-inside:avoid;background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:19px 21px;margin-bottom:14px;
+}
+.tipcard .tc-top{display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.tipcard .tc-top .pill{font-size:11.5px;padding:3px 11px}
+.tipcard b.tt{font-size:15px;display:block;margin-bottom:5px;letter-spacing:-.02em}
+.tipcard p{font-size:13.5px;color:#565c66;line-height:1.65}
+.link-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.linkcard{
+  background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 22px;
+  text-decoration:none;color:var(--c-ink);transition:transform .16s, box-shadow .16s;
+  display:flex;flex-direction:column;gap:6px;position:relative;
+}
+.linkcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.linkcard::after{content:'↗';position:absolute;top:18px;right:20px;font-size:14px;color:var(--c-sub)}
+.linkcard .lk-bar{width:26px;height:4px;border-radius:3px;margin-bottom:8px}
+.linkcard b{font-size:15.5px;letter-spacing:-.02em}
+.linkcard p{font-size:13.3px;color:var(--c-sub);line-height:1.55;flex:1}
+.linkcard .url{font-size:11.5px;color:var(--c-mist-d);font-weight:700;word-break:break-all;letter-spacing:.02em}
+.lk-group{margin-bottom:28px}
+.lk-group h3{font-size:16px;font-weight:800;margin-bottom:12px;letter-spacing:-.02em}
+
+/* ── 내 책 ─────────────────────────────── */
+.book-grid{display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start}
+.book-cover{
+  aspect-ratio:3/4;border-radius:16px;box-shadow:var(--shadow);padding:32px 28px;
+  display:flex;flex-direction:column;position:relative;overflow:hidden;
+  background:linear-gradient(165deg, color-mix(in srgb,var(--c-mist) 55%,#fff) 0%, color-mix(in srgb,var(--c-sage) 55%,#fff) 100%);
+}
+.book-cover .bc-title{font-size:27px;font-weight:900;letter-spacing:-.03em;line-height:1.3;color:var(--c-mist-d);word-break:keep-all}
+.book-cover .bc-author{margin-top:auto;font-size:14.5px;font-weight:800;color:var(--c-sage-d)}
+.book-cover .bc-img-desc{font-size:13px;color:rgba(62,92,110,.6);margin-top:10px;line-height:1.5}
+.book-sec{background:#fff;border:1px solid var(--line);border-radius:var(--card-r);padding:22px 26px;margin-bottom:14px}
+.book-sec h4{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--c-sub);margin-bottom:10px}
+.book-sec .bt{font-size:15px;line-height:1.85;white-space:pre-wrap}
+.book-sec .empty{color:#BDB9AE;font-size:14px}
+.cert{
+  position:relative;background:#fff;border:1px solid var(--c-butter);border-radius:20px;
+  box-shadow:var(--shadow);padding:44px;text-align:center;overflow:hidden;margin-top:22px;
+}
+.cert::before{content:'';position:absolute;inset:10px;border:1px solid color-mix(in srgb,var(--c-butter-d) 30%,#fff);border-radius:14px;pointer-events:none}
+.cert h3{font-size:12px;letter-spacing:.4em;color:var(--c-butter-d);font-weight:800}
+.cert .cert-name{font-size:31px;font-weight:900;margin:14px 0 4px;letter-spacing:-.02em}
+.cert p{font-size:14.5px;color:#6b6552;max-width:440px;margin:8px auto;line-height:1.8}
+.cert img{width:104px;height:104px;margin:16px auto 6px}
+.cert .cert-date{font-size:12.5px;color:var(--c-sub);margin-top:12px;letter-spacing:.04em}
+
+@media (max-width:980px){
+  .home-grid,.les-grid,.cal-grid-wrap,.book-grid{grid-template-columns:1fr}
+  .masonry{columns:1}
+  .link-grid{grid-template-columns:1fr}
+  .lesson-grid{grid-template-columns:1fr}
+  .hero-qk{display:none}
+  .doumi{position:static}
+  nav{gap:14px}
+}
+@media print{
+  header,.les-foot,.no-print{display:none!important}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-in">
+    <div class="logo" onclick="go('home')">
+      <img id="logoImg" src="" alt="쿼카">
+      <div><b>AI 동화작가 데뷔 스튜디오</b><br><span>내 마음이 책이 되는 순간 · 쿼카 AI융합교육연구회</span></div>
+    </div>
+    <nav>
+      <button class="nav-btn" data-v="home" onclick="go('home')">홈</button>
+      <button class="nav-btn" data-v="lesson" onclick="go('lesson')">실습 스튜디오</button>
+      <button class="nav-btn" data-v="book" onclick="go('book')">내 책</button>
+      <button class="nav-btn" data-v="shelf" onclick="go('shelf')">작가들의 책장</button>
+      <button class="nav-btn" data-v="cal" onclick="go('cal')">캘린더 · 출석</button>
+      <button class="nav-btn" data-v="links" onclick="go('links')">링크</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section id="v-home" class="view"></section>
+  <section id="v-lesson" class="view"></section>
+  <section id="v-book" class="view"></section>
+  <section id="v-shelf" class="view"></section>
+  <section id="v-cal" class="view"></section>
+  <section id="v-links" class="view"></section>
+</main>
+
+<script>
+const QUOKKA_FULL = "data:image/jpeg;base64,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";
+const QUOKKA_FACE = "data:image/jpeg;base64,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";
+document.getElementById('logoImg').src = QUOKKA_FACE;
+
+/* ═══════════ 데이터 ═══════════ */
+const STAGES = [
+ {en:'DISCOVER', name:'작가의 시작',  c:'sage',  range:[1,2], rngLabel:'2차시'},
+ {en:'STORY',    name:'이야기 씨앗',  c:'mist',  range:[3,6]},
+ {en:'UPGRADE',  name:'함께 다듬기',  c:'peach', range:[7,11]},
+ {en:'TAKEOFF',  name:'작가 데뷔',    c:'lilac', range:[12,15]},
+];
+const CV = {
+ sage:{bg:'var(--c-sage)',d:'var(--c-sage-d)'}, mist:{bg:'var(--c-mist)',d:'var(--c-mist-d)'},
+ peach:{bg:'var(--c-peach)',d:'var(--c-peach-d)'}, lilac:{bg:'var(--c-lilac)',d:'var(--c-lilac-d)'},
+ butter:{bg:'var(--c-butter)',d:'var(--c-butter-d)'},
+};
+function stageOf(n){return STAGES.find(s=>n>=s.range[0]&&n<=s.range[1]);}
+function soft(c){return `color-mix(in srgb, ${c} 32%, #fff)`;}
+
+const LESSONS = [
+{n:1, badge:'2차시', title:'작가 계정 만들기', sub:'나는 왜 작가가 되고 싶은가', helper:'작가의 방 도우미',
+ goals:['작가로서 나의 동기와 강점을 한 문장으로 표현하기','이야기 만들기가 내 마음을 들여다보는 일임을 알기','프로젝트 공동체 규칙을 스스로 제안하고 약속하기'],
+ ws:[
+  {t:'rows', h:'작가 프로필 — 오늘부터 나는 작가', rows:[
+    {k:'penname', tag:'작가 이름', ph:'필명을 지어 보세요 (예: 한로운 작가)'},
+    {k:'motive',  tag:'동기',     ph:'나는 ______ 때문에 이야기를 만들고 싶다'},
+    {k:'wish',    tag:'전하고픔', ph:'내 이야기로 ____에게 ____ 마음을 전하고 싶다'}]},
+  {t:'rows', h:'작가 약속 카드 — 우리 모둠의 약속', rows:[
+    {k:'p1', tag:'창작 태도', ph:'예: 서툰 첫 문장도 비웃지 않고 끝까지 듣는다'},
+    {k:'p2', tag:'AI 사용',  ph:'예: AI의 제안은 참고만, 마지막 문장은 내가 쓴다'},
+    {k:'p3', tag:'서로 돕기', ph:'예: 막힌 친구에게 답 대신 질문으로 돕는다'},
+    {k:'p4', tag:'마음 존중', ph:'예: 이야기 속 감정을 점수로 매기지 않는다'},
+    {k:'p5', tag:'필명으로 설명하기', ph:'예: 작품을 소개할 때는 실명 대신 필명으로 나를 설명한다'}]}],
+ chat:['여러분은 왜 이야기를 만들고 싶나요?','"그냥요"도 좋아요. 그 안의 진짜 이유를 함께 찾아봐요.'],
+ me:'내 마음을 말하고 싶어서요!',
+ prompt:null,
+ tip:'동기가 떠오르지 않는 학생에게는 "최근에 기억에 남은 일"을 먼저 물어보세요. 사건을 떠올리면 감정이 따라오고, 감정에서 이야기의 동기가 자연스럽게 나옵니다.',
+ note:'이 프로젝트에서 학생이 최종 작가이고, AI는 생각의 길을 안내하는 조력자예요. 첫 시간에 이 약속을 분명히 해요.',
+ quiz:[{q:'이 프로젝트에서 AI의 역할로 가장 알맞은 것은?',o:['학생 대신 이야기를 완성해 주는 작가','학생의 생각을 확장하도록 돕는 조력자','학생의 글을 점수로 평가하는 채점자'],a:1,ex:'학생이 최종 창작자, AI는 "다음 생각"을 돕는 조력자예요.'}],
+ cta:'작가 계정 만들기 완료'},
+
+{n:2, title:'AI 도우미 소환하기', sub:'안전한 창작 파트너 만들기', helper:'소환 도우미',
+ goals:['생성형 AI를 사고를 확장하는 협력 도구로 이해하기','안전한 AI 사용 규칙 지키기','역할·맥락·요청이 담긴 프롬프트 만들기'],
+ ws:[
+  {t:'check', h:'안전 규칙 3가지 — 함께 읽고 체크', k:'safe', opts:[
+    '내 이름·학교·친구 이름은 쓰지 않는다','AI의 답은 "참고"이고, 고르고 바꾸는 건 내가 한다','이상한 답이 나오면 멈추고 선생님께 알린다']},
+  {t:'rows', h:'좋은 질문의 3요소 — 나만의 프롬프트 조립', rows:[
+    {k:'role', tag:'역할', ph:'예: 너는 초등학생의 이야기 창작을 돕는 친절한 도우미야'},
+    {k:'ctx',  tag:'맥락', ph:'예: 나는 진로를 주제로 희망을 담은 동화를 쓰려고 해'},
+    {k:'req',  tag:'요청', ph:'예: 주인공이 꿈을 포기하려는 장면의 질문 3개를 만들어 줘. 답은 내가 쓸게'}]},
+  {t:'link', h:'실습 챗봇 — 만든 프롬프트를 바로 시험해 보기', items:[
+    {b:'2차시 실습 챗봇 열기 (Mizou)', u:'https://mizou.com/login-thread?ID=JlcPti2o91sXUKkcWw4S6qDqYT9AJm15ZE_SicnhZ24-140539', p:'이름만 입력하면 바로 시작할 수 있어요. 역할·맥락·요청을 담아 질문해 보세요.'}]}],
+ chat:['좋은 질문에는 세 가지가 들어가요. 역할·맥락·요청!','"답" 대신 "질문"을 요청해 보세요. 그게 사고 확장의 비밀이에요.'],
+ me:'질문 3개만 부탁해. 답은 내가 쓸게!',
+ promptFrom:['role','ctx','req'],
+ prompt:'너는 초등학생의 이야기 창작을 돕는 친절한 도우미야.\n나는 ○○을 주제로 동화를 쓰려고 해.\n주인공이 고민하는 장면의 질문 3개를 만들어 줘. 답은 내가 쓸게.',
+ tip:'교사가 먼저 "나쁜 프롬프트 → 좋은 프롬프트"를 시연하세요. 예: "이야기 써 줘"(X) → "무서운 마음을 주제로 한 이야기의 첫 문장 세 개를 제안해 줘. 결정은 내가 할게"(O).',
+ note:'챗봇은 차시·주제별 섹터로 분리해 운영해요(감정 탐험 도우미, 주인공 만들기 도우미…). 역할을 좁히면 안전해지고 질문도 분명해져요.',
+ quiz:[{q:'좋은 프롬프트에 꼭 담아야 할 3요소는?',o:['이름·학교·나이','역할·맥락·요청','정답·점수·등수'],a:1,ex:'누구로서·어떤 상황에서·무엇을 해 달라를 담으면 원하는 도움을 정확히 받아요.'}],
+ cta:'AI 도우미 소환 완료'},
+
+{n:3, title:'감정 탐험하기', sub:'내 이야기의 핵심 감정 찾기', helper:'감정 탐험 도우미',
+ goals:['경험에서 이야기로 발전시킬 핵심 감정 고르기','감정을 사건·이유·필요와 연결해 한 문단으로 표현하기','다루고 싶은 동화 주제를 스스로 선택하기'],
+ ws:[
+  {t:'pills', h:'감정 카드 — 내 이야기의 핵심 감정 고르기 (최대 2개)', k:'emos', max:2,
+   opts:['설렘','두려움','외로움','희망','서운함','뿌듯함','용기','미안함']},
+  {t:'rows', h:'감정을 이야기로 — 네 칸 구조', rows:[
+    {k:'ev',   tag:'사건',      ph:'예: 전학 첫날, 아무도 내게 말을 걸지 않았다'},
+    {k:'em',   tag:'감정',      ph:'예: 외롭고 조금 무서웠다'},
+    {k:'need', tag:'이유·필요', ph:'예: 나를 받아 줄 친구 한 명이 필요했다'},
+    {k:'act',  tag:'다음 행동', ph:'예: 용기를 내 옆자리 친구에게 먼저 인사했다'}]},
+  {t:'link', h:'내 감정동화, 작가들의 책장에 올리기', items:[
+    {go:"shelfJumpType('emotion')", b:'💛 감정동화 책장에 올리기', p:'감정 이야기를 그림·이미지로 만들었다면(캔바, 그림판, 손그림 사진), 책장에 꽂아 친구들과 마음을 나눠요.'}]}],
+ chat:['그 일을 떠올리면 몸이 어떻게 돼?','두 감정이 같이 있어도 괜찮아.'],
+ me:'설레면서도 조금 무서웠어.',
+ prompt:'너는 감정 탐험을 돕는 도우미야.\n내 핵심 감정은 ○○이야.\n이 감정을 더 잘 보여 줄 장면 질문 3개만 해 줘. 답은 내가 쓸게.',
+ tip:'감정을 고르기 어려워하면 "그 일을 떠올리면 몸이 어떻게 되는지"를 물어보세요. "가슴이 콩닥거린다 → 긴장"처럼 신체 감각에서 감정 어휘로 연결됩니다.',
+ note:'좋은 동화는 큰 사건이 아니라 진짜 감정에서 시작합니다. 주제는 학생이 안전한 만큼 선택해요.',
+ quiz:[{q:'감정을 언어화하는 네 칸 구조로 알맞은 것은?',o:['제목–주인공–배경–결말','사건–감정–이유·필요–다음 행동','발단–전개–위기–절정'],a:1,ex:'이 구조로 적으면 마음이 정리되고 장면의 뼈대가 만들어져요.'}],
+ cta:'핵심 감정 정하기'},
+
+{n:4, title:'주인공 만들기', sub:'강점·약점·성장포인트가 있는 인물', helper:'주인공 만들기 도우미',
+ tool:'character-studio.html', toolH:1760, toolSub:'쿼카연구회 캐릭터 프롬프트 생성기로 주인공을 직접 만들고, 캔바 매직미디어로 그려 보세요',
+ goals:['주인공의 강점·약점·성장포인트를 일관되게 설정하기','주변 인물의 입장에서 감정과 동기 추론하기','AI 제안을 비판적으로 골라 내 인물로 발전시키기'],
+ ws:[],
+ chat:['독자가 사랑하는 주인공은 완벽한 인물이 아니라 자라는 인물이에요.','라이벌은 왜 그렇게 행동했을까? 이유 3가지를 질문으로 줄게.'],
+ me:'하나 골라서 내 이야기로 발전시킬게!',
+ prompt:'너는 인물 설정을 돕는 도우미야.\n내 주인공의 라이벌이 왜 그렇게 행동하는지 가능한 이유 3가지를 질문 형태로 제안해 줘.\n나는 그중 하나를 골라 내 이야기로 발전시킬게.',
+ tip:'강점과 약점을 "반대 짝"으로 만들면 갈등이 선명해집니다. 예: "용감하지만 무모하다", "다정하지만 거절을 못 한다". 강점 때문에 생기는 약점을 떠올리면 인물이 진짜 사람처럼 느껴져요.',
+ note:'주변 인물의 마음을 상상하는 일은 그 자체로 공감·타인 이해를 연습하는 사회정서 활동이에요.',
+ quiz:[{q:'독자가 사랑하는 주인공의 특징은?',o:['약점이 전혀 없는 완벽한 인물','약점을 넘어 성장하는 인물','가장 힘이 센 인물'],a:1,ex:'매력은 완벽함이 아니라 약점을 넘어 자라는 변화에서 나와요.'}],
+ cta:'캐릭터 카드 완성'},
+
+{n:5, title:'이야기 씨앗 심기', sub:'배경과 기승전결 잡기', helper:'이야기 설계 도우미',
+ tool:'stage-checker.html', toolH:1580, toolSub:'기승전결 얼개를 한 단계씩 점검하고, 그대로 둘지 고칠지 작가가 직접 결정해요',
+ goals:['배경(시간·공간·분위기)을 구체적으로 설정하기','기승전결 네 마디로 사건의 흐름 계획하기','핵심 감정의 변화가 전개와 맞물리게 구성하기'],
+ ws:[],
+ chat:['좋은 이야기는 "무슨 일이 일어나는가"보다 "무엇이 달라지는가"예요.','"전(위기)"에서 핵심 감정이 가장 세게 부딪치게 해 볼까?'],
+ me:'위기를 더 팽팽하게 만들 질문을 부탁해!',
+ prompt:'너는 이야기 설계를 돕는 도우미야.\n내 기승전결에서 "전(위기)"을 더 팽팽하게 만들 질문 3개만 해 줘.\n사건은 내가 만들게.',
+ tip:'배경은 감정의 거울입니다. 두려움이 핵심이면 낯설고 큰 공간을, 희망이 핵심이면 빛이 드는 장면을 떠올리게 하면 글이 풍부해져요.',
+ note:'3차시의 핵심 감정과 4차시의 성장포인트가 "전(위기)"에서 부딪치도록 배치하는 것이 핵심!',
+ quiz:[{q:'기승전결에서 핵심 감정이 가장 강하게 부딪쳐야 할 단계는?',o:['기','승','전','결'],a:2,ex:'"전(위기)"에서 성장포인트와 핵심 감정이 부딪칠 때 이야기가 팽팽해져요.'}],
+ cta:'오늘 활동 끝! 완료 도장 찍기'},
+
+{n:6, title:'스토리맵 완성하기', sub:'초고 쓰기 — 틀려도 끝까지', helper:'초고 응원 도우미',
+ tool:'storymap-studio.html', toolH:2150, toolSub:'장면 카드 → 5분 초고 → 점검 기록표까지, 나의 스토리맵 완성',
+ goals:['설계한 구조로 처음부터 끝까지 초고 쓰기','틀려도 멈추지 않고 완성하는 태도 기르기','막힐 때 AI에게 "다음 장면 질문" 요청하기'],
+ ws:[],
+ chat:['오늘의 약속은 단 하나, "틀려도 끝까지 쓰기"!','손이 멈추면 나에게 질문을 요청해. 답 말고 질문!'],
+ me:'다음에 무슨 일이 일어나면 좋을까?',
+ prompt:'나는 지금 "전(위기)" 장면에서 막혔어.\n주인공이 도망치지 않고 한 발 내딛게 만들 "선택의 순간"을 떠올릴 수 있게,\n나에게 질문 3개만 해 줘. 장면은 내가 쓸게.',
+ tip:'"5분 멈추지 않고 쓰기" 같은 짧은 도전을 반복하면 글쓰기 두려움이 줄어듭니다. 다 쓴 학생은 친구의 막힌 부분을 "질문"으로 도와주게 하세요.',
+ note:'초고의 목표는 "잘 쓰기"가 아니라 "끝까지 쓰기". 완벽하지 않아도 괜찮다는 분위기가 교사의 핵심 역할이에요.',
+ quiz:[{q:'초고가 막힌 학생을 돕는 AI 활용으로 알맞은 것은?',o:['다음 장면을 통째로 써 달라고 한다','다음 장면을 떠올릴 질문을 요청한다','글을 점수로 평가하게 한다'],a:1,ex:'AI는 답이 아니라 질문으로 길을 여는 파트너!'}],
+ cta:'오늘 활동 끝! 완료 도장 찍기'},
+
+{n:7, title:'갈등을 키워라', sub:'서로 다른 마음이 부딪치는 순간', helper:'갈등 설계 도우미',
+ tools:[
+  {src:'conflict-layers.html',  h:1150, label:'활동 1 · 갈등 세 겹 적기'},
+  {src:'conflict-cards.html',   h:1650, label:'활동 2 · 학교생활 갈등 카드 고르기'},
+  {src:'conflict-rewrite.html', h:1150, label:'활동 3 · 갈등 장면 다시 쓰기'}],
+ toolSub:'갈등 세 겹 적기 → 갈등 카드 고르기 → 실마리와 갈등 장면 다시 쓰기',
+ goals:['이야기를 팽팽하게 만드는 갈등 상황 만들기','갈등 속 인물들의 서로 다른 입장·감정 설명하기','갈등 해결을 폭력이 아닌 관계적 방식으로 설계하기'],
+ ws:[],
+ chat:['갈등은 싸움이 아니라 서로 다른 마음이 부딪치는 순간이에요.','이 인물은 무엇이 무서웠을까?'],
+ me:'나쁜 인물에게도 이유를 만들어 줄래!',
+ prompt:null,
+ tip:'"나쁜 인물"에게도 필요와 두려움을 주면 갈등이 깊어집니다. 학생에게 "이 인물은 무엇이 무서웠을까?"를 물어보세요.',
+ note:'해결은 힘이나 운이 아닌 대화·이해·공동체의 도움으로. 그 선택의 책임은 작가인 학생에게 있어요.',
+ quiz:[{q:'동화의 갈등 해결 방식으로 권장되는 것은?',o:['힘으로 이기기','운으로 끝내기','대화·이해·공동체의 도움'],a:2,ex:'관계가 회복되는 방향으로 설계해요.'}],
+ cta:'갈등 카드 완성'},
+
+{n:8, title:'공감이 담긴 말로 동화 바꾸어쓰기', sub:'공감대화 · 나전달법 · 비폭력대화', helper:'대사 코치 도우미',
+ tool:'empathy-talk.html', toolH:1950,
+ toolSub:'말랑말랑 마음 번역기와 마음이 챗봇으로 대사를 공감의 말로 바꾸어 써요',
+ goals:['공감이 담긴 말 알아보기',"'마음이' 챗봇을 활용해 공감 대사로 바꾸어 쓰기",'대사 및 전체 원고 점검하기'],
+ ws:[],
+ chat:['좋은 대사 한 줄이 설명 열 줄보다 마음을 움직여요.','사건–감정–필요–부탁, 네 칸으로 말해 볼까?'],
+ me:'소리 내어 읽어 보니 알겠어!',
+ prompt:null,
+ tip:'대사를 소리 내어 읽게 하세요. 입으로 말해 보면 어색한 대사와 진짜 마음이 담긴 대사가 금방 구분됩니다.',
+ note:'이 활동은 동화 수정이자, 학생이 실제 삶에서 쓸 관계의 언어를 연습하는 사회정서 활동이에요.',
+ quiz:[{q:'나전달법(I-message)의 구조로 알맞은 것은?',o:['비난–명령–위협','사건–감정–필요–부탁','칭찬–보상–평가'],a:1,ex:'갈등을 비난 없이 전할 수 있는 구조예요.'}],
+ cta:'대사 다듬기 완료'},
+
+{n:9, title:'어떤 결말이 오래 남을까', sub:'해피엔딩 · 성장 결말 · 열린 결말 · 반전 결말 · 여운 결말', helper:'엔딩 안내 도우미',
+ tool:'ending-story.html', toolH:3200,
+ toolSub:"결말 다섯 유형을 알아보고, 엔딩 도우미 챗봇 '여운이'와 내 결말을 완성해요",
+ goals:['결말의 다섯 가지 종류 알아보기','오래 남는 결말의 조건 찾아보기',"엔딩 도우미 챗봇 '여운이'로 결말 완성하기"],
+ ws:[],
+ chat:['결말은 작가가 독자에게 전하는 마지막 인사예요.','이 이야기를 읽은 친구가 어떤 마음이면 좋겠어?'],
+ me:'작은 용기로 끝나는 성장 결말!',
+ prompt:null,
+ tip:'결말을 못 고르는 학생에게는 "이 이야기를 읽은 친구가 어떤 마음이면 좋겠어?"를 물어보세요. 독자의 마음에서 결말이 보입니다.',
+ note:'어느 결말이 더 좋다는 정답은 없어요. 내 주제와 핵심 감정에 어울리는가가 기준!',
+ quiz:[{q:'결말 선택의 기준으로 가장 알맞은 것은?',o:['가장 긴 결말','주제와 핵심 감정에 어울리는 결말','AI가 추천한 결말'],a:1,ex:'작가가 책임 있게, 근거를 들어 선택해요.'}],
+ cta:'결말 확정'},
+
+{n:10, title:'표지만 봐도 읽고 싶은 동화', sub:'한눈에 끌리는 동화 표지 만들기', helper:'표지 디자인 도우미',
+ goals:['표지가 주는 첫인상, 왜 중요할까','표지 3요소(제목·이미지·색) 정하기','그림 주문서 만들고 캔바로 완성하기'],
+ ws:[
+  {t:'rows', h:'표지 3요소 정하기', rows:[
+    {k:'title',  tag:'제목',   ph:'예: "작게, 시작" — 설명보다 여운'},
+    {k:'coverimg',tag:'이미지', ph:'예: 빈 운동장에 켜진 작은 빛'},
+    {k:'color',  tag:'색',     ph:'예: 차분한 남색 + 따뜻한 노랑 포인트'}]},
+  {t:'link', h:'「나는 꼬마 동화작가!」 웹앱 바로가기', items:[
+    {u:'https://gottkf1208.github.io/quokastorymaker/', b:'「나는 꼬마 동화작가!」 웹앱 바로가기', p:'웹앱으로 그림 주문서를 만들고, 캔바에서 이미지를 생성해요.'}]},
+  {t:'check', h:'좋은 표지의 네 가지 조건 점검', k:'cover4', opts:[
+    '제목이 한눈에 들어오는가','주인공이 표지에 드러나는가','색감이 이야기 분위기와 통일되는가','제목이 들어갈 여백을 비워 두었는가']},
+  {t:'link', h:'완성한 표지, 작가들의 책장에 자랑하기', items:[
+    {go:'shelfJumpCover()', b:'🎨 내 표지 책장에 올리기', p:'캔바에서 만든 표지를 이미지로 저장한 뒤, 작가들의 책장에 꽂아 친구들과 서로 감상해요.'}]}],
+ chat:['독자는 표지를 보고 0.5초 만에 결정한대요!','그림 실력 대결이 아니에요. 핵심 감정을 전하면 성공!'],
+ me:'내 이야기의 분위기를 정확히 설명해 볼게.',
+ promptFrom:['title','coverimg','color'],
+ prompt:'(AI 이미지용) 따뜻하고 깔끔한 동화 일러스트,\n빈 교실 운동장에 켜진 작은 불빛,\n차분한 남색 배경에 노란빛 포인트, 외로움 속 작은 희망의 분위기,\n글자는 넣지 않음.',
+ tip:'제목은 "설명"보다 "여운"이 좋습니다. "전학 온 날의 용기"보다 "작게, 시작"처럼 짧고 궁금하게! 그리고 「나는 꼬마 동화작가!」 웹앱으로 그림 주문서를 만들어 보세요.',
+ note:'AI 이미지 생성을 쓸 때는 "내 이야기의 분위기"를 정확히 설명하는 연습을 함께 해요. 캔바 Magic Media로 완성!',
+ quiz:[{q:'좋은 표지의 기준으로 이 차시가 강조한 것은?',o:['화려한 그림 실력','핵심 감정을 한눈에 전하기','글자를 최대한 많이 넣기'],a:1,ex:'제목·이미지·색으로 핵심 감정을 전하면 성공이에요.'}],
+ cta:'표지 시안 완성'},
+
+{n:11, title:'AI와 첫 합작', sub:'AI 피드백 받기 — 수용 · 보류 · 거절', helper:'피드백 도우미',
+ tools:[
+  {src:'feedback-questions.html', h:1650, label:'활동 1 · AI에게 물어볼 질문 고르기'},
+  {src:'feedback-3colors.html',   h:950,  label:'활동 2 · AI 피드백 3색 분류'}],
+ toolSub:'질문을 골라 AI에게 물어보고, 받은 제안을 수용(쓸래!) · 보류(생각해볼래!) · 거절(안 쓸래!)로 내가 판단해요',
+ goals:['초고 피드백을 구체적으로 요청하기','AI 제안을 비판적으로 검토해 스스로 판단하기','피드백을 성장의 자료로 받아들이기'],
+ ws:[],
+ chat:['핵심 감정이 잘 드러나는지 볼게.','고칠 점을 질문으로 알려줄게. 칭찬도 하나!'],
+ me:'이건 거절. 내 메시지와 달라서.',
+ prompt:null,
+ tip:'"거절" 칸을 꼭 한 개 이상 만들게 하세요. AI에게 "아니오"라고 말할 수 있을 때 학생은 진짜 작가가 됩니다. 그리고 피드백 순서와 개수를 정해 주세요 — "질문은 최대 3개까지만"처럼요.',
+ note:'AI 피드백은 정답이 아니라 참고 의견. 받아들일지 스스로 판단하는 게 AI 리터러시의 핵심입니다.',
+ quiz:[{q:'AI 피드백을 대하는 바른 태도는?',o:['모두 그대로 따른다','정답으로 받아들인다','수용·보류·거절로 비판적으로 검토한다'],a:2,ex:'참고 의견이므로 받아들일지 스스로 판단해요.'}],
+ cta:'피드백 정리하기'},
+
+{n:12, title:'내 언어로 다시 쓰기', sub:'고쳐쓰기 — 작가의 목소리 살리기', helper:'고쳐쓰기 도우미',
+ tools:[
+  {src:'rewrite-compare.html', h:2300, label:'활동 1 · 내 문장과 AI 문장 비교하기'},
+  {src:'rewrite-table.html',   h:1700, label:'활동 2 · 수정 전후 비교표'},
+  {src:'rewrite-voice.html',   h:2450, label:'활동 3 · 내 목소리 체크리스트'}],
+ toolSub:'문장을 나란히 비교하고, 수정 기록을 남기고, 내 목소리가 살아 있는지 점검해요',
+ bots:[
+  {emoji:'✍️', name:"고쳐쓰기 도우미 '수정이'", p:'내 문장을 내 말투로 다시 쓸 수 있게 질문으로 도와줘요.'},
+  {emoji:'🔍', name:"꼼꼼 점검 도우미 '꼼꼼이'", p:'수정한 글을 처음부터 끝까지 꼼꼼히 점검하도록 도와줘요.'}],
+ goals:['피드백을 반영해 글을 의미 있게 고쳐 쓰기','AI 표현을 내 언어로 바꾸어 쓰기','초고와 수정본을 비교하며 성장 확인하기'],
+ ws:[],
+ chat:['초고가 재료라면, 고쳐쓰기는 요리!','어려운 단어는 쉬운 말로, 설명은 장면으로.'],
+ me:'내 말투로 다시 써 볼게!',
+ prompt:null,
+ tip:'"어려운 단어를 쉬운 말로", "설명을 장면으로" 두 가지만 기억하게 하세요. 글이 훨씬 살아납니다.',
+ note:'AI가 제안한 멋진 문장이라도 반드시 내 언어로 바꿔 써야 내 작품이 됩니다. 비계를 거두며 스스로 서는 과정이에요.',
+ quiz:[{q:'AI가 제안한 문장을 다룰 때 이 차시의 규칙은?',o:['그대로 붙여 넣는다','반드시 내 언어로 바꿔 쓴다','무조건 더 어렵게 바꾼다'],a:1,ex:'그대로 붙여 넣으면 내 동화가 아니에요.'}],
+ cta:'수정본 완성'},
+
+{n:13, title:'책 완성하기', sub:'삽화·본문 디자인과 e북 발간', helper:'편집 도우미',
+ goals:['본문과 삽화를 보기 좋게 배치해 책 완성하기','디지털 도구로 동화를 e북으로 발간하기','완성의 경험으로 자기효능감 키우기'],
+ ws:[
+  {t:'radio', h:'나에게 맞는 전자책 도구 고르기', k:'tool', opts:[
+    {b:'Book Creator', p:'글·그림에 목소리까지 담는 전자책 도구. 학교 프로젝트 수업의 단골'},
+    {b:'Canva', p:'누구나 쉬운 디자인 도구. 여러 페이지를 연결해 전자책처럼'}]},
+  {t:'check', h:'책 구조 체크리스트', k:'bookparts', opts:[
+    '표지 — 제목·이미지·작가 이름','본문 — 장면별 글과 삽화 (한 장면 = 한 페이지)','뒷부분 — 작가의 말 자리 남겨 두기']}],
+ chat:['흩어진 글과 그림이 드디어 한 권의 책이 돼요!','글과 그림이 같은 감정을 말하게 해 볼까?'],
+ me:'중요한 장면엔 큰 삽화!',
+ prompt:null,
+ tip:'"한 장면 = 한 페이지" 원칙을 권하세요. 글이 길면 나누고, 중요한 장면엔 큰 삽화를 배치하면 리듬이 살아납니다.',
+ note:'완성의 경험은 어떤 칭찬보다 강한 자기효능감을 줍니다. 편집의 최종 결정은 작가가!',
+ quiz:[{q:'본문과 삽화 배치의 원칙으로 알맞은 것은?',o:['글을 한 쪽에 가득 채운다','글과 그림이 같은 감정을 말하게 한다','여백을 없앤다'],a:1,ex:'같은 감정을 말하고 여백을 살릴 때 책이 보기 좋아요.'}],
+ cta:'e북 발간 완료'},
+
+{n:14, title:'작가의 말 쓰기', sub:'데뷔의 소감 담기', helper:'성찰 도우미',
+ tool:'bookmark-maker.html', toolH:2100, toolSub:'작가의 말 세 문장을 쓰고, 가장 남기고 싶은 장면을 나만의 책갈피로 만들어요',
+ goals:['창작 여정을 돌아보며 작가의 말 쓰기','프로젝트에서 성장한 점을 구체적으로 설명하기','AI 질문을 활용하되 내 언어로 쓰기'],
+ ws:[],
+ chat:['짧지만 가장 깊은 성찰이 일어나는 순간이에요.','내 마음을 정리할 질문 3개, 준비됐어!'],
+ me:'글은 내가 내 말로 쓸게.',
+ prompt:'나는 동화 작가로 데뷔한 소감을 "작가의 말"로 쓰려고 해.\n내 마음을 정리할 수 있게, 나에게 질문 3개만 해 줘.\n글은 내가 내 말로 쓸게.',
+ tip:'"잘 보이려는 말"보다 "진짜 마음"을 칭찬해 주세요. 솔직한 한 줄이 멋진 미사여구보다 울림이 큽니다.',
+ note:'작가의 말은 책의 마지막이자, 나를 돌아보는 첫 거울. 학습자에서 작가로 성장한 자신을 확인하는 시간이에요.',
+ quiz:[{q:'"작가의 말" 쓰기가 특히 길러 주는 사회정서역량은?',o:['자기인식','계산력','암기력'],a:0,ex:'감정과 성장을 언어로 정리하는 일은 자기인식을 길러요.'}],
+ cta:'작가의 말 완성'},
+
+{n:15, title:'출간 파티', sub:'낭독회 · 피드백 · 작가 파티', helper:'출간 파티 도우미',
+ tool:'reading-party.html', toolH:2450, toolSub:'내 목소리로 낭독하고, 친구에게 공감 피드백을 남기는 우리 반 출간 파티',
+ goals:['내 동화를 자신감 있게 낭독하기','친구 작품에 공감적·구체적 피드백 주기','나와 공동체의 성장 확인하기'],
+ ws:[],
+ chat:['가장 들려주고 싶은 한 장면은?','친구 글에 어떤 마음을 전할까?'],
+ me:'우리 반 모두, 작가 데뷔 축하해!',
+ prompt:null,
+ tip:'낭독이 부담스러운 학생은 "작가의 말" 한 줄만 읽거나, 친구가 대신 읽어 주는 "대독"도 좋습니다. 모두에게 안전한 무대를 만들어 주세요.',
+ note:'글은 평가가 아니라 누군가에게 들려질 때 의미가 완성됩니다. 피드백은 점수가 아니라 공감으로.',
+ quiz:[{q:'낭독회에서 강조하는 "진정한 청중"의 의미는?',o:['글을 평가하는 심사위원','글을 들어 주고 공감하는 사람','AI 채점기'],a:1,ex:'들려지고 공감받을 때 글쓰기의 의미가 완성돼요.'}],
+ cta:'데뷔 축하하기'},
+];
+
+const LINKS = [
+ {g:'우리들의 창작 도구', items:[
+  {c:'butter', b:'동화 일러스트 프롬프트 생성기', p:'쿼카연구회 제작. 6단계로 입력하면 그림 주문서(프롬프트)가 자동 완성되는 도우미 도구.', u:'https://gottkf1208.github.io/quokastorymaker/'},
+  {c:'mist', b:'Mizou — 교육용 AI 챗봇', p:'차시·주제별 도우미 챗봇을 만들어 안전하게 운영할 수 있는 교육용 챗봇 플랫폼.', u:'https://mizou.com'},
+  {c:'lilac', b:'Canva 교육용', p:'표지 디자인, Magic Media 삽화 생성, 전자책 편집까지. 교육용 무료.', u:'https://www.canva.com/ko_kr/education/'},
+  {c:'sage', b:'Book Creator', p:'글·그림·목소리까지 담아 e북을 발간하는 전자책 제작 도구.', u:'https://bookcreator.com/'}]},
+ {g:'수업 · 출석', items:[
+  {c:'sage', b:'경기온라인학교', p:'자기주도학습 콘텐츠 수강. 강의를 들은 날은 캘린더 탭에서 출석도 함께 기록해요.', u:'https://online.goe.go.kr'},
+  {c:'peach', b:'스피치타임', p:'원고 분량 계산기 — 말하기 속도 100% 기준으로 학습 분량을 계산해요. (선생님용)', u:'https://www.speechtime.co.kr/'}]},
+ {g:'글쓰기 참고', items:[
+  {c:'mist', b:'표준국어대사전', p:'단어의 뜻이 궁금할 때. 국립국어원의 우리말 사전.', u:'https://stdict.korean.go.kr'},
+  {c:'butter', b:'국립어린이청소년도서관', p:'어린이 책과 동화를 만나는 국가 도서관. 좋은 동화를 읽는 것이 좋은 동화 쓰기의 시작.', u:'https://www.nlcy.go.kr'}]},
+];
+
+/* ═══════════ 상태 저장 ═══════════ */
+let S = {ans:{}, done:{}, events:{}, att:{}, cur:1};
+try{ const raw = localStorage.getItem('quokka_studio_v1'); if(raw) S = Object.assign(S, JSON.parse(raw)); }catch(e){}
+
+/* 도구 페이지(4·5·6·7·9·14·15차시 iframe)가 직접 저장하는 차시 답안은
+   스튜디오 메모리보다 디스크가 항상 최신 — 저장 전에 반드시 병합해
+   학생이 적은 내용이 덮어써지지 않게 한다. */
+const TOOL_ANS_KEYS = ['l4','l5','l6','l7','l9','l14','l15'];
+function syncToolAns(){
+  try{
+    const raw = localStorage.getItem('quokka_studio_v1'); if(!raw) return;
+    const disk = JSON.parse(raw);
+    if(disk && disk.ans) TOOL_ANS_KEYS.forEach(k=>{ if(disk.ans[k]) S.ans[k] = disk.ans[k]; });
+  }catch(e){}
+}
+function save(){ syncToolAns(); try{ localStorage.setItem('quokka_studio_v1', JSON.stringify(S)); }catch(e){} }
+window.addEventListener('storage', e=>{ if(e.key==='quokka_studio_v1') syncToolAns(); });
+
+/* 도구 iframe이 알려 주는 실제 높이로 맞춰 하단 여백 제거 */
+window.addEventListener('message', e=>{
+  const d = e.data || {};
+  if(d.qkFrameH){
+    document.querySelectorAll('iframe').forEach(f=>{
+      if(f.contentWindow === e.source) f.style.height = (d.qkFrameH + 4) + 'px';
+    });
+  }
+  if(d.qkScrollTop){
+    document.querySelectorAll('iframe').forEach(f=>{
+      if(f.contentWindow === e.source){
+        const y = f.getBoundingClientRect().top + window.scrollY - 90;
+        window.scrollTo({top:Math.max(0,y), behavior:'smooth'});
+      }
+    });
+  }
+});
+function A(n){ return S.ans['l'+n] = S.ans['l'+n] || {}; }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function doneCount(){ return LESSONS.filter(l=>S.done[l.n]).length; }
+
+/* ═══════════ 라우팅 ═══════════ */
+let CURV = 'home';
+const ORDER = ['home','lesson','book','shelf','cal','links'];
+function go(v, opt){
+  const back = ORDER.indexOf(v) < ORDER.indexOf(CURV);
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('show','back'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('on', b.dataset.v===v));
+  const el = document.getElementById('v-'+v);
+  ({home:renderHome, lesson:renderLesson, book:renderBook, shelf:renderShelf, cal:renderCal, links:renderLinks})[v](opt);
+  void el.offsetWidth;
+  el.classList.add('show'); if(back) el.classList.add('back');
+  CURV = v; window.scrollTo({top:0});
+}
+function openLesson(n){ S.cur = n; save(); go('lesson'); }
+
+/* ═══════════ 홈 ═══════════ */
+function renderHome(){
+  const el = document.getElementById('v-home');
+  const dc = doneCount();
+  let stagesHtml = STAGES.map(st=>{
+    const c = CV[st.c];
+    const cards = LESSONS.filter(l=>l.n>=st.range[0]&&l.n<=st.range[1]).map(l=>`
+      <button class="lcard" onclick="openLesson(${l.n})">
+        <span class="lnum" style="background:${soft(c.bg)};color:${c.d}">${String(l.n).padStart(2,'0')}</span>
+        <span><span class="lt">${l.title}</span><br><span class="ls">${l.sub}</span></span>
+        <span class="chk">${S.done[l.n]?'✓':''}</span>
+      </button>`).join('');
+    return `<div class="stage-block">
+      <div class="stage-head">
+        <span class="dot" style="background:${c.bg}"></span>
+        <span class="ov"><b>${st.en}</b> · ${st.name}</span>
+        <span class="rng">${st.rngLabel || (st.range[0]+'–'+st.range[1]+'차시')}</span>
+      </div>
+      <div class="lesson-grid">${cards}</div></div>`;
+  }).join('');
+
+  const today = fmtDate(new Date());
+  const attToday = !!S.att[today];
+  const nextLesson = LESSONS.find(l=>!S.done[l.n]);
+  el.innerHTML = `
+  <div class="hero">
+    <span class="blob-bg b1"></span><span class="blob-bg b2"></span><span class="blob-bg b3"></span>
+    <img class="qk qk-float hero-qk" src="${QUOKKA_FULL}" alt="쿼카 마스코트">
+    <span class="pill hero-tag">초등 4~6학년 · 15차시 프로젝트형 자기주도학습</span>
+    <h1>AI 동화작가<br>데뷔 프로젝트</h1>
+    <div class="rule"></div>
+    <p class="sub">내 마음이 책이 되는 순간 — 원고의 흐름을 그대로 따라가며 나만의 인성동화 한 권을 완성합니다.</p>
+    <div class="hero-principles">
+      <div class="pr-chip"><b><span class="dot" style="background:var(--c-accent)"></span>학생이 최종 창작자, AI는 조력자</b>AI는 답을 대신 쓰지 않고, 생각의 길을 안내하는 질문 파트너로만 참여합니다.</div>
+      <div class="pr-chip"><b><span class="dot" style="background:var(--c-cobalt)"></span>감정은 평가가 아니라 지원의 신호</b>꺼낸 감정에 점수를 매기지 않고, 더 잘 돕기 위한 자료로 읽습니다.</div>
+    </div>
+  </div>
+  <div class="home-grid">
+    <div>${stagesHtml}</div>
+    <div>
+      <div class="side-card">
+        <h3>나의 작가 여정</h3>
+        <div class="progress-ring">
+          <span class="pr-num">${dc}<small> / 15</small></span>
+          <span class="bar"><i style="width:${dc/15*100}%"></i></span>
+        </div>
+        <p style="font-size:13.5px;color:var(--c-sub);margin-top:10px">${dc===15?'데뷔 완료! [내 책] 탭에서 데뷔 증서를 확인하세요.':(dc===0?'1차시부터 여정을 시작해 볼까요?':'다음 차시 — '+ (nextLesson?.n ?? 15) +'차시 '+ (nextLesson?.title ?? ''))}</p>
+        <button class="cta" style="width:100%;justify-content:center;margin-top:14px" onclick="openLesson(${nextLesson?.n ?? 15})">이어서 실습하기</button>
+      </div>
+      <div class="side-card">
+        <h3>온라인학교 수강 · 출석</h3>
+        <div class="quick-links">
+          <a class="ql" href="https://online.goe.go.kr" target="_blank" rel="noopener">경기온라인학교 수강하러 가기</a>
+        </div>
+        <button class="att-big ${attToday?'did':''}" onclick="quickAtt()">${attToday?'오늘 출석 완료 · '+today:'오늘 수강 출석 등록'}</button>
+      </div>
+      <div class="side-card" id="homeShelfCard" style="display:none">
+        <h3>작가들의 책장 · 신간 📚</h3>
+        <div id="homeShelfList"></div>
+        <button class="att-big" onclick="go('shelf')">책장 구경 가기</button>
+      </div>
+      <div class="side-card">
+        <h3>바로가기</h3>
+        <div class="quick-links">
+          <a class="ql" href="https://gottkf1208.github.io/quokastorymaker/" target="_blank" rel="noopener">동화 일러스트 프롬프트 생성기</a>
+          <a class="ql" href="https://mizou.com" target="_blank" rel="noopener">Mizou 교육용 챗봇</a>
+          <a class="ql" href="https://www.canva.com/ko_kr/education/" target="_blank" rel="noopener">Canva 교육용</a>
+          <a class="ql" href="https://bookcreator.com/" target="_blank" rel="noopener">Book Creator</a>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  homeShelfLoad();
+}
+async function homeShelfLoad(){
+  try{
+    if(shelfPosts===null){
+      const r = await fetch('/api/bookshelf/list');
+      const j = await r.json();
+      if(j.ok) shelfPosts = j.posts; else return;
+    }
+    if(shelfPosts.error || !shelfPosts.length) return;
+    const card = document.getElementById('homeShelfCard'), box = document.getElementById('homeShelfList');
+    if(!card || !box) return;
+    box.innerHTML = shelfPosts.slice(0,3).map(p=>`
+      <div class="hs-row" onclick="go('shelf');setTimeout(()=>shelfOpen('${p.id}'),80)">
+        <span class="hs-ico">${TYPE_ICO[p.type]||'🔖'}</span><b>${esc(p.title)}</b><span>${TYPE_LESSON[p.type]?TYPE_LESSON[p.type]+'차시 · ':''}${esc(p.penname)}</span>
+      </div>`).join('');
+    card.style.display = 'block';
+  }catch(e){}
+}
+function quickAtt(){ const t = fmtDate(new Date()); if(S.att[t]) delete S.att[t]; else S.att[t]='경기온라인학교 수강'; save(); renderHome(); }
+
+/* ═══════════ 차시 실습 ═══════════ */
+function renderLesson(){
+  const el = document.getElementById('v-lesson');
+  const L = LESSONS.find(l=>l.n===S.cur) || LESSONS[0];
+  const st = stageOf(L.n), c = CV[st.c];
+  const a = A(L.n);
+
+  const lessonNav = `
+  <div class="lnav-wrap">
+    <div class="lnav-head"><span class="ov">차시 이동</span><span class="lnav-cap">번호를 누르면 다른 차시로 갈 수 있어요</span></div>
+    <div class="lnav">${LESSONS.map(l=>{
+      const sc = CV[stageOf(l.n).c];
+      const cur = l.n===L.n, done = !!S.done[l.n];
+      return `<button class="lnav-chip ${cur?'cur':''}" ${cur?'':`style="background:${soft(sc.bg)};color:${sc.d}"`} title="${l.n}차시 ${l.title}${done?' · 완료':''}" onclick="openLesson(${l.n})">${String(l.n).padStart(2,'0')}${done?'<i>✓</i>':''}</button>`;
+    }).join('')}</div>
+  </div>`;
+
+  if(L.tool || L.tools){
+    const pv = LESSONS.find(l=>l.n===L.n-1), nx = LESSONS.find(l=>l.n===L.n+1);
+    const tools = L.tools || [{src:L.tool, h:L.toolH}];
+    const toolsHtml = tools.map((t,i)=>`
+      ${t.label?`<div style="display:flex;align-items:center;gap:9px;margin:${i?'26px':'0'} 0 10px">
+        <span class="pill" style="background:${soft(c.bg)};color:${c.d}">${t.label}</span>
+      </div>`:''}
+      <iframe src="${t.src}" allow="microphone" style="width:100%;height:${t.h||1500}px;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:var(--shadow-sm);${(!t.label&&i)?'margin-top:26px':''}" title="${L.title}"></iframe>
+      <div style="margin-top:8px;text-align:right"><a href="${t.src}" target="_blank" rel="noopener" style="font-size:13.5px;color:var(--c-sub);font-weight:700;text-decoration:none">새 탭에서 크게 열기 ↗</a></div>`).join('');
+    const botsHtml = (L.bots||[]).map(b=>`
+      <div class="ws-card" style="margin-top:18px;background:linear-gradient(180deg,#FBFAF7 0%,#fff 100%)">
+        <div style="font-size:34px;line-height:1;margin-bottom:10px">${b.emoji||'🤖'}</div>
+        <h4 style="font-size:18px;margin-bottom:6px">${b.name}</h4>
+        <p style="font-size:14.5px;color:var(--c-sub);margin:0 0 16px;line-height:1.6">${b.p||''}</p>
+        ${b.u
+          ? `<a class="cta ghost" style="width:100%;justify-content:center" href="${b.u}" target="_blank" rel="noopener">${b.name} 열기 (Mizou) ↗</a>`
+          : `<div style="display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px dashed #C9C5BA;border-radius:14px;padding:15px;font-weight:800;font-size:15px;color:var(--c-sub)">🔗 챗봇 링크 준비 중 — 선생님이 안내하는 주소로 접속해요</div>`}
+      </div>`).join('');
+    el.innerHTML = `
+    <div class="les-top">
+      <span class="ov"><b>${st.en}</b> · ${st.name}</span>
+      <span class="helper-badge"><span class="dot" style="background:${c.bg}"></span>${L.helper}</span>
+    </div>
+    ${lessonNav}
+    <div class="les-head" style="margin-bottom:16px">
+      <span class="pill" style="background:${soft(c.bg)};color:${c.d}">${L.badge||(L.n+'차시')}</span>
+      <h2>${L.title}</h2>
+      <p class="sub2">${L.toolSub||L.sub}</p>
+    </div>
+    ${toolsHtml}
+    ${botsHtml}
+    <div class="les-foot no-print">
+      ${pv?`<button class="cta ghost" onclick="openLesson(${pv.n})">← ${pv.n}차시</button>`:''}
+      <span class="spacer"></span>
+      <button class="cta ${S.done[L.n]?'done':''}" onclick="toggleDone(${L.n})">${S.done[L.n]?'완료했어요 ✓':L.cta}</button>
+      ${nx?`<button class="cta ghost" onclick="openLesson(${nx.n})">${nx.n}차시 →</button>`:`<button class="cta ghost" onclick="go('book')">내 책 보기 →</button>`}
+    </div>`;
+    return;
+  }
+
+  const wsHtml = L.ws.map(w=>{
+    if(w.t==='rows'){
+      return `<div class="ws-card"><h4>${w.h}</h4>${w.rows.map(r=>`
+        <div class="row-line"><span class="tag" style="background:${soft(c.bg)};color:${c.d}">${r.tag}</span>
+        <input data-k="${r.k}" value="${esc(a[r.k])}" placeholder="${esc(r.ph)}" oninput="onAns(${L.n},this)"></div>`).join('')}
+        ${w.note?`<p class="ws-note" style="margin-top:11px">${w.note}</p>`:''}</div>`;
+    }
+    if(w.t==='link'){
+      return `<div class="ws-card"><h4>${w.h}</h4>${w.items.map(it=>`
+        ${it.p?`<p class="ws-note" style="margin:0 0 11px">${it.p}</p>`:''}
+        ${it.go
+          ? `<button class="cta" style="width:100%;justify-content:center" onclick="${it.go}">${it.b}</button>`
+          : `<a class="cta ghost" style="width:100%;justify-content:center" href="${it.u}" target="_blank" rel="noopener">${it.b} ↗</a>`}`).join('')}</div>`;
+    }
+    if(w.t==='pills'){
+      const sel = a[w.k]||[];
+      return `<div class="ws-card"><h4>${w.h}</h4><div class="pills-wrap">${w.opts.map(o=>`
+        <button class="e-pill ${sel.includes(o)?'sel':''}" onclick="togglePill(${L.n},'${w.k}','${o}',${w.max||99})">${o}</button>`).join('')}</div></div>`;
+    }
+    if(w.t==='ta'){
+      const cnt = (a[w.k]||'').length;
+      return `<div class="ws-card"><h4>${w.h}</h4>
+        <textarea class="big-ta" data-k="${w.k}" placeholder="${esc(w.ph)}" oninput="onAns(${L.n},this);document.getElementById('cnt${L.n}').textContent=this.value.length">${esc(a[w.k])}</textarea>
+        <div class="ta-meta">
+          ${w.timer?`<button class="timer-btn" id="timerBtn" onclick="startTimer(${w.timer})">${w.timer}분 멈추지 않고 쓰기</button>`:''}
+          <span style="margin-left:auto"><b id="cnt${L.n}">${cnt}</b>자</span>
+        </div></div>`;
+    }
+    if(w.t==='triage'){
+      return `<div class="ws-card"><h4>${w.h}</h4>${w.rows.map(r=>{
+        const style = r.c==='accent' ? 'background:var(--c-accent);color:#fff' : `background:${soft(CV[r.c].bg)};color:${CV[r.c].d}`;
+        return `<div class="triage-row"><span class="tag" style="${style}">${r.tag}</span>
+          <div class="triage-inputs">
+            <input data-k="${r.k}_f" value="${esc(a[r.k+'_f'])}" placeholder="${esc(r.ph1)}" oninput="onAns(${L.n},this)">
+            <input data-k="${r.k}_w" value="${esc(a[r.k+'_w'])}" placeholder="${esc(r.ph2)}" oninput="onAns(${L.n},this)">
+          </div></div>`;}).join('')}</div>`;
+    }
+    if(w.t==='pair'){
+      return `<div class="ws-card"><h4>${w.h}</h4><div class="pair-grid">
+        <div class="ph-head">${w.heads[0]}</div><div class="ph-head">${w.heads[1]}</div>
+        ${w.rows.map(r=>`
+          <textarea data-k="${r.k1}" placeholder="${esc(r.ph1)}" oninput="onAns(${L.n},this)">${esc(a[r.k1])}</textarea>
+          <textarea data-k="${r.k2}" placeholder="${esc(r.ph2)}" oninput="onAns(${L.n},this)">${esc(a[r.k2])}</textarea>`).join('')}
+      </div></div>`;
+    }
+    if(w.t==='radio'){
+      return `<div class="ws-card"><h4>${w.h}</h4><div class="radio-cards">${w.opts.map(o=>`
+        <button class="r-card ${a[w.k]===o.b?'sel':''}" onclick="setAns(${L.n},'${w.k}','${esc(o.b)}')">
+          <span class="rdot"></span>
+          <span><b>${o.b}</b><p>${o.p}</p></span></button>`).join('')}</div></div>`;
+    }
+    if(w.t==='check'){
+      const sel = a[w.k]||[];
+      return `<div class="ws-card"><h4>${w.h}</h4><div class="check-list">${w.opts.map(o=>`
+        <button class="ck ${sel.includes(o)?'sel':''}" onclick="togglePill(${L.n},'${w.k}','${esc(o)}',99)">
+        <span class="box">✓</span><span>${o}</span></button>`).join('')}</div></div>`;
+    }
+    return '';
+  }).join('');
+
+  const quizHtml = L.quiz.map((q,qi)=>`
+    <div class="quiz-q"><div class="qq">Q. ${q.q}</div>
+      ${q.o.map((o,oi)=>`<button class="quiz-opt" id="qo${qi}_${oi}" onclick="quizPick(${qi},${oi},${q.a})">${'①②③④'[oi]} ${o}</button>`).join('')}
+      <div class="quiz-ex" id="qex${qi}">${q.ex}</div>
+    </div>`).join('');
+
+  const promptHtml = L.prompt ? `
+    <div class="prompt-box"><div class="pb-head"><b>PROMPT ${L.promptFrom?'· 내 입력으로 자동 완성':''}</b>
+      <button class="copy-btn" onclick="copyPrompt(${L.n})">복사</button></div>
+      <pre id="promptPre">${esc(buildPrompt(L))}</pre></div>` : '';
+
+  const prevL = LESSONS.find(l=>l.n===L.n-1), nextL = LESSONS.find(l=>l.n===L.n+1);
+
+  el.innerHTML = `
+  <div class="les-top">
+    <span class="ov"><b>${st.en}</b> · ${st.name}</span>
+    <span class="helper-badge"><span class="dot" style="background:${c.bg}"></span>${L.helper}</span>
+  </div>
+  ${lessonNav}
+  <div class="les-grid">
+    <div>
+      <div class="les-head">
+        <span class="pill" style="background:${soft(c.bg)};color:${c.d}">${L.badge||(L.n+'차시')}</span>
+        <h2>${L.title}</h2>
+        <p class="sub2">${L.sub}</p>
+        <div class="goals">${L.goals.map(g=>`<div>${g}</div>`).join('')}</div>
+      </div>
+      ${wsHtml}
+      <div class="les-foot no-print">
+        ${prevL?`<button class="cta ghost" onclick="openLesson(${prevL.n})">← ${prevL.n}차시</button>`:''}
+        <span class="spacer"></span>
+        <button class="cta ${S.done[L.n]?'done':''}" onclick="toggleDone(${L.n})">${S.done[L.n]?'완료했어요 ✓':(L.cta)}</button>
+        ${nextL?`<button class="cta ghost" onclick="openLesson(${nextL.n})">${nextL.n}차시 →</button>`:`<button class="cta ghost" onclick="go('book')">내 책 보기 →</button>`}
+      </div>
+    </div>
+    <div class="doumi">
+      <div class="doumi-head">
+        <img class="qk" src="${QUOKKA_FACE}" alt="AI 도우미">
+        <div><b>AI 도우미</b><span>${L.helper}</span></div>
+        <span class="mini">답 대신 질문</span>
+      </div>
+      ${L.chat.map(cc=>`<div class="bubble">${cc}</div>`).join('')}
+      <div class="bubble me">${L.me}</div>
+      ${promptHtml}
+      <div class="tip-box"><b>초등 실전 TIP</b>${L.tip}</div>
+      <div class="quiz-box">${quizHtml}</div>
+      <div class="doumi-note">${L.note}</div>
+    </div>
+  </div>`;
+}
+
+function buildPrompt(L){
+  if(L.promptFrom){
+    const a = A(L.n);
+    const parts = L.promptFrom.map(k=>a[k]).filter(Boolean);
+    if(parts.length) return parts.join('\n');
+  }
+  return L.prompt || '';
+}
+function onAns(n, elm){ A(n)[elm.dataset.k] = elm.value; save(); syncPrompt(n); }
+function setAns(n, k, v){ A(n)[k] = v; save(); renderLesson(); }
+function togglePill(n, k, v, max){
+  const a = A(n); a[k] = a[k]||[];
+  const i = a[k].indexOf(v);
+  if(i>=0) a[k].splice(i,1);
+  else { if(a[k].length>=max) a[k].shift(); a[k].push(v); }
+  save(); renderLesson();
+}
+function syncPrompt(n){
+  const L = LESSONS.find(l=>l.n===n);
+  const pre = document.getElementById('promptPre');
+  if(pre && L && L.promptFrom) pre.textContent = buildPrompt(L);
+}
+function copyPrompt(n){
+  const L = LESSONS.find(l=>l.n===n);
+  const txt = buildPrompt(L);
+  (navigator.clipboard?.writeText(txt) || Promise.reject()).then(()=>toast('프롬프트를 복사했어요'))
+   .catch(()=>{ const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); toast('프롬프트를 복사했어요'); });
+}
+function toggleDone(n){
+  S.done[n] = !S.done[n]; save(); renderLesson();
+  if(S.done[n]) toast(n===15?'작가 데뷔를 축하합니다. [내 책]에서 데뷔 증서를 확인하세요':n+'차시 완료');
+}
+function quizPick(qi, oi, a){
+  const btn = document.getElementById('qo'+qi+'_'+oi);
+  btn.classList.add(oi===a?'ok':'no');
+  if(oi===a) document.getElementById('qex'+qi).style.display='block';
+}
+let timerId=null;
+function startTimer(min){
+  const btn = document.getElementById('timerBtn'); if(!btn) return;
+  if(timerId){ clearInterval(timerId); timerId=null; btn.classList.remove('run'); btn.textContent=min+'분 멈추지 않고 쓰기'; return; }
+  let left = min*60;
+  btn.classList.add('run');
+  timerId = setInterval(()=>{
+    left--;
+    btn.textContent = String(Math.floor(left/60)).padStart(2,'0') + ':' + String(left%60).padStart(2,'0') + ' — 멈추지 말고!';
+    if(left<=0){ clearInterval(timerId); timerId=null; btn.classList.remove('run'); btn.textContent='완주! 끝까지 썼어요'; toast('멈추지 않고 끝까지 썼어요. 초고는 고치기 위해 쓰는 글'); }
+  },1000);
+}
+function toast(msg){
+  let t = document.getElementById('toast');
+  if(!t){ t=document.createElement('div'); t.id='toast';
+    t.style.cssText='position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--c-ink);color:#fff;padding:12px 26px;border-radius:99px;font-weight:700;font-size:14.5px;box-shadow:var(--shadow);z-index:99;transition:opacity .3s;';
+    document.body.appendChild(t); }
+  t.textContent = msg; t.style.opacity='1';
+  clearTimeout(t._h); t._h = setTimeout(()=>t.style.opacity='0', 2600);
+}
+
+/* ═══════════ 5차시 얼개 점검 엔진 — 기승전결 신호 분석 ═══════════ */
+const CK_NEG_AFTER = ["지 않","지않","않았","않는","않아","못했","못한다","못하고","못하는","못해"];
+const CK_NEG_BEFORE = /(^|[^가-힣])안\s?$/;
+function ckMk(list, neg){ return list.map(w => ({ w, neg })); }
+
+const CK_WANT = ckMk([
+  "원한다","원했다","원하는","원하고","원한","원하다","원해","원하",
+  "바란다","바랐다","바라는","바라며","바라고","바란","바라다","바래","바랬","바라",
+  "꿈꾼다","꿈꿨다","꿈꾸는","꿈이었","꿈꾼","꿈꾸고","꿈꾸다","꿈꿔","꿈은","꿈꾸",
+  "부럽다","부러워","부러웠","부러운","부럽고","부럽",
+  "좋겠다","좋겠어","좋겠",
+  "기대한다","기대했다","기대되는","기대감","기대하는","기대한","기대하고","기대하다","기대해","기대돼","기대됐","기대하",
+  "동경한다","동경했다","동경한","동경",
+  "갈망한다","갈망했다","갈망한","갈망",
+  "소원","소망",
+  "할 거야","할거야","하고 말겠다","말겠다",
+  "싶다","싶어","싶었","싶고","싶은","싶네","싶으니","싶"
+], true);
+const CK_PURPOSE = ckMk(["위해","위한","하려고","하고자"], false);
+const CK_ACH = ckMk([
+  "성공하다","성공했다","성공한","성공하고","성공해","성공",
+  "해내다","해냈다","해냈","해낸","해내",
+  "이루다","이뤘다","이뤘","이룬","이루",
+  "이뤄내다","이뤄냈다","이뤄냈","이뤄낸",
+  "달성하다","달성했다","달성한","달성",
+  "성취하다","성취했다","성취한","성취"
+], true);
+const CK_TRANS = ckMk([
+  "그런데","근데","그러다가","그러자","그러던 중","그러던중",
+  "갑자기","바로 그때","바로그때","그 순간","그순간",
+  "어느 날","어느날","우연히","뜻밖에",
+  "다음 날","다음날","며칠 뒤","며칠뒤","잠시 후","잠시후",
+  "그러고 나서","그러고나서",
+  "점점",
+  "커지다","커졌","커지는","커지고","커진","커지",
+  "심해지다","심해졌","심해지고","심해진","심해지",
+  "생기다","생겼다","생겼","생기는","생기고","생긴","생겨","생기",
+  "벌어지다","벌어졌다","벌어졌","벌어지는","벌어지고","벌어진","벌어져","벌어지",
+  "일어나다","일어났다","일어났","일어나고","일어나는","일어난",
+  "나타나다","나타났다","나타났","나타나고","나타나는","나타난",
+  "만나다","만났다","만났","만나고","만나는","만난","만나",
+  "도와주다","도와줬다","도와줬","도와주고","도와주는","도와준","도움을 받",
+  "방해","가로막","막히다","막힌","막혔","막혀",
+  "빼앗기다","빼앗긴","빼앗겼",
+  "잃어버리다","잃어버린","잃어버렸","잃어버리","잃었다","잃는다",
+  "그때부터","이후로",
+  "싸우다","싸웠다","싸웠","싸우고","싸우는","싸운","싸우",
+  "다투다","다퉜다","다퉜","다투고","다투는","다툰","다투",
+  "사고가 나","사고가 났",
+  "사라지","사라졌","사라진",
+  "다치","다쳤","다친",
+  "넘어지","넘어졌","넘어진",
+  "부서지","부서졌","부서진"
+], false);
+const CK_FEAR = [
+  ...ckMk([
+  "두렵다","두려워","두려웠","두려운","두렵고","두렵",
+  "무섭다","무서워","무서웠","무서운","무섭고","무섭",
+  "망설이다","망설였","망설이는","망설임","망설이고","망설인","망설",
+  "걱정되다","걱정했다","걱정스럽","걱정된","걱정되고","걱정하고","걱정하는","걱정",
+  "자신없","자신이 없",
+  "머뭇거리다","머뭇거렸","머뭇거리고","머뭇거린","머뭇거리",
+  "주저하다","주저했","주저하고","주저한","주저하",
+  "긴장되다","긴장했다","긴장되고","긴장된","긴장",
+  "불안하다","불안했","불안한","불안",
+  "떨리다","떨렸다","떨리고","떨린","떨리",
+  "포기하고 싶",
+  "속상하다","속상했","속상한","속상",
+  "화나다","화났다","화가 나","화나고","화난","화나",
+  "억울하다","억울했","억울한","억울",
+  "울다","울었다","울고 싶","울고","우는","눈물이",
+  "힘들다","힘들었","힘들어하","힘든","힘들고","힘들",
+  "힘이 들","힘이 든","힘겹다","힘겨워","힘겨웠","힘겨운",
+  "애먹",
+  "창피하다","창피했","창피한","창피",
+  "부끄럽다","부끄러웠","부끄러운","부끄럽",
+  "후회하다","후회했","후회하는","후회한","후회",
+  "서럽다","서러웠","서러운","서럽",
+  "답답하다","답답했","답답한","답답",
+  "곤란하다","곤란했","곤란한","곤란",
+  "혼나다","혼났다","혼나고","혼나는","혼난","혼날","혼나",
+  "혼내다","혼냈다","혼내고","혼낸","혼내",
+  "야단맞다","야단맞았","야단맞는","꾸중을 듣",
+  "당황하다","당황했","당황한","당황해","당황",
+  "괴롭다","괴로워","괴로웠","괴로운","괴롭",
+  "겁나다","겁이 나","겁났","겁먹","겁나",
+  "슬프다","슬펐","슬픈","슬퍼",
+  "외롭다","외로워","외로웠","외로운","외롭",
+  "어렵다","어려워","어려웠","어려운","어렵",
+  "버겁다","버거워","버거웠","버거운",
+  "막막하다","막막했","막막한",
+  "어쩔 줄 모르","어쩔 줄 몰랐",
+  "큰일 났","큰일 나",
+  "짜증나다","짜증났","짜증나고","짜증난","짜증이","짜증나",
+  "진짜 싫","완전 싫","너무 싫","싫다","싫었","싫어했",
+  "별로다","별로였",
+  "열받","열받았",
+  "실패하다","실패했다","실패한","실패하고","실패해","실패",
+  "망쳤다","망친","망치고",
+  "놓치다","놓쳤다","놓친","놓치고","놓치",
+  "틀리다","틀렸다","틀린","틀리고","틀려",
+  "실수하다","실수했다","실수한","실수하고","실수해","실수",
+  "포기하다","포기했다","포기한","포기하고","포기해","포기",
+  "쫓기다","쫓겼다","쫓기는","쫓기고","쫓기",
+  "갇히다","갇혔다","갇힌","갇히고","갇히",
+  "위험하다","위험했다","위험한","위험",
+  "다치다","다쳤다","다친","다치고","다치",
+  "떨어지다","떨어졌다","떨어진","떨어지고","떨어지","시험에 떨어지"
+  ], true),
+  ...ckMk(["죽을 뻔","죽을뻔"], false),
+];
+const CK_CONTRAST = ckMk(["지만","그러나","하지만","그런데도","그래도"], false);
+const CK_CHANGE = [
+  ...ckMk(["달라지다","달라졌","달라진","달라지","변하다","변했다","변한","변하고","변해","변하",
+         "깨닫다","깨달았","깨닫는","깨달은","깨닫",
+         "용기를 내","용기를 냈","용기를 낸","용기 내",
+         "용기가 생기","용기가 생겼",
+         "자신감이 생기","자신감이 생겼",
+         "용감해지","용감해졌","용감해진",
+         "씩씩해지","씩씩해졌","씩씩해진",
+         "성장하다","성장했다","성장한","성장하",
+         "결심하다","결심했다","결심한","결심하",
+         "다짐하다","다짐했다","다짐한","다짐해","다짐",
+         "알게 되","알게 됐",
+         "마음먹",
+         "해내","해냈","해낸",
+         "성공하다","성공했다","성공한","성공하",
+         "화해하다","화해했다","화해한","화해하",
+         "반성하다","반성했다","반성한","반성하",
+         "할 수 있게"], true),
+  ...ckMk(["더 이상","더이상","예전과 달리","예전과달리",
+         "이제는","이제야","그제야","그제서야","처음으로","앞으로는",
+         "드디어","결국"], false),
+];
+
+function ckFind(text, entries){
+  let negatedAny = false;
+  for(const {w, neg} of entries){
+    let searchFrom = 0;
+    while(true){
+      const idx = text.indexOf(w, searchFrom);
+      if(idx === -1) break;
+      if(!neg) return { found:true, negated:false, matched:w };
+      const after = text.slice(idx + w.length, idx + w.length + 8);
+      const before = text.slice(Math.max(0, idx - 3), idx);
+      const isNeg = CK_NEG_AFTER.some(n => after.includes(n)) || CK_NEG_BEFORE.test(before);
+      if(!isNeg) return { found:true, negated:false, matched:w };
+      negatedAny = true;
+      searchFrom = idx + 1;
+    }
+  }
+  return { found:false, negated:negatedAny, matched:null };
+}
+
+function ckClassify(sk, text){
+  const t = (text || "").trim();
+  if(!t) return { level:"C", empty:true };
+  if(sk === "기"){
+    const want = ckFind(t, CK_WANT), long = t.length >= 12;
+    let level = "B";
+    if(want.found && long) level = "A";
+    else if(!want.found && !want.negated && !long) level = "C";
+    return { level, want, long };
+  }
+  if(sk === "승"){
+    const trans = ckFind(t, CK_TRANS), long = t.length >= 12;
+    let level = "B";
+    if(trans.found && long) level = "A";
+    else if(!trans.found && !long) level = "C";
+    return { level, trans, long };
+  }
+  if(sk === "전"){
+    const goal = ckFind(t, [...CK_WANT, ...CK_PURPOSE, ...CK_ACH]);
+    const fear = ckFind(t, CK_FEAR);
+    const hasConnective = CK_CONTRAST.some(e => t.includes(e.w));
+    let level = "B";
+    if(goal.found && fear.found) level = "A";
+    else if((!goal.found && !goal.negated) && (!fear.found && !fear.negated)) level = "C";
+    return { level, goal, fear, hasConnective };
+  }
+  if(sk === "결"){
+    const change = ckFind(t, CK_CHANGE), long = t.length >= 10;
+    let level = "B";
+    if(change.found && long) level = "A";
+    else if(!change.found && !change.negated && !long) level = "C";
+    return { level, change, long };
+  }
+}
+
+const CK_MSG = {
+  기: {
+    A: r => `좋아요! "${r.want.matched}" 같은 표현에서 주인공이 원하는 마음이 잘 느껴져요. 이야기를 시작하기에 충분해요.`,
+    B: r => {
+      if(r.want.negated && !r.want.found) return `주인공이 무언가를 원하지 않는 것처럼 읽히는 부분이 있어요. 표현이 헷갈리게 됐다면 한번 다시 읽어봐도 좋아요.`;
+      if(r.want.found && !r.long) return `"${r.want.matched}" 표현은 보이는데, 조금 더 자세히 써보면 어떨까요? 주인공이 평소 어떤 모습인지 한 문장 더 있으면 좋겠어요.`;
+      if(!r.want.found && r.long) return `문장은 충분히 자세한데, 주인공이 정확히 무엇을 원하는지는 콕 집어 보이진 않아요. 이야기 속에 숨어있을 수도 있으니 스스로 확인해볼까요?`;
+      return `원하는 마음이 살짝 보이는 것 같기도 해요. 조금 더 보여준다면, 주인공은 정확히 무엇을 원하는 걸까요?`;
+    },
+    C: () => `아직 주인공이 무엇을 원하는지 잘 안 보여요. "~하고 싶다"나 "~을 바란다"처럼 한 문장 더 넣어볼까요?`,
+  },
+  승: {
+    A: r => `"${r.trans.matched}" 덕분에 사건이 새롭게 시작되는 게 잘 보여요!`,
+    B: r => {
+      if(r.trans.found && !r.long) return `"${r.trans.matched}" 표현은 보이는데, 무슨 일이 정확히 생긴 건지 조금 더 자세히 써볼까요?`;
+      if(!r.trans.found && r.long) return `문장은 자세한데, 사건이 새롭게 바뀌는 지점이 콕 집어 보이진 않아요. 방해가 되는 일이나 도움이 되는 일이 어디쯤 있을까요?`;
+      return `사건이 조금 바뀌는 것 같기도 해요. 정확히 무슨 일이 생겼는지 조금 더 또렷하게 써볼까요?`;
+    },
+    C: () => `아직 특별한 사건이 잘 안 보여요. 주인공에게 방해가 되는 일이나 도움이 되는 일이 생긴다면 어떤 걸까요?`,
+  },
+  전: {
+    A: r => `원하는 마음("${r.goal.matched}")과 두려운 마음("${r.fear.matched}")이 잘 부딪히고 있어요. 아주 좋은 위기예요!`,
+    B: r => {
+      if(r.goal.found && !r.fear.found) return `원하는 마음("${r.goal.matched}")은 보이는데, 그걸 가로막는 두려움이나 망설임은 아직 잘 안 보여요. 무엇이 주인공을 망설이게 할까요?`;
+      if(!r.goal.found && r.fear.found) return `두려운 마음("${r.fear.matched}")은 보이는데, 주인공이 정말 원하는 게 뭔지는 잘 안 보여요. 원하는 것도 함께 넣어볼까요?`;
+      if(r.hasConnective) return `대조되는 흐름은 보이는데, 원하는 마음과 두려운 마음이 조금 더 뚜렷하게 드러나면 훨씬 힘든 순간처럼 느껴질 거예요.`;
+      return `지금보다 조금 더, 원하는 마음과 두려운 마음이 동시에 드러나면 이야기가 훨씬 팽팽해질 거예요.`;
+    },
+    C: () => `아직 위기가 잘 안 보여요. 주인공이 원하는 것과, 그걸 가로막는 두려움을 함께 써볼까요?`,
+  },
+  결: {
+    A: r => `"${r.change.matched}"에서 주인공의 변화가 잘 느껴져요!`,
+    B: r => {
+      if(r.change.found && !r.long) return `"${r.change.matched}" 표현은 보이는데, '기'에서의 모습과 비교했을 때 뭐가 달라졌는지 조금 더 보여줄까요?`;
+      if(r.change.negated && !r.change.found) return `변화가 없었다는 쪽으로 읽히는 부분이 있어요. 의도한 결말이 맞는지 한번 확인해봐도 좋아요.`;
+      return `조금 달라진 것 같기도 해요. 완벽한 성공이 아니어도 괜찮으니, 뭐라도 달라진 점을 더 보여줄까요?`;
+    },
+    C: () => `아직 주인공이 변한 모습이 잘 안 보여요. 완벽한 성공이 아니어도 괜찮으니, 달라진 점을 하나 적어볼까요?`,
+  },
+};
+function ckMessage(sk, res){
+  if(res.empty) return "아직 아무것도 쓰지 않았어요. 얼개를 한 문장 적어보세요.";
+  return CK_MSG[sk][res.level](res);
+}
+
+function ckInput(n, elm){
+  const a = A(n);
+  a[elm.dataset.k] = elm.value;
+  delete a[elm.dataset.k + '_lv'];
+  save();
+  const fb = document.getElementById('fb_' + elm.dataset.k);
+  if(fb) fb.remove();
+}
+function ckCheck(n, k, sk){
+  const a = A(n);
+  const ta = document.querySelector(`textarea[data-k="${k}"]`);
+  if(ta) a[k] = ta.value;
+  const res = ckClassify(sk, a[k] || '');
+  if(res.empty){ toast('먼저 문장을 한 줄 적어 보세요'); return; }
+  a[k + '_lv'] = res.level;
+  if(!a[k + '_dec']) a[k + '_dec'] = (res.level === 'A') ? 'keep' : 'fix';
+  save(); renderLesson();
+}
+function ckDecide(n, k, v){ A(n)[k + '_dec'] = v; save(); renderLesson(); }
+
+/* ═══════════ 6차시 장면 카드 · 점검 기록표 ═══════════ */
+function ensureScenes(n){ const a = A(n); if(!a.scenes || !a.scenes.length) a.scenes = [{}]; return a.scenes; }
+function sceneInput(n, el){ const sc = ensureScenes(n); const i = +el.dataset.si; while(sc.length <= i) sc.push({}); sc[i][el.dataset.sf] = el.value; save(); }
+function sceneAdd(n){ ensureScenes(n).push({}); save(); renderLesson(); }
+function sceneDel(n, i){ const sc = ensureScenes(n); sc.splice(i,1); if(!sc.length) sc.push({}); save(); renderLesson(); }
+function ensureCt(n){ const a = A(n); if(!a.checkrows || !a.checkrows.length) a.checkrows = [{},{},{}]; return a.checkrows; }
+function ctInput(n, el){ const rs = ensureCt(n); const i = +el.dataset.ci; while(rs.length <= i) rs.push({}); rs[i][el.dataset.cf] = el.value; save(); }
+function ctAdd(n){ ensureCt(n).push({}); save(); renderLesson(); }
+
+/* ═══════════ 내 책 ═══════════ */
+function renderBook(){
+  syncToolAns();
+  const el = document.getElementById('v-book');
+  const a1=A(1), a3=A(3), a4=A(4), a5=A(5), a6=A(6), a9=A(9), a10=A(10), a14=A(14);
+  const title = a10.title || '(10차시에서 제목을 정해요)';
+  const author = a1.penname || '나의 필명';
+  const val = (v,msg)=> v ? `<div class="bt">${esc(v)}</div>` : `<div class="empty">${msg}</div>`;
+  const story4 = ['gi','seung','jeon','gyeol'].map((k,i)=> a5[k]?`<b style="color:var(--c-mist-d)">${['기','승','전','결'][i]}</b> ${esc(a5[k])}`:null).filter(Boolean).join('<br>');
+  const authorNote = ['awhy','afeel','asay'].map(k=>a14[k]).filter(Boolean).join('\n');
+  const emos = (a3.emos||[]).join(' · ');
+  const allDone = doneCount()===15;
+  el.innerHTML = `
+  <h2 class="sec">내 책 미리보기</h2>
+  <p class="sec-sub">실습에서 쓴 내용이 자동으로 모여 한 권의 책이 됩니다. 인쇄하거나 Book Creator · Canva로 옮겨 완성하세요.</p>
+  <div class="book-grid">
+    <div>
+      <div class="book-cover">
+        <span class="pill" style="background:rgba(255,255,255,.6);color:var(--c-mist-d);align-self:flex-start">${emos||'나의 핵심 감정'}</span>
+        <div class="bc-title" style="margin-top:18px">${esc(title)}</div>
+        <div class="bc-img-desc">${esc(a10.coverimg||'')}</div>
+        <div class="bc-author">글 · ${esc(author)}</div>
+      </div>
+      <div class="no-print" style="display:flex;gap:10px;margin-top:14px">
+        <button class="cta ghost" style="flex:1;justify-content:center" onclick="window.print()">인쇄</button>
+        <button class="cta ghost" style="flex:1;justify-content:center" onclick="copyBook()">전체 복사</button>
+      </div>
+    </div>
+    <div>
+      <div class="book-sec"><h4>주인공</h4>${val([a4.hname,a4.str&&('강점: '+a4.str),a4.weak&&('약점: '+a4.weak),a4.grow&&('성장포인트: '+a4.grow)].filter(Boolean).join('\n'),'4차시 캐릭터 생성기에서 만든 주인공을 적어 두세요')}</div>
+      <div class="book-sec"><h4>이야기 뼈대 · 기승전결</h4>${story4?`<div class="bt">${story4}</div>`:'<div class="empty">5차시에서 기승전결을 설계해요</div>'}</div>
+      <div class="book-sec"><h4>본문 · 초고</h4>${val(a6.draft,'6차시에서 초고를 써요')}</div>
+      <div class="book-sec"><h4>결말</h4>${val([a9.ending,a9.lastline&&('마지막 문장: '+a9.lastline)].filter(Boolean).join('\n'),'9차시에서 결말을 선택해요')}</div>
+      <div class="book-sec"><h4>작가의 말</h4>${val(authorNote,'14차시에서 작가의 말을 써요')}</div>
+    </div>
+  </div>
+  ${allDone?`
+  <div class="cert">
+    <h3>CERTIFICATE OF DEBUT</h3>
+    <img class="qk" src="${QUOKKA_FULL}" alt="쿼카 트로피">
+    <div class="cert-name">${esc(author)}</div>
+    <p>위 학생은 《AI 동화작가 데뷔 프로젝트》 15차시의 여정을 끝까지 완주하고,<br>자신의 마음을 한 권의 동화 <b>《${esc(title)}》</b>로 완성하였기에<br>이 증서를 드리며 <b>작가 데뷔</b>를 축하합니다.</p>
+    <div class="cert-date">${new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'})} · 쿼카 AI융합교육연구회</div>
+  </div>`:`
+  <div class="card no-print" style="margin-top:20px;text-align:center;color:var(--c-sub);font-size:14.5px">
+    15차시를 모두 완료하면 이 자리에 <b>작가 데뷔 증서</b>가 나타납니다. (현재 ${doneCount()}/15)
+  </div>`}`;
+}
+function copyBook(){
+  const a1=A(1),a3=A(3),a4=A(4),a5=A(5),a6=A(6),a9=A(9),a10=A(10),a14=A(14);
+  const t = [
+   '『'+(a10.title||'제목 미정')+'』 — 글 '+(a1.penname||''),
+   '핵심 감정: '+((a3.emos||[]).join(', ')),
+   '', '[주인공] '+(a4.hname||''), '강점: '+(a4.str||''), '약점: '+(a4.weak||''), '성장포인트: '+(a4.grow||''),
+   '', '[기승전결]', '기: '+(a5.gi||''), '승: '+(a5.seung||''), '전: '+(a5.jeon||''), '결: '+(a5.gyeol||''),
+   '', '[본문 초고]', a6.draft||'',
+   '', '[결말] '+(a9.ending||''), '마지막 문장: '+(a9.lastline||''),
+   '', '[작가의 말]', [a14.awhy,a14.afeel,a14.asay].filter(Boolean).join('\n')
+  ].join('\n');
+  (navigator.clipboard?.writeText(t)||Promise.reject()).then(()=>toast('책 내용을 복사했어요. Book Creator나 Canva에 붙여넣으세요')).catch(()=>toast('복사에 실패했어요'));
+}
+
+/* ═══════════ 작가들의 책장 (공유 게시판) ═══════════ */
+const SHELF_COLORS = ["#AEC6D6","#BFD0B7","#CBBFDC","#E8D2C1","#ECE1BE","#F2B8B8","#BFD9DD","#D9CBB8"];
+const TYPE_ICO = {reading:'🎙️', bookmark:'🔖', cover:'🎨', character:'🦸', emotion:'💛'};
+const TYPE_LABEL = {reading:'낭독 작품', bookmark:'나만의 책갈피', cover:'동화 표지', character:'캐릭터 시트', emotion:'감정동화'};
+const TYPE_TINT = {reading:['var(--c-peach)','var(--c-peach-d)'], bookmark:['var(--c-lilac)','var(--c-lilac-d)'], cover:['var(--c-mist)','var(--c-mist-d)'], character:['var(--c-butter)','var(--c-butter-d)'], emotion:['var(--c-sage)','var(--c-sage-d)']};
+const TYPE_ORDER = ['character','emotion','cover','bookmark','reading'];
+const TYPE_LESSON = {character:4, emotion:3, cover:10, bookmark:14, reading:15};
+const TYPE_SHORT = {character:'캐릭터', emotion:'감정동화', cover:'표지', bookmark:'책갈피', reading:'낭독'};
+let shelfPosts = null, shelfFilter = 'all', shelfSort = 'new', shelfUpOpen = false, shelfColor = SHELF_COLORS[0], shelfBusy = false;
+let shelfUpType = 'reading', shelfCurList = [];
+/* 감상평은 자유 입력 대신 문장 카드만 허용 — 서버에서도 이 목록만 통과됩니다 */
+const COMMENT_CARDS = [
+  "마음이 따뜻해지는 작품이에요 💛",
+  "이 장면이 오래 기억에 남을 것 같아요",
+  "목소리에서 정성이 느껴졌어요 🎙️",
+  "색깔이 정말 잘 어울려요 🎨",
+  "주인공을 직접 만나 보고 싶어요",
+  "다음 이야기가 궁금해요!",
+  "작은 용기가 느껴지는 작품이에요",
+  "나도 이런 마음이 든 적 있어요",
+  "정성이 가득 담겨 있어요",
+  "제목이 참 멋져요",
+  "읽고 나니 기분이 좋아져요",
+  "데뷔 축하해요, 작가님! 🎉",
+];
+
+function shelfSetType(t, el){
+  shelfUpType = t;
+  if(el) el.parentElement.querySelectorAll('.e-pill').forEach(b=>b.classList.toggle('sel', b===el));
+}
+function shelfSetColor(c, el){
+  shelfColor = c;
+  if(el) el.parentElement.querySelectorAll('.csw').forEach(s=>s.classList.toggle('on', s===el));
+}
+function shelfFilePicked(inp){
+  const f = inp.files[0]; if(!f) return;
+  document.getElementById('upFileName').textContent = '📎 ' + f.name;
+  const row = document.getElementById('upTypeRow');
+  if(f.type.startsWith('audio')){ shelfUpType='reading'; }
+  else if(f.type.startsWith('image') && shelfUpType==='reading'){ shelfUpType='bookmark'; }
+  if(row) row.querySelectorAll('.e-pill').forEach(b=>b.classList.toggle('sel', b.dataset.t===shelfUpType));
+}
+function shelfJumpType(t){ shelfUpOpen = true; shelfUpType = t; go('shelf'); }
+function shelfJumpCover(){ shelfJumpType('cover'); }
+
+function fmtShelfDate(ts){ const d = new Date(ts); return (d.getMonth()+1)+'월 '+d.getDate()+'일'; }
+function spineH(id){ let h=0; for(const ch of id) h=(h*31+ch.charCodeAt(0))>>>0; return 104 + (h % 34); }
+function shelfTotal(p){ return (p.clap||0)+(p.heart||0)+(p.party||0); }
+
+function renderShelf(){
+  const el = document.getElementById('v-shelf');
+  const list = shelfPosts === null ? null
+    : shelfPosts
+      .filter(p=>shelfFilter==='all'||p.type===shelfFilter)
+      .sort((a,b)=> shelfSort==='cheer' ? (shelfTotal(b)-shelfTotal(a))||(b.created_at-a.created_at) : b.created_at-a.created_at);
+
+  let wall;
+  if(list===null){
+    wall = `<div class="shelf-empty">책장을 살펴보는 중이에요… 🔍</div>`;
+  } else if(shelfPosts.error){
+    wall = `<div class="shelf-empty"><b>지금은 책장에 연결할 수 없어요.</b><br>온라인 스튜디오(배포 주소)에서 열면 친구들의 작품을 볼 수 있어요.</div>`;
+  } else if(!list.length){
+    wall = `<div class="shelf-empty">아직 이 칸의 책장이 비어 있어요.<br><b>첫 번째 작가</b>가 되어 볼까요? 위의 [내 작품 올리기]를 눌러 보세요 ✦</div>`;
+  } else {
+    shelfCurList = [];
+    const spineHtml = p => `
+      <button class="spine" style="background:${esc(p.color||SHELF_COLORS[0])};height:${spineH(p.id)}px" onclick="shelfOpen('${p.id}')" title="${TYPE_LESSON[p.type]||''}차시 · ${esc(p.title)} · ${esc(p.penname)}">
+        ${TYPE_LESSON[p.type]?`<span class="sn">${TYPE_LESSON[p.type]}</span>`:''}
+        <span class="st">${esc(p.title)}</span>
+        <span class="sdeco"></span>
+        <span class="se">${TYPE_ICO[p.type]||'🔖'}</span>
+      </button>`;
+    const groups = TYPE_ORDER.filter(t=>list.some(p=>p.type===t));
+    wall = groups.map(t=>{
+      const posts = list.filter(p=>p.type===t);
+      posts.forEach(p=>shelfCurList.push(p.id));
+      return `<div class="shelf-sec">
+        <div class="shelf-sec-head">
+          <span class="ssh-ico">${TYPE_ICO[t]}</span><b>${TYPE_LABEL[t]}</b>
+          <span class="ssh-les">${TYPE_LESSON[t]}차시 작품</span>
+          <span class="ssh-cnt">${posts.length}권</span>
+        </div>
+        <div class="shelf-grid">${posts.map(spineHtml).join('')}</div>
+      </div>`;
+    }).join('');
+  }
+
+  const pen = esc(A(1).penname||'');
+  el.innerHTML = `
+  <h2 class="sec">경기온라인학교 동화작가들의 책장</h2>
+  <p class="sec-sub">친구들의 낭독과 책갈피가 꽂혀 있는 우리들의 책장이에요. 책등을 눌러 꺼내 보고, 응원 스탬프를 찍어 주세요.</p>
+  <div class="shelf-top">
+    <button class="e-pill ${shelfFilter==='all'?'sel':''}" onclick="shelfFilter='all';renderShelf()">전체</button>
+    ${TYPE_ORDER.map(t=>`<button class="e-pill ${shelfFilter===t?'sel':''}" onclick="shelfFilter='${t}';renderShelf()">${TYPE_ICO[t]} ${TYPE_SHORT[t]} <i class="fn">${TYPE_LESSON[t]}차시</i></button>`).join('')}
+    <span class="spacer"></span>
+    <button class="e-pill ${shelfSort==='new'?'sel':''}" onclick="shelfSort='new';renderShelf()">최신순</button>
+    <button class="e-pill ${shelfSort==='cheer'?'sel':''}" onclick="shelfSort='cheer';renderShelf()">응원순</button>
+    <button class="cta" style="padding:10px 18px;font-size:14px" onclick="shelfUpOpen=!shelfUpOpen;renderShelf()">${shelfUpOpen?'닫기':'내 작품 올리기'}</button>
+  </div>
+  ${shelfUpOpen?`
+  <div class="up-panel">
+    <h3>내 작품 올리기 — 낭독 녹음(오디오) 또는 책갈피(이미지)</h3>
+    <div class="up-grid">
+      <label class="up-file" style="grid-column:1/-1">
+        <span id="upFileName">📂 파일 고르기 — 낭독 녹음(오디오) 또는 책갈피·표지(이미지)</span>
+        <input type="file" id="upFile" accept="audio/*,image/png,image/jpeg,image/webp" onchange="shelfFilePicked(this)">
+      </label>
+      <div class="up-field" style="grid-column:1/-1"><label>작품 종류</label>
+        <div class="type-row" id="upTypeRow">
+          <button class="e-pill ${shelfUpType==='character'?'sel':''}" data-t="character" onclick="shelfSetType('character',this)">🦸 캐릭터 시트 (4차시)</button>
+          <button class="e-pill ${shelfUpType==='emotion'?'sel':''}" data-t="emotion" onclick="shelfSetType('emotion',this)">💛 감정동화 (3차시)</button>
+          <button class="e-pill ${shelfUpType==='cover'?'sel':''}" data-t="cover" onclick="shelfSetType('cover',this)">🎨 동화 표지 (10차시)</button>
+          <button class="e-pill ${shelfUpType==='bookmark'?'sel':''}" data-t="bookmark" onclick="shelfSetType('bookmark',this)">🔖 책갈피 (14차시)</button>
+          <button class="e-pill ${shelfUpType==='reading'?'sel':''}" data-t="reading" onclick="shelfSetType('reading',this)">🎙️ 낭독 (15차시)</button>
+        </div>
+      </div>
+      <div class="up-field"><label>필명 (실명 금지!)</label><input type="text" id="upPen" maxlength="20" value="${pen}" placeholder="예: 한로운 작가"></div>
+      <div class="up-field"><label>작품 제목</label><input type="text" id="upTitle" maxlength="40" placeholder="예: 작게, 시작"></div>
+      <div class="up-field" style="grid-column:1/-1"><label>한 줄 소개</label><input type="text" id="upMsg" maxlength="100" placeholder="예: 발표가 무서웠던 로운이의 첫 한마디를 들어 주세요"></div>
+      <div class="up-field"><label>책등 색깔</label><div class="color-row">${SHELF_COLORS.map(c=>`<span class="csw ${c===shelfColor?'on':''}" style="background:${c}" onclick="shelfSetColor('${c}',this)"></span>`).join('')}</div></div>
+      <div class="up-field"><label>삭제 비밀번호 (숫자 4자리 — 꼭 기억!)</label><input type="password" id="upPin" maxlength="4" inputmode="numeric" placeholder="0000"></div>
+    </div>
+    <div class="up-actions">
+      <button class="cta" id="upGo" onclick="shelfUpload()">책장에 꽂기</button>
+      <span class="up-msg" id="upMsgOut"></span>
+    </div>
+    <p class="shelf-note" style="text-align:left;margin-top:10px">🔒 실명·얼굴 사진·친구 정보는 올리지 않아요. 우리는 필명으로 만나는 작가들!</p>
+  </div>`:''}
+  <div class="shelf-wall">${wall}</div>
+  <p class="shelf-note">책등을 누르면 작품을 꺼내 볼 수 있어요 · 응원 스탬프는 작품마다 한 번씩</p>`;
+
+  if(shelfPosts===null) shelfLoad();
+}
+
+async function shelfLoad(){
+  try{
+    const r = await fetch('/api/bookshelf/list');
+    const j = await r.json();
+    shelfPosts = j.ok ? j.posts : Object.assign([], {error:true});
+  }catch(e){ shelfPosts = Object.assign([], {error:true}); }
+  if(CURV==='shelf') renderShelf();
+}
+
+async function shelfUpload(){
+  if(shelfBusy) return;
+  const f = document.getElementById('upFile').files[0];
+  const pen = document.getElementById('upPen').value.trim();
+  const title = document.getElementById('upTitle').value.trim();
+  const msg = document.getElementById('upMsg').value.trim();
+  const pin = document.getElementById('upPin').value.trim();
+  const out = document.getElementById('upMsgOut');
+  const say = (t,ok)=>{ out.textContent=t; out.style.color = ok?'var(--c-sage-d)':'var(--c-accent-d)'; };
+  if(!f) return say('먼저 파일을 골라 주세요!');
+  if(!pen||!title) return say('필명과 제목을 적어 주세요!');
+  if(!/^\d{4}$/.test(pin)) return say('삭제 비밀번호는 숫자 4자리예요!');
+  let type = shelfUpType;
+  if(f.type.startsWith('audio')) type = 'reading';
+  else if(f.type.startsWith('image')){ if(type === 'reading') type = 'bookmark'; }
+  else return say('오디오 또는 이미지 파일만 올릴 수 있어요!');
+  if(f.size > 8*1024*1024) return say('파일이 너무 커요 (8MB까지)!');
+  shelfBusy = true; document.getElementById('upGo').textContent='꽂는 중…'; say('책장에 꽂는 중이에요…',true);
+  try{
+    const fd = new FormData();
+    fd.append('file', f); fd.append('type', type); fd.append('penname', pen);
+    fd.append('title', title); fd.append('msg', msg); fd.append('color', shelfColor); fd.append('pin', pin);
+    const r = await fetch('/api/bookshelf/upload', {method:'POST', body:fd});
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.code);
+    shelfUpOpen = false; shelfPosts = null;
+    toast('책장에 꽂혔어요! 친구들의 응원을 기다려요 📚');
+    renderShelf();
+  }catch(e){
+    say(e.message==='bad_words' ? '앗, 고운 말로 바꿔 볼까요? 필명·제목·한 줄 소개를 다시 봐 주세요.' : '올리지 못했어요. 파일과 인터넷 연결을 확인해 주세요.');
+  }
+  document.getElementById('upGo').textContent='책장에 꽂기';
+  shelfBusy = false;
+}
+
+function shelfOpen(id){
+  const p = (shelfPosts||[]).find(x=>x.id===id); if(!p) return;
+  const old = document.getElementById('shelfModal'); if(old) old.remove();
+  const total = shelfTotal(p);
+  const idx = shelfCurList.indexOf(id);
+  const tint = TYPE_TINT[p.type]||TYPE_TINT.bookmark;
+  const m = document.createElement('div');
+  m.className='shelf-modal'; m.id='shelfModal'; m.dataset.pid = id;
+  m.onclick = e=>{ if(e.target===m) m.remove(); };
+  m.innerHTML = `
+  <div class="sm-card">
+    <div class="sm-top">
+      <span class="pill" style="background:${soft(tint[0])};color:${tint[1]}">${TYPE_ICO[p.type]||'🔖'} ${TYPE_LABEL[p.type]||'작품'}${TYPE_LESSON[p.type]?` · ${TYPE_LESSON[p.type]}차시`:''}</span>
+      <span style="font-size:12.5px;color:var(--c-sub)">${fmtShelfDate(p.created_at)}</span>
+      <span style="font-size:12px;color:var(--c-sub);margin-left:auto">${idx+1} / ${shelfCurList.length}</span>
+      <button class="x" onclick="document.getElementById('shelfModal').remove()">✕</button>
+    </div>
+    <h3>${esc(p.title)}</h3>
+    <div class="sm-pen">글 · ${esc(p.penname)} 작가 · 👀 <span id="smViews">${p.views||0}</span>번 꺼내 봤어요 ${total>0?`· 응원 ${total}개`:''}</div>
+    ${p.msg?`<div class="sm-msg">${esc(p.msg)}</div>`:''}
+    ${p.type==='reading'
+      ? `<audio controls preload="metadata" src="/api/bookshelf/file/${p.id}"></audio>`
+      : `<img class="bm" src="/api/bookshelf/file/${p.id}" alt="${esc(p.title)}" loading="lazy">`}
+    <div class="rx-row">
+      <button class="rx" id="rx_clap" onclick="shelfReact('${p.id}','clap')">👏 박수 <b id="rxn_clap">${p.clap||0}</b></button>
+      <button class="rx" id="rx_heart" onclick="shelfReact('${p.id}','heart')">💛 감동 <b id="rxn_heart">${p.heart||0}</b></button>
+      <button class="rx" id="rx_party" onclick="shelfReact('${p.id}','party')">🎉 축하 <b id="rxn_party">${p.party||0}</b></button>
+    </div>
+    <div class="cm-wrap">
+      <div class="cm-head">💬 감상평 <span id="cmCount"></span></div>
+      <div class="cm-list" id="cmList"><span class="cm-loading">감상평을 읽어 오는 중…</span></div>
+      <div class="cm-form">
+        <span class="cm-lab">내 필명</span>
+        <input type="text" id="cmPen" maxlength="20" placeholder="필명을 적고 아래 카드를 눌러요" value="${esc(A(1).penname||'')}">
+      </div>
+      <div class="cm-cards">${COMMENT_CARDS.map((c,i)=>`<button class="cm-card" onclick="shelfComment('${p.id}',${i},this)">${c}</button>`).join('')}</div>
+    </div>
+    <div class="sm-foot">
+      <span>피드백은 점수가 아니라 마음으로</span>
+      <button class="sm-del" onclick="shelfDelete('${p.id}')">작품 삭제</button>
+    </div>
+    <button class="sm-arrow prev" ${idx<=0?'disabled':''} onclick="shelfNav(-1)" title="이전 작품">‹</button>
+    <button class="sm-arrow next" ${idx>=shelfCurList.length-1?'disabled':''} onclick="shelfNav(1)" title="다음 작품">›</button>
+  </div>`;
+  document.body.appendChild(m);
+  shelfCountView(p);
+  shelfLoadComments(p.id);
+}
+
+function shelfNav(dir){
+  const m = document.getElementById('shelfModal'); if(!m) return;
+  const idx = shelfCurList.indexOf(m.dataset.pid);
+  const next = shelfCurList[idx+dir];
+  if(next) shelfOpen(next);
+}
+document.addEventListener('keydown', e=>{
+  if(!document.getElementById('shelfModal')) return;
+  if(e.key==='ArrowRight') shelfNav(1);
+  else if(e.key==='ArrowLeft') shelfNav(-1);
+  else if(e.key==='Escape'){ const m=document.getElementById('shelfModal'); if(m) m.remove(); }
+});
+
+async function shelfCountView(p){
+  const guard = 'qshelf_v_'+p.id;
+  try{ if(localStorage.getItem(guard)) return; }catch(e){}
+  try{
+    const r = await fetch('/api/bookshelf/view', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({id:p.id})});
+    const j = await r.json();
+    if(j.ok){
+      try{ localStorage.setItem(guard,'1'); }catch(e){}
+      p.views = j.views;
+      const n = document.getElementById('smViews'); if(n) n.textContent = j.views;
+    }
+  }catch(e){}
+}
+
+async function shelfLoadComments(id){
+  const box = document.getElementById('cmList'); if(!box) return;
+  try{
+    const r = await fetch('/api/bookshelf/comments?post='+id);
+    const j = await r.json();
+    if(!j.ok) throw 0;
+    const cnt = document.getElementById('cmCount'); if(cnt) cnt.textContent = j.comments.length ? j.comments.length+'개' : '';
+    box.innerHTML = j.comments.length
+      ? j.comments.map(c=>`<div class="cm-item"><b>${esc(c.penname)}</b><span>${esc(c.text)}</span><button class="cm-x" title="감상평 지우기 (작품 비밀번호)" onclick="shelfCommentDel('${c.id}','${id}')">✕</button></div>`).join('')
+      : `<span class="cm-empty">아직 감상평이 없어요. 첫 마음을 남겨 볼까요?</span>`;
+  }catch(e){ box.innerHTML = '<span class="cm-empty">감상평을 불러오지 못했어요.</span>'; }
+}
+
+async function shelfComment(postId, cardIdx, btn){
+  const pen = (document.getElementById('cmPen')||{}).value?.trim();
+  const text = COMMENT_CARDS[cardIdx];
+  if(!pen){ toast('먼저 필명을 적어 주세요'); document.getElementById('cmPen')?.focus(); return; }
+  if(!text) return;
+  if(btn) btn.disabled = true;
+  try{
+    const r = await fetch('/api/bookshelf/comments', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({post_id:postId, penname:pen, text})});
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.code);
+    shelfLoadComments(postId);
+    toast('감상평 카드를 남겼어요 💬');
+  }catch(e){
+    toast(e.message==='bad_words' ? '필명에 고운 말을 사용해 주세요' : '감상평을 남기지 못했어요');
+  }
+  if(btn) btn.disabled = false;
+}
+
+async function shelfCommentDel(cid, postId){
+  const pin = prompt('감상평을 지우려면 이 작품의 삭제 비밀번호(숫자 4자리)를 입력하세요.');
+  if(pin===null) return;
+  try{
+    const r = await fetch('/api/bookshelf/comment-remove', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({id:cid, pin:String(pin).trim()})});
+    const j = await r.json();
+    if(j.ok){ shelfLoadComments(postId); toast('감상평을 지웠어요'); }
+    else toast(j.code==='wrong_pin'?'비밀번호가 맞지 않아요':'지우지 못했어요');
+  }catch(e){ toast('지우지 못했어요'); }
+}
+
+async function shelfReact(id, kind){
+  const guard = 'qshelf_rx_'+id+'_'+kind;
+  try{ if(localStorage.getItem(guard)){ toast('이 작품에는 이미 '+({clap:'👏 박수',heart:'💛 감동',party:'🎉 축하'})[kind]+' 스탬프를 찍었어요'); return; } }catch(e){}
+  const btn = document.getElementById('rx_'+kind);
+  if(btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); }
+  try{
+    const r = await fetch('/api/bookshelf/react', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({id, kind})});
+    const j = await r.json();
+    if(j.ok){
+      try{ localStorage.setItem(guard,'1'); }catch(e){}
+      ['clap','heart','party'].forEach(k=>{ const n=document.getElementById('rxn_'+k); if(n) n.textContent=j.counts[k]; });
+      const p=(shelfPosts||[]).find(x=>x.id===id); if(p) Object.assign(p, j.counts);
+    }
+  }catch(e){}
+}
+
+async function shelfDelete(id){
+  const pin = prompt('이 작품을 올릴 때 정한 삭제 비밀번호(숫자 4자리)를 입력하세요.');
+  if(pin===null) return;
+  try{
+    const r = await fetch('/api/bookshelf/remove', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({id, pin:String(pin).trim()})});
+    const j = await r.json();
+    if(j.ok){
+      const m=document.getElementById('shelfModal'); if(m) m.remove();
+      shelfPosts=null; toast('책장에서 내렸어요'); renderShelf();
+    } else {
+      toast(j.code==='wrong_pin'?'비밀번호가 맞지 않아요':'삭제하지 못했어요');
+    }
+  }catch(e){ toast('삭제하지 못했어요'); }
+}
+
+/* ═══════════ 캘린더 · 출석 ═══════════ */
+let calY, calM, calSel;
+function fmtDate(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function renderCal(){
+  const now = new Date();
+  if(calY===undefined){ calY=now.getFullYear(); calM=now.getMonth(); calSel=fmtDate(now); }
+  const el = document.getElementById('v-cal');
+  const first = new Date(calY, calM, 1);
+  const start = new Date(first); start.setDate(1-first.getDay());
+  let cells = '';
+  for(let i=0;i<42;i++){
+    const d = new Date(start); d.setDate(start.getDate()+i);
+    const key = fmtDate(d);
+    const other = d.getMonth()!==calM;
+    const today = key===fmtDate(now);
+    const evs = (S.events[key]||[]).slice(0,2).map(e=>`<div class="ev" style="background:${e.c||soft('var(--c-mist)')};color:var(--c-ink)">${esc(e.t)}</div>`).join('');
+    const more = (S.events[key]||[]).length>2 ? `<div class="ev" style="background:transparent;color:var(--c-sub)">+${S.events[key].length-2}</div>`:'';
+    cells += `<div class="cal-cell ${other?'other':''} ${today?'today':''} ${key===calSel?'seld':''}" onclick="selDay('${key}')">
+      <span class="d ${d.getDay()===0?'sun':''}">${d.getDate()}</span>
+      ${S.att[key]?'<span class="att-dot">✓</span>':''}${evs}${more}</div>`;
+  }
+  const attCnt = Object.keys(S.att).length;
+  const monthAtt = Object.keys(S.att).filter(k=>k.startsWith(calY+'-'+String(calM+1).padStart(2,'0'))).length;
+  const selEvs = (S.events[calSel]||[]).map((e,i)=>`<div class="ev-line"><span>${e.t}</span><button onclick="delEv('${calSel}',${i})">✕</button></div>`).join('') || '<p style="font-size:13.5px;color:var(--c-sub)">등록된 일정이 없어요.</p>';
+  const selAtt = !!S.att[calSel];
+  el.innerHTML = `
+  <h2 class="sec">프로젝트 캘린더 · 출석부</h2>
+  <p class="sec-sub">차시별 학습 일정을 등록하고, 경기온라인학교 수강 출석을 기록해요.</p>
+  <div class="cal-grid-wrap">
+    <div class="card">
+      <div class="cal-head">
+        <button class="cal-nav" onclick="mvCal(-1)">‹</button>
+        <h3>${calY}년 ${calM+1}월</h3>
+        <button class="cal-nav" onclick="mvCal(1)">›</button>
+        <span style="margin-left:auto;font-size:12.5px;color:var(--c-sub)">✓ 출석한 날</span>
+      </div>
+      <div class="cal-table">
+        ${['일','월','화','수','목','금','토'].map(d=>`<div class="cal-dow">${d}</div>`).join('')}
+        ${cells}
+      </div>
+    </div>
+    <div>
+      <div class="side-card day-panel">
+        <h4>${calSel.replace(/-/g,'. ')}.</h4>
+        ${selEvs}
+        <div class="add-ev">
+          <input id="evInput" placeholder="일정 입력 (예: 3차시 감정 탐험)" onkeydown="if(event.key==='Enter')addEv()">
+          <button onclick="addEv()">추가</button>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">
+          ${[1,4,7,12,15].map(n=>`<button class="e-pill" style="font-size:12.5px;padding:5px 13px" onclick="addEvQuick(${n})">+ ${n}차시</button>`).join('')}
+        </div>
+        <button class="att-big ${selAtt?'did':''}" onclick="toggleAtt('${calSel}')">${selAtt?'출석 완료 · 누르면 취소':'이 날 출석 등록'}</button>
+      </div>
+      <div class="side-card">
+        <h3>출석 현황</h3>
+        <div class="att-stats">
+          <div class="att-stat"><b>${monthAtt}</b><span>이번 달 출석</span></div>
+          <div class="att-stat"><b>${attCnt}</b><span>누적 출석</span></div>
+          <div class="att-stat"><b>${doneCount()}</b><span>완료 차시</span></div>
+        </div>
+        <div class="quick-links" style="margin-top:12px">
+          <a class="ql" href="https://online.goe.go.kr" target="_blank" rel="noopener">경기온라인학교 바로가기</a>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function mvCal(d){ calM+=d; if(calM<0){calM=11;calY--;} if(calM>11){calM=0;calY++;} renderCal(); }
+function selDay(k){ calSel=k; renderCal(); }
+function addEv(){
+  const inp = document.getElementById('evInput');
+  if(!inp.value.trim()) return;
+  (S.events[calSel]=S.events[calSel]||[]).push({t:inp.value.trim(), c:soft('var(--c-mist)')});
+  save(); renderCal();
+}
+function addEvQuick(n){
+  const L = LESSONS.find(l=>l.n===n);
+  const sc = CV[stageOf(n).c];
+  (S.events[calSel]=S.events[calSel]||[]).push({t:n+'차시 '+L.title, c:soft(sc.bg)});
+  save(); renderCal();
+}
+function delEv(k,i){ S.events[k].splice(i,1); if(!S.events[k].length) delete S.events[k]; save(); renderCal(); }
+function toggleAtt(k){ if(S.att[k]) delete S.att[k]; else S.att[k]='경기온라인학교 수강'; save(); renderCal(); }
+
+/* ═══════════ 링크 ═══════════ */
+function renderLinks(){
+  const el = document.getElementById('v-links');
+  el.innerHTML = `
+  <h2 class="sec">동화작가의 책갈피</h2>
+  <p class="sec-sub">동화를 쓸 때 참고하는 웹사이트 — 카드를 누르면 새 탭으로 열려요.</p>
+  ${LINKS.map(g=>`
+    <div class="lk-group"><h3>${g.g}</h3>
+    <div class="link-grid">
+      ${g.items.map(it=>`
+        <a class="linkcard" href="${it.u}" target="_blank" rel="noopener">
+          <span class="lk-bar" style="background:${CV[it.c].bg}"></span>
+          <b>${it.b}</b><p>${it.p}</p><span class="url">${it.u.replace('https://','')}</span>
+        </a>`).join('')}
+    </div></div>`).join('')}
+  <div class="card" style="display:flex;align-items:center;gap:18px">
+    <img class="qk" src="${QUOKKA_FACE}" style="width:56px;height:56px" alt="쿼카">
+    <div><b style="font-size:15.5px">안전 약속, 잊지 않기</b>
+    <p style="font-size:14px;color:var(--c-sub);margin-top:3px">외부 사이트에서도 내 이름·학교·친구 이름은 입력하지 않아요. AI의 답은 참고만, 최종 결정은 언제나 작가인 내가.</p></div>
+  </div>`;
+}
+
+/* 시작 */
+go(location.hash==='#shelf' ? 'shelf' : 'home');
+</script>
+</body>
+</html>

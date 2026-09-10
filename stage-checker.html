@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5차시 · 이야기 씨앗 심기 — 얼개 점검 스튜디오</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --c-bg:#EFEDE7; --c-ink:#3D434C; --c-sub:#7A766C;
+  --c-mist:#AEC6D6; --c-mist-d:#3E5C6E;
+  --c-sage:#BFD0B7; --c-sage-d:#4F6645;
+  --c-lilac:#CBBFDC; --c-lilac-d:#5A4E75;
+  --c-peach:#E8D2C1; --c-peach-d:#8A634A;
+  --c-butter:#ECE1BE; --c-butter-d:#82743F;
+  --c-accent:#FF5757; --c-accent-d:#B81E1E;
+  --line:rgba(61,67,76,.10);
+  --field:#FBFAF7;
+  --shadow-sm:0 1px 2px rgba(61,67,76,.04), 0 6px 18px rgba(61,67,76,.05);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Pretendard Variable',Pretendard,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  background:var(--c-bg); color:var(--c-ink);
+  font-size:16px; line-height:1.65; letter-spacing:-.01em;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea{font-family:inherit;color:var(--c-ink)}
+.ov{font-size:11.5px;font-weight:800;letter-spacing:.16em;color:var(--c-sub)}
+
+#app{max-width:680px;margin:0 auto;padding:26px 20px 34px}
+#autoSave{
+  position:fixed;right:14px;bottom:14px;z-index:60;pointer-events:none;
+  background:var(--c-ink);color:#fff;font-size:12px;font-weight:800;
+  padding:7px 14px;border-radius:999px;opacity:0;transition:opacity .25s;
+}
+#autoSave.show{opacity:.92}
+.head{margin-bottom:18px}
+.head h1{font-size:26px;font-weight:900;letter-spacing:-.04em;line-height:1.25;margin-top:6px}
+.head .rule{width:48px;height:5px;border-radius:3px;background:var(--c-accent);margin:12px 0 10px}
+.head .sub{font-size:14px;color:var(--c-sub)}
+
+.card{
+  background:#fff;border:1px solid var(--line);border-radius:18px;
+  box-shadow:var(--shadow-sm);padding:22px 24px;margin-bottom:14px;
+}
+.card h2{font-size:16.5px;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+.card .hint{color:var(--c-sub);font-size:13.5px;margin:-6px 0 14px}
+
+/* 진행 점 */
+.progress{display:flex;gap:6px;margin-bottom:16px}
+.progress-dot{flex:1;height:5px;border-radius:3px;background:#DDDACF;transition:background .3s}
+.progress-dot.done{background:var(--c-sage-d)}
+.progress-dot.current{background:var(--c-accent)}
+
+/* 시작 화면 힌트 */
+.start-hint{
+  display:flex;align-items:flex-start;gap:11px;
+  padding:11px 4px;border-bottom:1px solid var(--line);font-size:14px;
+}
+.start-hint:last-of-type{border-bottom:none}
+.sh-tag{
+  flex-shrink:0;min-width:58px;text-align:center;
+  padding:4px 10px;border-radius:8px;font-size:12.5px;font-weight:800;
+}
+.start-hint span.tx{color:#565c66;padding-top:2px}
+
+/* 배경 씨앗 */
+.row-line{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.row-line:last-child{border-bottom:none}
+.tag{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:64px;padding:5px 12px;border-radius:8px;font-size:12.5px;font-weight:800;flex-shrink:0;
+  background:color-mix(in srgb,var(--c-mist) 32%,#fff);color:var(--c-mist-d);
+}
+.row-line input{
+  flex:1;border:none;background:transparent;padding:5px 4px;font-size:15px;outline:none;
+  border-bottom:1.5px solid transparent;transition:border-color .2s;min-width:0;
+}
+.row-line input:focus{border-bottom-color:var(--c-ink)}
+input::placeholder,textarea::placeholder{color:#BDB9AE}
+
+/* 요약 스트립 */
+.summary-strip{padding:16px 20px}
+.summary-strip .st-title{font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--c-sub);margin-bottom:8px}
+.stage-line{display:flex;gap:9px;font-size:13.5px;color:#565c66;padding:3px 0}
+.stage-line b{flex-shrink:0;color:var(--c-ink)}
+
+/* 단계 화면 */
+.stage-label{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.stage-label h2{margin-bottom:0}
+.fk-hint{font-size:12.5px;color:var(--c-sub);font-weight:600;margin-bottom:12px}
+textarea.stage-ta{
+  width:100%;min-height:96px;background:var(--field);border:1px solid var(--line);
+  border-radius:12px;padding:13px 15px;font-size:15.5px;line-height:1.75;outline:none;
+  resize:vertical;transition:border-color .2s;
+}
+textarea.stage-ta:focus{border-color:var(--c-ink)}
+
+/* 피드백 */
+.fb-box{margin-top:12px;border-radius:12px;padding:13px 15px;font-size:13.8px;line-height:1.65;animation:pop .3s cubic-bezier(.22,.9,.36,1)}
+@keyframes pop{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+.fb-box.lv-A{background:color-mix(in srgb,var(--c-sage) 28%,#fff);color:var(--c-sage-d)}
+.fb-box.lv-B{background:color-mix(in srgb,var(--c-butter) 34%,#fff);color:var(--c-butter-d)}
+.fb-box.lv-C{background:color-mix(in srgb,var(--c-accent) 8%,#fff);color:var(--c-accent-d)}
+.lv-badge{display:inline-block;font-size:11.5px;font-weight:800;padding:3px 11px;border-radius:999px;color:#fff;margin-bottom:7px}
+.lv-badge.lv-A{background:var(--c-sage-d)}
+.lv-badge.lv-B{background:var(--c-butter-d)}
+.lv-badge.lv-C{background:var(--c-accent)}
+
+/* 버튼 */
+.btn-row{display:flex;gap:9px;margin-top:16px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  background:var(--c-accent);color:#fff;font-weight:800;font-size:14.5px;
+  padding:12px 22px;border-radius:12px;transition:transform .15s, background .15s, opacity .15s;
+  box-shadow:0 6px 16px rgba(255,87,87,.22);
+}
+.btn:hover{transform:translateY(-1px);background:#F04A4A}
+.btn:disabled{opacity:.35;cursor:not-allowed;box-shadow:none;transform:none}
+.btn.ghost{background:#fff;color:var(--c-ink);border:1px solid var(--line);box-shadow:none}
+.btn.ghost:hover{background:var(--field);transform:none}
+.btn.grow{flex:1}
+
+/* 요약 화면 */
+.final-item{border:1px solid var(--line);border-radius:14px;padding:15px 17px;margin-bottom:11px;background:#fff}
+.final-item .ft{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.final-item .ft b{font-size:14.5px;letter-spacing:-.02em}
+.edit-jump{
+  margin-left:auto;flex-shrink:0;
+  background:#fff;border:1px solid var(--line);border-radius:999px;
+  padding:5px 13px;font-size:12.5px;font-weight:800;color:var(--c-sub);
+  transition:all .15s;
+}
+.edit-jump:hover{border-color:var(--c-ink);color:var(--c-ink)}
+.final-item .stage-text{color:#565c66;font-size:13.8px;margin-bottom:7px;white-space:pre-wrap;line-height:1.6}
+.final-item .stage-msg{font-size:12.8px;color:var(--c-sub);margin-bottom:11px;line-height:1.6}
+.toggle-row{display:flex;gap:7px}
+.toggle-btn{
+  flex:1;max-width:150px;padding:7px 10px;font-size:12.5px;border-radius:999px;
+  border:1px solid var(--line);background:#fff;color:var(--c-sub);font-weight:800;transition:all .15s;
+}
+.toggle-btn:hover{border-color:var(--c-ink);color:var(--c-ink)}
+.toggle-btn.on-keep{background:var(--c-sage-d);border-color:var(--c-sage-d);color:#fff}
+.toggle-btn.on-fix{background:var(--c-accent);border-color:var(--c-accent);color:#fff}
+
+.limit-note{
+  margin-top:16px;padding:13px 16px;border-radius:12px;
+  background:color-mix(in srgb,var(--c-butter) 30%,#fff);
+  font-size:12.5px;color:#565c66;line-height:1.6;
+}
+.limit-note b{color:var(--c-butter-d)}
+
+@media print{.btn-row,.progress{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* ═══════ 스튜디오 저장소 연동 (내 책 미리보기와 공유) ═══════ */
+const ST_KEY='quokka_studio_v1', LKEY='l5';
+function stAll(){ try{ return JSON.parse(localStorage.getItem(ST_KEY))||{} }catch(e){ return {} } }
+function stGet(){ const S=stAll(); return (S.ans&&S.ans[LKEY])||{} }
+function stSet(kv){ try{ const S=stAll(); S.ans=S.ans||{}; S.ans[LKEY]=Object.assign(S.ans[LKEY]||{},kv); localStorage.setItem(ST_KEY,JSON.stringify(S)); flashSave(); }catch(e){} }
+
+/* 자동 저장 배지 */
+const _svBadge = document.createElement('div'); _svBadge.id='autoSave'; _svBadge.textContent='✓ 자동 저장됨';
+document.addEventListener('DOMContentLoaded', ()=>document.body.appendChild(_svBadge));
+let _svT;
+function flashSave(){
+  if(!_svBadge.isConnected && document.body) document.body.appendChild(_svBadge);
+  _svBadge.classList.add('show');
+  clearTimeout(_svT); _svT = setTimeout(()=>_svBadge.classList.remove('show'), 1200);
+}
+/* 저장하기 버튼 (모든 화면 공통) */
+function saveAllNow(btn){
+  const kv = {
+    gi: state.inputs.기, seung: state.inputs.승, jeon: state.inputs.전, gyeol: state.inputs.결,
+  };
+  ['btime','bplace','bmood'].forEach(id=>{ const el=document.getElementById(id); if(el) kv[id]=el.value; });
+  STAGES.forEach(st=>{ if(state.decisions[st.key]) kv[st.k+'_dec']=state.decisions[st.key]; });
+  stSet(kv);
+  if(btn){
+    btn.textContent='✓ 모두 저장됐어요!';
+    setTimeout(()=>{ btn.textContent='💾 지금까지 쓴 내용 저장하기'; }, 1600);
+  }
+}
+document.addEventListener('click', e=>{
+  if(e.target && e.target.id==='btn-saveall') saveAllNow(e.target);
+});
+
+/* ═══════ 데이터 ═══════ */
+const APP_TITLE="기승전결 얼개 점검";
+const STAGES=[
+ {key:"기", k:"gi",    label:"기 — 이야기의 시작",     ph:"예) 아기 다람쥐는 겨울잠 자는 법을 몰라 걱정이 많다.", hint:"기: 주인공이 원하는 것이 잘 드러나야 해요.", col:"mist"},
+ {key:"승", k:"seung", label:"승 — 사건이 커지는 부분", ph:"예) 부엉이를 만나 겨울잠 자는 법을 배우게 된다.",     hint:"승: 사건이 실제로 벌어지고 커져야 해요.", col:"sage"},
+ {key:"전", k:"jeon",  label:"전 — 가장 힘든 순간",     ph:"예) 첫눈이 내렸는데 도토리를 모아두지 않아 먹을 게 없다.", hint:"전: 원하는 것과 두려운 것이 함께 부딪혀야 해요.", col:"peach"},
+ {key:"결", k:"gyeol", label:"결 — 이야기의 마무리",   ph:"예) 힘들었지만 이웃 다람쥐와 나눠 먹으며 겨울을 났다.",  hint:"결: 주인공이 '기'와 비교해 조금이라도 달라져야 해요.", col:"lilac"},
+];
+const COLV={mist:['#3E5C6E','#AEC6D6'],sage:['#4F6645','#BFD0B7'],peach:['#8A634A','#E8D2C1'],lilac:['#5A4E75','#CBBFDC']};
+function tagStyle(col){const c=COLV[col];return `background:color-mix(in srgb,${c[1]} 34%,#fff);color:${c[0]}`}
+
+/* ═══════ 판정 엔진 (얼개 점검 도우미 원본) ═══════ */
+const NEG_AFTER=["지 않","지않","않았","않는","않아","못했","못한다","못하고","못하는","못해"];
+const NEG_BEFORE_RE=/(^|[^가-힣])안\s?$/;
+function mk(list,neg){return list.map(w=>({w,neg}));}
+const WANT_ENTRIES=mk(["원한다","원했다","원하는","원하고","원한","원하다","원해","원하","바란다","바랐다","바라는","바라며","바라고","바란","바라다","바래","바랬","바라","꿈꾼다","꿈꿨다","꿈꾸는","꿈이었","꿈꾼","꿈꾸고","꿈꾸다","꿈꿔","꿈은","꿈꾸","부럽다","부러워","부러웠","부러운","부럽고","부럽","좋겠다","좋겠어","좋겠","기대한다","기대했다","기대되는","기대감","기대하는","기대한","기대하고","기대하다","기대해","기대돼","기대됐","기대하","동경한다","동경했다","동경한","동경","갈망한다","갈망했다","갈망한","갈망","소원","소망","할 거야","할거야","하고 말겠다","말겠다","싶다","싶어","싶었","싶고","싶은","싶네","싶으니","싶"],true);
+const PURPOSE_ENTRIES=mk(["위해","위한","하려고","하고자"],false);
+const ACHIEVEMENT_ENTRIES=mk(["성공하다","성공했다","성공한","성공하고","성공해","성공","해내다","해냈다","해냈","해낸","해내","이루다","이뤘다","이뤘","이룬","이루","이뤄내다","이뤄냈다","이뤄냈","이뤄낸","달성하다","달성했다","달성한","달성","성취하다","성취했다","성취한","성취"],true);
+const TRANSITION_ENTRIES=mk(["그런데","근데","그러다가","그러자","그러던 중","그러던중","갑자기","바로 그때","바로그때","그 순간","그순간","어느 날","어느날","우연히","뜻밖에","다음 날","다음날","며칠 뒤","며칠뒤","잠시 후","잠시후","그러고 나서","그러고나서","점점","커지다","커졌","커지는","커지고","커진","커지","심해지다","심해졌","심해지고","심해진","심해지","생기다","생겼다","생겼","생기는","생기고","생긴","생겨","생기","벌어지다","벌어졌다","벌어졌","벌어지는","벌어지고","벌어진","벌어져","벌어지","일어나다","일어났다","일어났","일어나고","일어나는","일어난","나타나다","나타났다","나타났","나타나고","나타나는","나타난","만나다","만났다","만났","만나고","만나는","만난","만나","도와주다","도와줬다","도와줬","도와주고","도와주는","도와준","도움을 받","방해","가로막","막히다","막힌","막혔","막혀","빼앗기다","빼앗긴","빼앗겼","잃어버리다","잃어버린","잃어버렸","잃어버리","잃었다","잃는다","그때부터","이후로","싸우다","싸웠다","싸웠","싸우고","싸우는","싸운","싸우","다투다","다퉜다","다퉜","다투고","다투는","다툰","다투","사고가 나","사고가 났","사라지","사라졌","사라진","다치","다쳤","다친","넘어지","넘어졌","넘어진","부서지","부서졌","부서진"],false);
+const FEAR_ENTRIES=[...mk(["두렵다","두려워","두려웠","두려운","두렵고","두렵","무섭다","무서워","무서웠","무서운","무섭고","무섭","망설이다","망설였","망설이는","망설임","망설이고","망설인","망설","걱정되다","걱정했다","걱정스럽","걱정된","걱정되고","걱정하고","걱정하는","걱정","자신없","자신이 없","머뭇거리다","머뭇거렸","머뭇거리고","머뭇거린","머뭇거리","주저하다","주저했","주저하고","주저한","주저하","긴장되다","긴장했다","긴장되고","긴장된","긴장","불안하다","불안했","불안한","불안","떨리다","떨렸다","떨리고","떨린","떨리","포기하고 싶","속상하다","속상했","속상한","속상","화나다","화났다","화가 나","화나고","화난","화나","억울하다","억울했","억울한","억울","울다","울었다","울고 싶","울고","우는","눈물이","힘들다","힘들었","힘들어하","힘든","힘들고","힘들","힘이 들","힘이 든","힘겹다","힘겨워","힘겨웠","힘겨운","애먹","창피하다","창피했","창피한","창피","부끄럽다","부끄러웠","부끄러운","부끄럽","후회하다","후회했","후회하는","후회한","후회","서럽다","서러웠","서러운","서럽","답답하다","답답했","답답한","답답","곤란하다","곤란했","곤란한","곤란","혼나다","혼났다","혼나고","혼나는","혼난","혼날","혼나","혼내다","혼냈다","혼내고","혼낸","혼내","야단맞다","야단맞았","야단맞는","꾸중을 듣","당황하다","당황했","당황한","당황해","당황","괴롭다","괴로워","괴로웠","괴로운","괴롭","겁나다","겁이 나","겁났","겁먹","겁나","슬프다","슬펐","슬픈","슬퍼","외롭다","외로워","외로웠","외로운","외롭","어렵다","어려워","어려웠","어려운","어렵","버겁다","버거워","버거웠","버거운","막막하다","막막했","막막한","어쩔 줄 모르","어쩔 줄 몰랐","큰일 났","큰일 나","짜증나다","짜증났","짜증나고","짜증난","짜증이","짜증나","진짜 싫","완전 싫","너무 싫","싫다","싫었","싫어했","별로다","별로였","열받","열받았","실패하다","실패했다","실패한","실패하고","실패해","실패","망쳤다","망친","망치고","놓치다","놓쳤다","놓친","놓치고","놓치","틀리다","틀렸다","틀린","틀리고","틀려","실수하다","실수했다","실수한","실수하고","실수해","실수","포기하다","포기했다","포기한","포기하고","포기해","포기","쫓기다","쫓겼다","쫓기는","쫓기고","쫓기","갇히다","갇혔다","갇힌","갇히고","갇히","위험하다","위험했다","위험한","위험","다치다","다쳤다","다친","다치고","다치","떨어지다","떨어졌다","떨어진","떨어지고","떨어지","시험에 떨어지"],true),...mk(["죽을 뻔","죽을뻔"],false)];
+const CONTRAST_ENTRIES=mk(["지만","그러나","하지만","그런데도","그래도"],false);
+const CHANGE_ENTRIES=[...mk(["달라지다","달라졌","달라진","달라지","변하다","변했다","변한","변하고","변해","변하","깨닫다","깨달았","깨닫는","깨달은","깨닫","용기를 내","용기를 냈","용기를 낸","용기 내","용기가 생기","용기가 생겼","자신감이 생기","자신감이 생겼","용감해지","용감해졌","용감해진","씩씩해지","씩씩해졌","씩씩해진","성장하다","성장했다","성장한","성장하","결심하다","결심했다","결심한","결심하","다짐하다","다짐했다","다짐한","다짐해","다짐","알게 되","알게 됐","마음먹","해내","해냈","해낸","성공하다","성공했다","성공한","성공하","화해하다","화해했다","화해한","화해하","반성하다","반성했다","반성한","반성하","할 수 있게"],true),...mk(["더 이상","더이상","예전과 달리","예전과달리","이제는","이제야","그제야","그제서야","처음으로","앞으로는","드디어","결국"],false)];
+
+function findSignal(text,entries){
+  let negatedAny=false;
+  for(const {w,neg} of entries){
+    let from=0;
+    while(true){
+      const idx=text.indexOf(w,from);
+      if(idx===-1) break;
+      if(!neg) return {found:true,negated:false,matched:w};
+      const after=text.slice(idx+w.length, idx+w.length+8);
+      const before=text.slice(Math.max(0,idx-3), idx);
+      const isNeg=NEG_AFTER.some(n=>after.includes(n))||NEG_BEFORE_RE.test(before);
+      if(!isNeg) return {found:true,negated:false,matched:w};
+      negatedAny=true; from=idx+1;
+    }
+  }
+  return {found:false,negated:negatedAny,matched:null};
+}
+function classify(sk,text){
+  const t=(text||"").trim();
+  if(!t) return {level:"C",empty:true};
+  if(sk==="기"){ const want=findSignal(t,WANT_ENTRIES), long=t.length>=12;
+    let level="B"; if(want.found&&long) level="A"; else if(!want.found&&!want.negated&&!long) level="C";
+    return {level,want,long}; }
+  if(sk==="승"){ const trans=findSignal(t,TRANSITION_ENTRIES), long=t.length>=12;
+    let level="B"; if(trans.found&&long) level="A"; else if(!trans.found&&!long) level="C";
+    return {level,trans,long}; }
+  if(sk==="전"){ const goal=findSignal(t,[...WANT_ENTRIES,...PURPOSE_ENTRIES,...ACHIEVEMENT_ENTRIES]);
+    const fear=findSignal(t,FEAR_ENTRIES);
+    const hasConnective=CONTRAST_ENTRIES.some(e=>t.includes(e.w));
+    let level="B"; if(goal.found&&fear.found) level="A";
+    else if((!goal.found&&!goal.negated)&&(!fear.found&&!fear.negated)) level="C";
+    return {level,goal,fear,hasConnective}; }
+  if(sk==="결"){ const change=findSignal(t,CHANGE_ENTRIES), long=t.length>=10;
+    let level="B"; if(change.found&&long) level="A"; else if(!change.found&&!change.negated&&!long) level="C";
+    return {level,change,long}; }
+}
+const MSG={
+  기:{A:r=>`좋아요! "${r.want.matched}" 같은 표현에서 주인공이 원하는 마음이 잘 느껴져요. 이야기를 시작하기에 충분해요.`,
+     B:r=>{ if(r.want.negated&&!r.want.found) return `주인공이 무언가를 원하지 않는 것처럼 읽히는 부분이 있어요. 표현이 헷갈리게 됐다면 한번 다시 읽어봐도 좋아요.`;
+       if(r.want.found&&!r.long) return `"${r.want.matched}" 표현은 보이는데, 조금 더 자세히 써보면 어떨까요? 주인공이 평소 어떤 모습인지 한 문장 더 있으면 좋겠어요.`;
+       if(!r.want.found&&r.long) return `문장은 충분히 자세한데, 주인공이 정확히 무엇을 원하는지는 콕 집어 보이진 않아요. 이야기 속에 숨어있을 수도 있으니 스스로 확인해볼까요?`;
+       return `원하는 마음이 살짝 보이는 것 같기도 해요. 조금 더 보여준다면, 주인공은 정확히 무엇을 원하는 걸까요?`; },
+     C:()=>`아직 주인공이 무엇을 원하는지 잘 안 보여요. "~하고 싶다"나 "~을 바란다"처럼 한 문장 더 넣어볼까요?`},
+  승:{A:r=>`"${r.trans.matched}" 덕분에 사건이 새롭게 시작되는 게 잘 보여요!`,
+     B:r=>{ if(r.trans.found&&!r.long) return `"${r.trans.matched}" 표현은 보이는데, 무슨 일이 정확히 생긴 건지 조금 더 자세히 써볼까요?`;
+       if(!r.trans.found&&r.long) return `문장은 자세한데, 사건이 새롭게 바뀌는 지점이 콕 집어 보이진 않아요. 방해가 되는 일이나 도움이 되는 일이 어디쯤 있을까요?`;
+       return `사건이 조금 바뀌는 것 같기도 해요. 정확히 무슨 일이 생겼는지 조금 더 또렷하게 써볼까요?`; },
+     C:()=>`아직 특별한 사건이 잘 안 보여요. 주인공에게 방해가 되는 일이나 도움이 되는 일이 생긴다면 어떤 걸까요?`},
+  전:{A:r=>`원하는 마음("${r.goal.matched}")과 두려운 마음("${r.fear.matched}")이 잘 부딪히고 있어요. 아주 좋은 위기예요!`,
+     B:r=>{ if(r.goal.found&&!r.fear.found) return `원하는 마음("${r.goal.matched}")은 보이는데, 그걸 가로막는 두려움이나 망설임은 아직 잘 안 보여요. 무엇이 주인공을 망설이게 할까요?`;
+       if(!r.goal.found&&r.fear.found) return `두려운 마음("${r.fear.matched}")은 보이는데, 주인공이 정말 원하는 게 뭔지는 잘 안 보여요. 원하는 것도 함께 넣어볼까요?`;
+       if(r.hasConnective) return `대조되는 흐름은 보이는데, 원하는 마음과 두려운 마음이 조금 더 뚜렷하게 드러나면 훨씬 힘든 순간처럼 느껴질 거예요.`;
+       return `지금보다 조금 더, 원하는 마음과 두려운 마음이 동시에 드러나면 이야기가 훨씬 팽팽해질 거예요.`; },
+     C:()=>`아직 위기가 잘 안 보여요. 주인공이 원하는 것과, 그걸 가로막는 두려움을 함께 써볼까요?`},
+  결:{A:r=>`"${r.change.matched}"에서 주인공의 변화가 잘 느껴져요!`,
+     B:r=>{ if(r.change.found&&!r.long) return `"${r.change.matched}" 표현은 보이는데, '기'에서의 모습과 비교했을 때 뭐가 달라졌는지 조금 더 보여줄까요?`;
+       if(r.change.negated&&!r.change.found) return `변화가 없었다는 쪽으로 읽히는 부분이 있어요. 의도한 결말이 맞는지 한번 확인해봐도 좋아요.`;
+       return `조금 달라진 것 같기도 해요. 완벽한 성공이 아니어도 괜찮으니, 뭐라도 달라진 점을 더 보여줄까요?`; },
+     C:()=>`아직 주인공이 변한 모습이 잘 안 보여요. 완벽한 성공이 아니어도 괜찮으니, 달라진 점을 하나 적어볼까요?`},
+};
+function getMessage(sk,r){ if(r.empty) return "아직 아무것도 쓰지 않았어요. 얼개를 한 문장 적어보세요."; return MSG[sk][r.level](r); }
+
+/* ═══════ 상태 ═══════ */
+const saved = stGet();
+const state={
+  step:-1,
+  inputs:{기:saved.gi||"", 승:saved.seung||"", 전:saved.jeon||"", 결:saved.gyeol||""},
+  results:{기:null,승:null,전:null,결:null},
+  checked:{기:false,승:false,전:false,결:false},
+  decisions:{기:saved.gi_dec||null, 승:saved.seung_dec||null, 전:saved.jeon_dec||null, 결:saved.gyeol_dec||null},
+};
+function persistStage(st){ stSet({[st.k]: state.inputs[st.key]}); }
+function persistDec(st){ stSet({[st.k+'_dec']: state.decisions[st.key]}); }
+
+/* 이미 적은 내용이 있으면 처음부터 다시 밟지 않고, 내가 쓴 얼개가 한눈에 보이는 결과 화면에서 시작 */
+if(Object.values(state.inputs).some(v=>v&&v.trim())) state.step=4;
+
+const app=document.getElementById("app");
+const escH=s=>(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const LIMIT=`💡 이 도우미는 몇 가지 표현 신호만 살펴봐요. 놓치는 경우도 있으니 <b>참고만 하고, 최종 판단은 작가인 내가</b> 해요.`;
+
+function headHtml(sub){
+  return `<div class="head"><span class="ov">LESSON 05 · STORY SEED</span>
+    <h1>${APP_TITLE}</h1><div class="rule"></div><div class="sub">${sub}</div></div>`;
+}
+function render(){
+  if(state.step===-1) renderStart();
+  else if(state.step<4) renderStage(state.step);
+  else renderSummary();
+  if(window.parent !== window) parent.postMessage({qkScrollTop:1}, '*');
+  else window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* 시작 화면 */
+function renderStart(){
+  const a=stGet();
+  app.innerHTML=`
+  ${headHtml("내가 쓴 기승전결 얼개를 한 단계씩 점검해봐요.")}
+  <div class="card">
+    <h2>먼저, 배경 씨앗 심기 🌱</h2>
+    <p class="hint">이야기가 펼쳐질 시간·공간·분위기를 정해요. 배경은 감정의 거울!</p>
+    <div class="row-line"><span class="tag">시간</span><input id="btime" value="${escH(a.btime)}" placeholder="예: 새 학기가 시작된 3월"></div>
+    <div class="row-line"><span class="tag">공간</span><input id="bplace" value="${escH(a.bplace)}" placeholder="예: 전학 온 학교, 비 오는 운동장"></div>
+    <div class="row-line"><span class="tag">분위기</span><input id="bmood" value="${escH(a.bmood)}" placeholder="예: 낯설고 크지만 어딘가 빛이 드는"></div>
+  </div>
+  <div class="card">
+    <h2>점검 전에 이것만 기억하세요</h2>
+    ${STAGES.map(s=>`<div class="start-hint"><span class="sh-tag" style="${tagStyle(s.col)}">${s.key}</span><span class="tx">${s.hint.split(": ")[1]}</span></div>`).join("")}
+    <div class="btn-row">
+      <button class="btn grow" id="btn-start">기승전결 점검 시작하기 →</button>
+      ${Object.values(state.inputs).some(v=>v&&v.trim())?'<button class="btn ghost" id="btn-backsummary">점검 결과로 →</button>':''}
+    </div>
+  </div>
+  <div class="limit-note">${LIMIT}</div>
+  <button class="btn ghost" id="btn-saveall" style="width:100%;margin-top:10px">💾 지금까지 쓴 내용 저장하기</button>`;
+  ["btime","bplace","bmood"].forEach(id=>{
+    document.getElementById(id).addEventListener("input",e=>stSet({[id]:e.target.value}));
+  });
+  document.getElementById("btn-start").addEventListener("click",()=>{ state.step=0; render(); });
+  const bs=document.getElementById("btn-backsummary");
+  if(bs) bs.addEventListener("click",()=>{ state.step=4; render(); });
+}
+
+function renderProgress(){
+  let h='<div class="progress">';
+  for(let i=0;i<4;i++){
+    let cls="progress-dot";
+    if(i<state.step) cls+=" done"; else if(i===state.step) cls+=" current";
+    h+=`<div class="${cls}"></div>`;
+  }
+  return h+"</div>";
+}
+function renderStrip(upto){
+  if(upto===0) return "";
+  let h='<div class="card summary-strip"><div class="st-title">지금까지 쓴 얼개</div>';
+  for(let i=0;i<upto;i++){
+    const s=STAGES[i];
+    h+=`<div class="stage-line"><b>${s.key}</b><span>${escH(state.inputs[s.key]||"(비어 있음)")}</span></div>`;
+  }
+  return h+"</div>";
+}
+
+/* 단계 화면 */
+function renderStage(idx){
+  const st=STAGES[idx];
+  const checked=state.checked[st.key];
+  const result=state.results[st.key];
+  let fb="";
+  if(checked&&result){
+    const lab=result.level==="A"?"뚜렷해요":result.level==="B"?"조금 더 살펴볼까요":"아직 잘 안 보여요";
+    fb=`<div class="fb-box lv-${result.level}"><span class="lv-badge lv-${result.level}">${lab}</span><div>${escH(getMessage(st.key,result))}</div></div>`;
+  }
+  app.innerHTML=`
+  ${headHtml("한 단계씩 쓰고 확인해봐요. 수정하면 다시 확인!")}
+  ${renderProgress()}
+  ${renderStrip(idx)}
+  <div class="card">
+    <div class="stage-label"><span class="sh-tag" style="${tagStyle(st.col)}">${st.key}</span><h2>${st.label.split(" — ")[1]}</h2></div>
+    <div class="fk-hint">${st.hint.split(": ")[1]}</div>
+    <textarea id="stage-input" class="stage-ta" placeholder="${st.ph}">${escH(state.inputs[st.key])}</textarea>
+    ${fb}
+    <div class="btn-row">
+      <button class="btn ghost" id="btn-check">이 문장 확인해보기</button>
+      ${idx>0?'<button class="btn ghost" id="btn-prev">← 이전</button>':''}
+      ${Object.values(state.inputs).every(v=>v&&v.trim())?'<button class="btn ghost" id="btn-gosummary">점검 결과로 →</button>':''}
+      <button class="btn grow" id="btn-next" ${checked?'':'disabled'}>${idx===3?'점검 결과 보기 ✦':'다음 단계로 →'}</button>
+    </div>
+  </div>
+  <div class="limit-note">${LIMIT}</div>
+  <button class="btn ghost" id="btn-saveall" style="width:100%;margin-top:10px">💾 지금까지 쓴 내용 저장하기</button>`;
+
+  const ta=document.getElementById("stage-input");
+  ta.addEventListener("input",()=>{
+    state.inputs[st.key]=ta.value;
+    state.checked[st.key]=false;
+    persistStage(st);
+    document.getElementById("btn-next").disabled=true;
+    const f=document.querySelector(".fb-box"); if(f) f.remove();
+  });
+  document.getElementById("btn-check").addEventListener("click",()=>{
+    state.inputs[st.key]=ta.value; persistStage(st);
+    const r=classify(st.key,ta.value);
+    state.results[st.key]=r; state.checked[st.key]=true;
+    if(!state.decisions[st.key]){ state.decisions[st.key]=(r.level==="A")?"keep":"fix"; persistDec(st); }
+    renderStage(idx);
+  });
+  const pb=document.getElementById("btn-prev");
+  if(pb) pb.addEventListener("click",()=>{ state.step--; render(); });
+  const gs=document.getElementById("btn-gosummary");
+  if(gs) gs.addEventListener("click",()=>{ state.inputs[st.key]=ta.value; persistStage(st); state.step=4; render(); });
+  document.getElementById("btn-next").addEventListener("click",()=>{
+    if(!state.checked[st.key]) return;
+    state.step++; render();
+  });
+}
+
+/* 요약 화면 */
+function renderSummary(){
+  let items="";
+  STAGES.forEach((st,i)=>{
+    const r=state.results[st.key]||classify(st.key,state.inputs[st.key]);
+    const msg=getMessage(st.key,r);
+    const dec=state.decisions[st.key]||"fix";
+    items+=`
+    <div class="final-item">
+      <div class="ft"><span class="sh-tag" style="${tagStyle(st.col)}">${st.key}</span><b>${st.label.split(" — ")[1]}</b>
+        <button class="edit-jump no-print" data-idx="${i}" title="이 단계만 바로 고치러 가기">✏️ 고치기</button></div>
+      <div class="stage-text">${escH(state.inputs[st.key]||"(비어 있음)")}</div>
+      <div class="stage-msg">${escH(msg)}</div>
+      <div class="toggle-row" data-stage="${st.key}">
+        <button class="toggle-btn ${dec==='keep'?'on-keep':''}" data-choice="keep">그대로 둘 것</button>
+        <button class="toggle-btn ${dec==='fix'?'on-fix':''}" data-choice="fix">고칠 것</button>
+      </div>
+    </div>`;
+  });
+  app.innerHTML=`
+  ${headHtml("내가 쓴 얼개가 한눈에! 고치고 싶은 단계만 ✏️ 고치기를 눌러 바로 고쳐요.")}
+  ${renderProgress()}
+  <div class="card"><h2>내 얼개 점검 결과 ✦</h2>${items}</div>
+  <div class="btn-row no-print">
+    <button class="btn ghost" id="btn-seed">🌱 배경 씨앗 보기·고치기</button>
+    <button class="btn ghost" id="btn-back">← 처음부터 다시 살펴보기</button>
+    <button class="btn grow" id="btn-print">이 결과 인쇄 · 저장하기</button>
+  </div>
+  <div class="limit-note">${LIMIT}</div>
+  <button class="btn ghost" id="btn-saveall" style="width:100%;margin-top:10px">💾 지금까지 쓴 내용 저장하기</button>`;
+  document.querySelectorAll(".toggle-btn").forEach(b=>{
+    b.addEventListener("click",e=>{
+      const key=e.target.closest(".toggle-row").dataset.stage;
+      state.decisions[key]=e.target.dataset.choice;
+      persistDec(STAGES.find(s=>s.key===key));
+      renderSummary();
+    });
+  });
+  document.querySelectorAll(".edit-jump").forEach(b=>{
+    b.addEventListener("click",()=>{ state.step=+b.dataset.idx; render(); });
+  });
+  document.getElementById("btn-seed").addEventListener("click",()=>{ state.step=-1; render(); });
+  document.getElementById("btn-back").addEventListener("click",()=>{ state.step=0; render(); });
+  document.getElementById("btn-print").addEventListener("click",()=>window.print());
+}
+
+render();
+
+/* 부모(스튜디오)에 실제 높이를 알려 하단 여백 없이 맞추기 */
+(function(){
+  if(window.parent === window) return;
+  let t, lastH = 0;
+  function report(){
+    clearTimeout(t);
+    t = setTimeout(()=>{
+      /* scrollHeight는 iframe이 크면 그 값을 돌려줘 줄어들지 않는다 —
+         실제 콘텐츠의 바닥 좌표를 직접 잰다 (fixed 요소 제외) */
+      let max = 0;
+      for(const el of document.body.children){
+        const cs = getComputedStyle(el);
+        if(cs.position === 'fixed' || cs.display === 'none') continue;
+        const r = el.getBoundingClientRect();
+        max = Math.max(max, r.bottom + window.scrollY + (parseFloat(cs.marginBottom)||0));
+      }
+      const h = Math.ceil(max + (parseFloat(getComputedStyle(document.body).paddingBottom)||0));
+      if(h > 100 && Math.abs(h - lastH) > 2){ lastH = h; parent.postMessage({qkFrameH: h}, '*'); }
+    }, 80);
+  }
+  new MutationObserver(report).observe(document.documentElement, {childList:true, subtree:true, attributes:true});
+  addEventListener('load', report);
+  addEventListener('resize', report);
+  setInterval(report, 700);
+  report();
+})();
+</script>
+</body>
+</html>

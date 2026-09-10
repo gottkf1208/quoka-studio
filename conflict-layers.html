@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>갈등 세 겹 적기 · AI 동화작가 데뷔 스튜디오</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* ── 컬러 토큰 (donghwa-studio 동일) ───────────────── */
+:root{
+  --c-bg:#EFEDE7; --c-ink:#3D434C; --c-sub:#7A766C;
+  --c-mist:#AEC6D6; --c-mist-d:#3E5C6E;
+  --c-sage:#BFD0B7; --c-sage-d:#4F6645;
+  --c-lilac:#CBBFDC; --c-lilac-d:#5A4E75;
+  --c-peach:#E8D2C1; --c-peach-d:#8A634A;
+  --c-butter:#ECE1BE; --c-butter-d:#82743F;
+  --c-accent:#FF5757; --c-accent-d:#B81E1E;
+  --line:rgba(61,67,76,.10);
+  --card-r:18px;
+  --shadow-sm:0 1px 2px rgba(61,67,76,.04), 0 6px 18px rgba(61,67,76,.05);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Pretendard Variable',Pretendard,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  background:var(--c-bg); color:var(--c-ink);
+  font-size:16px; line-height:1.65; letter-spacing:-0.01em;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea{font-family:inherit;font-size:15px;color:var(--c-ink)}
+main{max-width:920px;margin:0 auto;padding:34px 24px 60px}
+
+h2.sec{font-size:27px;font-weight:900;letter-spacing:-.035em;margin:6px 0 6px}
+p.sec-sub{color:var(--c-sub);margin-bottom:22px;font-size:15px}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:4px 13px;border-radius:999px;font-size:12.5px;font-weight:800}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+
+.ws-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--card-r);
+  box-shadow:var(--shadow-sm);padding:26px 28px;margin-bottom:16px;
+}
+.ws-card h4{font-size:15.5px;font-weight:800;margin-bottom:14px;letter-spacing:-.02em}
+input::placeholder,textarea::placeholder{color:#BDB9AE}
+
+/* 갈등 카드 */
+.cf{
+  background:#FBFAF7;border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin-bottom:14px;
+}
+.cf-head{display:flex;align-items:center;margin-bottom:12px}
+.cf-head .no{
+  min-width:30px;height:30px;border-radius:9px;background:var(--c-peach);color:var(--c-peach-d);
+  font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-right:9px;
+}
+.cf-head b{font-size:14.5px;letter-spacing:-.02em}
+.cf-kill{margin-left:auto;color:#BDB9AE;font-size:15px;padding:2px 6px}
+.cf-kill:hover{color:var(--c-accent-d)}
+.layer{display:flex;gap:12px;align-items:flex-start;padding:9px 0}
+.layer + .layer{border-top:1px dashed var(--line)}
+.layer .lb{
+  flex:0 0 168px;padding-top:9px;
+}
+.layer .lb b{display:block;font-size:13.5px;font-weight:800;letter-spacing:-.02em}
+.layer .lb span{font-size:12px;color:var(--c-sub)}
+.layer textarea{
+  flex:1;min-height:56px;background:#fff;border:1px solid var(--line);border-radius:11px;
+  padding:11px 13px;font-size:14.5px;line-height:1.7;outline:none;resize:vertical;transition:border-color .2s;
+}
+.layer textarea:focus{border-color:var(--c-ink)}
+.l1 .lb b{color:var(--c-mist-d)} .l2 .lb b{color:var(--c-peach-d)} .l3 .lb b{color:var(--c-sage-d)}
+@media (max-width:640px){ .layer{flex-direction:column;gap:6px} .layer .lb{flex:none;padding-top:0} }
+
+.add-btn{
+  width:100%;background:#fff;border:1.5px dashed #C9C5BA;color:var(--c-sub);
+  font-weight:800;font-size:14px;padding:13px;border-radius:12px;transition:all .15s;
+}
+.add-btn:hover{border-color:var(--c-ink);color:var(--c-ink)}
+
+.tip-box{background:#F8F4E8;border-radius:12px;padding:14px 16px;margin-top:16px;font-size:13.8px;line-height:1.65;color:#565c66}
+.tip-box b{display:block;font-size:11.5px;letter-spacing:.14em;color:var(--c-butter-d);margin-bottom:5px}
+
+#autoSave{
+  position:fixed;right:14px;bottom:14px;z-index:60;pointer-events:none;
+  background:var(--c-ink);color:#fff;font-size:12px;font-weight:800;
+  padding:7px 14px;border-radius:999px;opacity:0;transition:opacity .25s;
+}
+#autoSave.show{opacity:.92}
+
+@media (max-width:720px){ main{padding:24px 16px 50px} h2.sec{font-size:23px} .ws-card{padding:20px 18px} }
+</style>
+</head>
+<body>
+<main>
+
+  <span class="pill" style="background:var(--c-peach);color:var(--c-peach-d)">
+    <span class="dot" style="background:var(--c-peach-d)"></span>활동 1 · 갈등 세 겹 적기
+  </span>
+  <h2 class="sec">갈등 세 겹 적기</h2>
+  <p class="sec-sub">겉으로 벌어진 일 아래에는 그때의 감정이, 그 아래에는 진짜 바람이 숨어 있어요.<br>양파 껍질을 벗기듯, 내 이야기의 갈등을 세 겹으로 들여다봐요.</p>
+
+  <section class="ws-card">
+    <h4>갈등을 세 겹으로 적어 보세요</h4>
+    <div id="cfList"></div>
+    <button class="add-btn" id="addBtn">＋ 다른 갈등 또 생각해보기</button>
+    <div class="tip-box">
+      <b>초등 실전 TIP</b>
+      "나쁜 인물"에게도 세 겹이 있어요. 그 인물은 겉으로 무슨 일을 벌였고, 속으로 어떤 감정이었고, 진짜로 무엇을 바랐을까요?
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ═══════ 스튜디오 저장소 연동 ═══════ */
+const ST_KEY='quokka_studio_v1', LKEY='l7';
+function stAll(){ try{ return JSON.parse(localStorage.getItem(ST_KEY))||{} }catch(e){ return {} } }
+function stGet(){ const S=stAll(); return (S.ans&&S.ans[LKEY])||{} }
+function stSet(kv){ try{ const S=stAll(); S.ans=S.ans||{}; S.ans[LKEY]=Object.assign(S.ans[LKEY]||{},kv); localStorage.setItem(ST_KEY,JSON.stringify(S)); flashSave(); }catch(e){} }
+const _svBadge=document.createElement('div'); _svBadge.id='autoSave'; _svBadge.textContent='✓ 자동 저장됨';
+let _svT;
+function flashSave(){
+  if(!_svBadge.isConnected && document.body) document.body.appendChild(_svBadge);
+  _svBadge.classList.add('show');
+  clearTimeout(_svT); _svT=setTimeout(()=>_svBadge.classList.remove('show'),1200);
+}
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+const LAYERS=[
+  ['s1','l1','한 겹 — 겉으로 벌어진 일','표면 사건','예: 모둠 발표 준비 시간에 친구와 크게 다퉜다'],
+  ['s2','l2','두 겹 — 그 때 든 감정','속마음','예: 방해받는 것 같아 두렵고, 한편으로는 서운했다'],
+  ['s3','l3','세 겹 — 진짜 바람','마음 속 깊은 소망','예: 사실은 잘 해내서 친구들에게 인정받고 싶었다'],
+];
+
+let conflicts = (stGet().conflicts && stGet().conflicts.length) ? stGet().conflicts : [{}];
+function save(){ stSet({conflicts}); }
+
+function render(){
+  const box=document.getElementById('cfList');
+  box.innerHTML = conflicts.map((c,i)=>`
+    <div class="cf">
+      <div class="cf-head"><span class="no">${i+1}</span><b>갈등 ${i+1}</b>
+        ${conflicts.length>1?`<button class="cf-kill" data-i="${i}" title="이 갈등 지우기">✕</button>`:''}
+      </div>
+      ${LAYERS.map(l=>`
+        <div class="layer ${l[1]}">
+          <div class="lb"><b>${l[2]}</b><span>${l[3]}</span></div>
+          <textarea data-i="${i}" data-f="${l[0]}" placeholder="${l[4]}">${esc(c[l[0]])}</textarea>
+        </div>`).join('')}
+    </div>`).join('');
+  box.querySelectorAll('textarea').forEach(ta=>{
+    ta.addEventListener('input',()=>{ conflicts[+ta.dataset.i][ta.dataset.f]=ta.value; save(); });
+  });
+  box.querySelectorAll('.cf-kill').forEach(b=>{
+    b.addEventListener('click',()=>{ conflicts.splice(+b.dataset.i,1); if(!conflicts.length) conflicts.push({}); save(); render(); });
+  });
+}
+document.getElementById('addBtn').addEventListener('click',()=>{ conflicts.push({}); save(); render(); });
+render();
+
+/* 부모(스튜디오)에 실제 높이를 알려 하단 여백 없이 맞추기 */
+(function(){
+  if(window.parent === window) return;
+  let t, lastH = 0;
+  function report(){
+    clearTimeout(t);
+    t = setTimeout(()=>{
+      let max = 0;
+      for(const el of document.body.children){
+        const cs = getComputedStyle(el);
+        if(cs.position === 'fixed' || cs.display === 'none') continue;
+        const r = el.getBoundingClientRect();
+        max = Math.max(max, r.bottom + window.scrollY + (parseFloat(cs.marginBottom)||0));
+      }
+      const h = Math.ceil(max + (parseFloat(getComputedStyle(document.body).paddingBottom)||0));
+      if(h > 100 && Math.abs(h - lastH) > 2){ lastH = h; parent.postMessage({qkFrameH: h}, '*'); }
+    }, 80);
+  }
+  new MutationObserver(report).observe(document.documentElement, {childList:true, subtree:true, attributes:true});
+  addEventListener('load', report);
+  addEventListener('resize', report);
+  setInterval(report, 700);
+  report();
+})();
+</script>
+</body>
+</html>

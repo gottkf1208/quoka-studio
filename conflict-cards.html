@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>학교생활 갈등 카드 고르기 · AI 동화작가 데뷔 스튜디오</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* ── 컬러 토큰 (donghwa-studio 동일) ───────────────── */
+:root{
+  --c-bg:#EFEDE7; --c-ink:#3D434C; --c-sub:#7A766C;
+  --c-mist:#AEC6D6; --c-mist-d:#3E5C6E;
+  --c-sage:#BFD0B7; --c-sage-d:#4F6645;
+  --c-lilac:#CBBFDC; --c-lilac-d:#5A4E75;
+  --c-peach:#E8D2C1; --c-peach-d:#8A634A;
+  --c-butter:#ECE1BE; --c-butter-d:#82743F;
+  --c-accent:#FF5757; --c-accent-d:#B81E1E;
+  --c-cobalt:#2E5BFF;
+  --line:rgba(61,67,76,.10);
+  --card-r:18px;
+  --shadow:0 1px 2px rgba(61,67,76,.04), 0 14px 36px rgba(61,67,76,.07);
+  --shadow-sm:0 1px 2px rgba(61,67,76,.04), 0 6px 18px rgba(61,67,76,.05);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Pretendard Variable',Pretendard,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  background:var(--c-bg); color:var(--c-ink);
+  font-size:16px; line-height:1.65; letter-spacing:-0.01em;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea{font-family:inherit;font-size:15px;color:var(--c-ink)}
+main{max-width:920px;margin:0 auto;padding:34px 24px 100px}
+
+.ov{font-size:11.5px;font-weight:800;letter-spacing:.16em;color:var(--c-sub)}
+h2.sec{font-size:27px;font-weight:900;letter-spacing:-.035em;margin:6px 0 6px}
+p.sec-sub{color:var(--c-sub);margin-bottom:22px;font-size:15px}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:4px 13px;border-radius:999px;font-size:12.5px;font-weight:800}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+
+/* ── 단계 표시 ─────────────────────────── */
+.seg-wrap{display:flex;gap:5px;margin-bottom:8px}
+.seg{flex:1;height:4px;border-radius:99px;background:#DDDACF;transition:background .25s}
+.seg.on{background:var(--c-accent)}
+.seg.done{background:var(--c-sage-d)}
+.seg-label{text-align:right;font-size:12.5px;color:var(--c-sub);font-weight:700;margin-bottom:20px}
+
+/* ── 카드 ──────────────────────────────── */
+.ws-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--card-r);
+  box-shadow:var(--shadow-sm);padding:26px 28px;margin-bottom:16px;
+}
+.ws-card[hidden]{display:none}
+.ws-card h4{font-size:15.5px;font-weight:800;margin-bottom:14px;letter-spacing:-.02em}
+
+label.fld{display:block;font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--c-sub);margin:0 0 8px}
+input.line{
+  width:100%;background:#FBFAF7;border:1px solid var(--line);border-radius:11px;
+  padding:11px 14px;font-size:15px;outline:none;transition:border-color .2s;
+}
+input.line:focus{border-color:var(--c-ink)}
+input::placeholder,textarea::placeholder{color:#BDB9AE}
+.big-ta{
+  width:100%;min-height:220px;border:1px solid var(--line);background:#FBFAF7;border-radius:12px;
+  padding:16px 18px;font-size:15.5px;line-height:1.8;outline:none;resize:vertical;transition:border-color .2s;
+}
+.big-ta.med{min-height:100px; padding:12px 14px;}
+.big-ta:focus{border-color:var(--c-ink)}
+
+/* ── 갈등 카드 그리드 ──────────────────── */
+.cat-block{margin-bottom:18px}
+.cat-block:last-of-type{margin-bottom:0}
+.cat-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.cat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cat-name{font-size:13px;font-weight:800;color:var(--c-sub);letter-spacing:.02em}
+
+.cf-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(120px,1fr));gap:9px}
+.cf-card{
+  border:1.5px solid var(--line);border-radius:13px;background:#FBFAF7;
+  padding:14px 10px;text-align:center;font-size:15px;font-weight:800;
+  transition:all .15s;
+}
+.cf-card:hover{border-color:var(--c-ink)}
+.cf-card.sel{color:#fff;border-color:transparent}
+@media (max-width:640px){ .cf-grid{grid-template-columns:repeat(auto-fill, minmax(96px,1fr))} }
+
+/* ── 버튼 ──────────────────────────────── */
+.cta{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--c-accent);color:#fff;font-weight:800;font-size:15.5px;
+  padding:13px 26px;border-radius:12px;
+  transition:transform .15s, box-shadow .15s, background .15s;
+  box-shadow:0 6px 16px rgba(255,87,87,.25);
+}
+.cta:hover{transform:translateY(-1px);background:#F04A4A}
+.cta.ghost{background:#fff;color:var(--c-ink);box-shadow:none;border:1px solid var(--line)}
+.cta.ghost:hover{background:#FBFAF7}
+.les-foot{display:flex;align-items:center;gap:10px;margin-top:24px;flex-wrap:wrap}
+.les-foot .spacer{flex:1}
+.msg{font-size:13.5px;font-weight:700;color:var(--c-sage-d);min-height:20px;margin-top:12px}
+.msg.warn{color:var(--c-accent-d)}
+
+/* ── 진행 / 기록 카드 ───────────────────── */
+.progress{position:sticky;top:0;z-index:5;background:var(--c-bg);padding:14px 0 12px;margin-bottom:14px}
+.ptext{font-size:12.5px;font-weight:800;color:var(--c-sub);margin-bottom:7px}
+
+.tri{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin-bottom:11px;transition:box-shadow .16s, border-color .16s;
+}
+.tri.adopt{border-color:var(--c-peach-d); background:color-mix(in srgb,var(--c-peach) 8%,#fff)}
+.tri-top{display:flex;gap:12px;align-items:flex-start}
+.tri-num{
+  min-width:30px;height:30px;border-radius:9px;background:var(--c-bg);color:var(--c-sub);
+  font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.tri-text{flex:1;font-size:15.5px;line-height:1.7}
+.tri-kill{color:#BDB9AE;font-size:16px;padding:0 2px;flex-shrink:0}
+.tri-kill:hover{color:var(--c-accent-d)}
+
+.tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tag{font-size:12.5px;font-weight:800;padding:4px 11px;border-radius:999px;color:#fff}
+
+.empty-state { text-align:center; padding: 30px; color:var(--c-sub); font-size:14.5px; background:#FBFAF7; border-radius:12px; border:1px dashed var(--line); margin-bottom:11px;}
+
+/* ── 결과 ──────────────────────────────── */
+.tally{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.tally div{flex:1;min-width:110px;background:#FBFAF7;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+.tally b{font-size:23px;font-weight:900;display:block;letter-spacing:-.02em}
+.tally span{font-size:12.5px;color:var(--c-sub);font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:14.5px; table-layout:fixed; word-break:keep-all}
+th,td{border-bottom:1px solid var(--line);padding:14px 12px;text-align:left;vertical-align:top}
+th{font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--c-sub); background:#FBFAF7;}
+.tg{font-weight:800;white-space:nowrap;font-size:13px}
+.tg.a{color:var(--c-peach-d)}
+.tip-box{background:color-mix(in srgb,var(--c-butter) 30%,#fff);border-radius:12px;padding:14px 16px;margin-top:16px;font-size:13.8px;line-height:1.65;color:#565c66}
+.tip-box b{display:block;font-size:11.5px;letter-spacing:.14em;color:var(--c-butter-d);margin-bottom:5px}
+
+@media (max-width:720px){
+  main{padding:24px 16px 80px}
+  h2.sec{font-size:23px}
+  .ws-card{padding:20px 18px}
+  table th, table td { padding: 10px 8px; font-size: 13.5px; }
+}
+@media print{
+  .no-print,.les-foot,.progress,.seg-wrap,.seg-label,.ws-card:not(#p2){display:none!important}
+  body{background:#fff}
+  .ws-card{box-shadow:none;border:none;padding:0; margin:0;}
+  table th { background: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<main>
+
+  <div class="seg-wrap no-print">
+    <div class="seg on" id="g1"></div>
+    <div class="seg" id="g2"></div>
+  </div>
+  <div class="seg-label no-print" id="segLabel">1 / 2 단계</div>
+
+  <span class="pill no-print" style="background:var(--c-peach);color:var(--c-peach-d)">
+    <span class="dot" style="background:var(--c-peach-d)"></span>활동 2 · 학교생활 갈등 카드
+  </span>
+  <h2 class="sec no-print">학교생활 속 갈등 카드 고르기</h2>
+  <p class="sec-sub no-print">동화 속 이야기는 크고 작은 갈등에서 시작돼요.<br>학교생활에서 있을 법한 갈등 카드 중, 내 이야기에 담고 싶은 것을 골라보세요.</p>
+
+  <!-- ══════════ 1단계: 카드 고르기 ══════════ -->
+  <section class="ws-card" id="p1">
+    <h4>1. 갈등 카드 고르기</h4>
+
+    <p style="font-size:14.5px;color:var(--c-sub);margin-bottom:16px;">
+      카드는 여러 개 골라도 돼요. <b style="color:var(--c-ink)">이 갈등으로 어떤 이야기를 만들고 싶은지</b> 함께 적어 보세요.
+    </p>
+
+    <div id="card-wrap" style="margin-bottom:20px;"></div>
+
+    <div style="background:#FBFAF7; padding:18px; border-radius:14px; border:1px solid var(--line); margin-bottom:24px;">
+      <label class="fld">고른 카드로 어떤 장면·이야기를 만들고 싶나요?</label>
+      <textarea class="big-ta med" id="idea-text" placeholder="예: 단짝 친구가 다른 애랑 더 친해져서 서운한 마음을 그려보고 싶다."></textarea>
+
+      <button class="cta ghost" style="width:100%; justify-content:center; border-style:dashed; margin-top:14px;" onclick="addRecord()">+ 이 카드 기록 목록에 추가하기</button>
+      <p class="msg" id="m2" style="text-align:center; margin-top:8px; margin-bottom:0;"></p>
+    </div>
+
+    <div class="progress">
+      <div class="ptext" id="ptext">0개의 기록을 만들었어요</div>
+    </div>
+
+    <div id="record-list">
+      <div class="empty-state">아직 고른 카드가 없어요.<br>위에서 카드를 골라 보세요!</div>
+    </div>
+
+    <div class="les-foot">
+      <span class="spacer"></span>
+      <button class="cta" onclick="finish()">고른 카드 정리하기 →</button>
+    </div>
+    <p class="msg" id="m3"></p>
+  </section>
+
+  <!-- ══════════ 2단계: 결과 ══════════ -->
+  <section class="ws-card" id="p2" hidden>
+    <h4 class="no-print">2. 갈등 카드 정리</h4>
+    <h2 class="sec" id="print-title" style="display:none; text-align:center; margin-bottom:20px;">학교생활 갈등 카드</h2>
+    <p style="font-size:14.5px;color:var(--c-sub);margin-bottom:16px;" class="no-print">
+      내가 고른 갈등 카드와 이야기 아이디어를 모아봤어요.
+    </p>
+
+    <div id="tally" class="tally no-print">
+      <div><b class="tg a" id="t-cnt">0</b><span>기록한 아이디어 수</span></div>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="tip-box no-print">
+      <b>꼭 저장하세요</b>
+      창을 닫으면 지금 적은 내용은 사라집니다. <b style="display:inline;letter-spacing:0;font-size:13.8px;color:#565c66">복사하기</b> 또는 <b style="display:inline;letter-spacing:0;font-size:13.8px;color:#565c66">파일로 내려받기</b>를 눌러 선생님께 제출하거나 기록장 등에 옮겨 두세요.
+    </div>
+
+    <div class="les-foot no-print">
+      <button class="cta" onclick="copyResult()">복사하기</button>
+      <button class="cta ghost" onclick="download()">파일로 내려받기</button>
+      <button class="cta ghost" onclick="doPrint()">인쇄하기</button>
+      <span class="spacer"></span>
+      <button class="cta ghost" onclick="go(1)">← 카드 더 고르기</button>
+    </div>
+    <p class="msg" id="m4"></p>
+  </section>
+
+</main>
+
+<script>
+/* ── 갈등 카드 데이터 ── */
+const CATEGORIES = [
+  { name:'관계 갈등', color:'mist-d', words:['오해','소외','질투','편애','따돌림','변심','비밀'] },
+  { name:'경쟁 갈등', color:'peach-d', words:['승부욕','인정욕구','실력차'] },
+  { name:'규칙·공정 갈등', color:'sage-d', words:['약속','역할분담','책임회피','불공평','새치기','거짓말'] },
+  { name:'정체성 갈등', color:'lilac-d', words:['놀림','자존심','편견'] }
+];
+
+let records = [];
+let selectedCards = [];
+let step = 1;
+
+/* ── 카드 그리드 렌더링 ── */
+function buildCards() {
+  const wrap = document.getElementById('card-wrap');
+  let h = '';
+  CATEGORIES.forEach(cat => {
+    h += '<div class="cat-block">'
+      + '<div class="cat-head"><span class="cat-dot" style="background:var(--c-'+cat.color+')"></span><span class="cat-name">'+cat.name+'</span></div>'
+      + '<div class="cf-grid">';
+    cat.words.forEach(w => {
+      h += '<button class="cf-card" type="button" data-word="'+w+'" data-color="'+cat.color+'" onclick="toggleCard(this)">'+w+'</button>';
+    });
+    h += '</div></div>';
+  });
+  wrap.innerHTML = h;
+}
+
+function toggleCard(btn) {
+  const w = btn.dataset.word;
+  const color = btn.dataset.color;
+  const idx = selectedCards.indexOf(w);
+  if (idx > -1) {
+    selectedCards.splice(idx, 1);
+    btn.classList.remove('sel');
+    btn.style.background = '';
+    btn.style.borderColor = '';
+  } else {
+    selectedCards.push(w);
+    btn.classList.add('sel');
+    btn.style.background = 'var(--c-'+color+')';
+  }
+}
+
+/* ── 기록 추가 ── */
+function addRecord() {
+  const idea = document.getElementById('idea-text').value.trim();
+
+  if (selectedCards.length === 0) {
+    say('m2', '갈등 카드를 1개 이상 골라 주세요.', true);
+    return;
+  }
+  if (!idea) {
+    say('m2', '어떤 이야기를 만들고 싶은지 적어 주세요.', true);
+    return;
+  }
+
+  records.push({ cards: [...selectedCards], idea: idea });
+
+  // Clear
+  document.getElementById('idea-text').value = '';
+  selectedCards = [];
+  document.querySelectorAll('.cf-card').forEach(b => { b.classList.remove('sel'); b.style.background=''; b.style.borderColor=''; });
+
+  renderList();
+  say('m2', '기록이 추가되었습니다.');
+}
+
+function removeRecord(i) {
+  records.splice(i, 1);
+  renderList();
+}
+
+function colorFor(word) {
+  for (const cat of CATEGORIES) { if (cat.words.includes(word)) return cat.color; }
+  return 'ink';
+}
+
+function tagRow(cards) {
+  return cards.map(w => '<span class="tag" style="background:var(--c-'+colorFor(w)+')">'+esc(w)+'</span>').join('');
+}
+
+function renderList() {
+  const box = document.getElementById('record-list');
+  if (records.length === 0) {
+    box.innerHTML = '<div class="empty-state">아직 고른 카드가 없어요.<br>위에서 카드를 골라 보세요!</div>';
+    document.getElementById('ptext').textContent = '0개의 기록을 만들었어요';
+    return;
+  }
+  document.getElementById('ptext').textContent = records.length + '개의 기록을 만들었어요';
+  let h = '';
+  records.forEach((r, i) => {
+    h += '<div class="tri adopt"><div class="tri-top">'
+      + '<div class="tri-num">'+(i+1)+'</div>'
+      + '<div class="tri-text" style="font-size:14.5px;">'
+      +   '<div class="tag-row">'+tagRow(r.cards)+'</div>'
+      +   '<div>'+esc(r.idea)+'</div>'
+      + '</div>'
+      + '<button class="tri-kill" type="button" title="삭제" onclick="removeRecord('+i+')">✕</button>'
+      + '</div></div>';
+  });
+  box.innerHTML = h;
+}
+
+/* ── 결과 표 ── */
+function finish() {
+  if (records.length === 0) {
+    say('m3', '기록을 1개 이상 추가해야 정리표를 만들 수 있어요.', true);
+    return;
+  }
+
+  document.getElementById('t-cnt').textContent = records.length;
+
+  let h = '<table><tr>'
+        + "<th style='width:38px; text-align:center;'>№</th>"
+        + "<th style='width:34%;'>고른 갈등 카드</th>"
+        + "<th style='width:auto;'>이야기 아이디어</th>"
+        + '</tr>';
+  records.forEach((r, i) => {
+    h += '<tr>'
+       + "<td style='text-align:center; color:var(--c-sub); font-weight:800;'>"+(i+1)+'</td>'
+       + "<td><div class='tag-row' style='margin-bottom:0;'>"+tagRow(r.cards)+'</div></td>'
+       + "<td style='color:var(--c-ink);'>"+esc(r.idea).replace(/\n/g,'<br>')+'</td>'
+       + '</tr>';
+  });
+  document.getElementById('result').innerHTML = h + '</table>';
+  go(2);
+}
+
+function makeText() {
+  let t = '학교생활 갈등 카드 고르기\n';
+  t += '총 기록: ' + records.length + '개\n';
+  t += '--------------------------------------\n\n';
+
+  records.forEach((r, i) => {
+    t += `[${i+1}]\n`;
+    t += `- 고른 카드: ${r.cards.join(', ')}\n`;
+    t += `- 이야기 아이디어: ${r.idea}\n\n`;
+  });
+  return t;
+}
+
+function copyResult() {
+  copy(makeText(), 'm4', '내용을 복사했습니다. 원하는 곳에 붙여넣으세요.');
+}
+
+function download() {
+  const name = '갈등카드.txt';
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([makeText()], {type: 'text/plain;charset=utf-8'}));
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  say('m4', '파일을 내려받았습니다.');
+}
+
+function doPrint() {
+  const printTitle = document.getElementById('print-title');
+  printTitle.style.display = 'block';
+  printTitle.innerHTML = '학교생활 갈등 카드';
+  window.print();
+  printTitle.style.display = 'none';
+}
+
+/* ── 공통 유틸 ── */
+function go(n) {
+  step = n;
+  [1, 2].forEach(i => {
+    const sec = document.getElementById('p'+i);
+    if (sec) sec.hidden = (i !== n);
+    const g = document.getElementById('g'+i);
+    if (g) g.className = 'seg' + (i === n ? ' on' : (i < n ? ' done' : ''));
+  });
+  document.getElementById('segLabel').textContent = n + ' / 2 단계';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function say(id, msg, warn) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'msg' + (warn ? ' warn' : '');
+  setTimeout(() => { if (el.textContent === msg) el.textContent = ''; }, 4500);
+}
+
+function copy(text, id, msg) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => say(id, msg)).catch(() => fallbackCopy(text, id, msg));
+  } else {
+    fallbackCopy(text, id, msg);
+  }
+}
+
+function fallbackCopy(text, id, msg) {
+  const t = document.createElement('textarea');
+  t.value = text;
+  document.body.appendChild(t);
+  t.select();
+  document.execCommand('copy');
+  t.remove();
+  say(id, msg);
+}
+
+function esc(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+buildCards();
+
+window.addEventListener('beforeunload', e => {
+  if (records.length > 0 && step !== 2) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+
+/* 부모(스튜디오)에 실제 높이를 알려 하단 여백 없이 맞추기 */
+(function(){
+  if(window.parent === window) return;
+  let t, lastH = 0;
+  function report(){
+    clearTimeout(t);
+    t = setTimeout(()=>{
+      let max = 0;
+      for(const el of document.body.children){
+        const cs = getComputedStyle(el);
+        if(cs.position === 'fixed' || cs.display === 'none') continue;
+        const r = el.getBoundingClientRect();
+        max = Math.max(max, r.bottom + window.scrollY + (parseFloat(cs.marginBottom)||0));
+      }
+      const h = Math.ceil(max + (parseFloat(getComputedStyle(document.body).paddingBottom)||0));
+      if(h > 100 && Math.abs(h - lastH) > 2){ lastH = h; parent.postMessage({qkFrameH: h}, '*'); }
+    }, 80);
+  }
+  new MutationObserver(report).observe(document.documentElement, {childList:true, subtree:true, attributes:true});
+  addEventListener('load', report);
+  addEventListener('resize', report);
+  setInterval(report, 700);
+  report();
+})();
+</script>
+</body>
+</html>
