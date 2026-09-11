@@ -744,7 +744,7 @@ const LESSONS = [
  quiz:[{q:'동화의 갈등 해결 방식으로 권장되는 것은?',o:['힘으로 이기기','운으로 끝내기','대화·이해·공동체의 도움'],a:2,ex:'관계가 회복되는 방향으로 설계해요.'}],
  cta:'갈등 카드 완성'},
 
-{n:8, title:'공감이 담긴 말로 동화 바꾸어쓰기', sub:'공감대화 · 나전달법 · 비폭력대화', helper:'대사 코치 도우미',
+{n:8, title:'공감 대화로 바꾸기', sub:'공감대화 · 나전달법 · 비폭력대화', helper:'대사 코치 도우미',
  tool:'empathy-talk.html', toolH:1950,
  toolSub:'말랑말랑 마음 번역기와 마음이 챗봇으로 대사를 공감의 말로 바꾸어 써요',
  goals:['공감이 담긴 말 알아보기',"'마음이' 챗봇을 활용해 공감 대사로 바꾸어 쓰기",'대사 및 전체 원고 점검하기'],
@@ -757,7 +757,7 @@ const LESSONS = [
  quiz:[{q:'나전달법(I-message)의 구조로 알맞은 것은?',o:['비난–명령–위협','사건–감정–필요–부탁','칭찬–보상–평가'],a:1,ex:'갈등을 비난 없이 전할 수 있는 구조예요.'}],
  cta:'대사 다듬기 완료'},
 
-{n:9, title:'어떤 결말이 오래 남을까', sub:'해피엔딩 · 성장 결말 · 열린 결말 · 반전 결말 · 여운 결말', helper:'엔딩 안내 도우미',
+{n:9, title:'결말 디자인하기', sub:'해피엔딩 · 성장 결말 · 열린 결말 · 반전 결말 · 여운 결말', helper:'엔딩 안내 도우미',
  tool:'ending-story.html', toolH:3200,
  toolSub:"결말 다섯 유형을 알아보고, 엔딩 도우미 챗봇 '여운이'와 내 결말을 완성해요",
  goals:['결말의 다섯 가지 종류 알아보기','오래 남는 결말의 조건 찾아보기',"엔딩 도우미 챗봇 '여운이'로 결말 완성하기"],
@@ -770,7 +770,7 @@ const LESSONS = [
  quiz:[{q:'결말 선택의 기준으로 가장 알맞은 것은?',o:['가장 긴 결말','주제와 핵심 감정에 어울리는 결말','AI가 추천한 결말'],a:1,ex:'작가가 책임 있게, 근거를 들어 선택해요.'}],
  cta:'결말 확정'},
 
-{n:10, title:'표지만 봐도 읽고 싶은 동화', sub:'한눈에 끌리는 동화 표지 만들기', helper:'표지 디자인 도우미',
+{n:10, title:'표지 만들기 대작전', sub:'한눈에 끌리는 동화 표지 만들기', helper:'표지 디자인 도우미',
  goals:['표지가 주는 첫인상, 왜 중요할까','표지 3요소(제목·이미지·색) 정하기','그림 주문서 만들고 캔바로 완성하기'],
  ws:[
   {t:'rows', h:'표지 3요소 정하기', rows:[
@@ -833,7 +833,9 @@ const LESSONS = [
     {b:'Book Creator', p:'글·그림에 목소리까지 담는 전자책 도구. 학교 프로젝트 수업의 단골'},
     {b:'Canva', p:'누구나 쉬운 디자인 도구. 여러 페이지를 연결해 전자책처럼'}]},
   {t:'check', h:'책 구조 체크리스트', k:'bookparts', opts:[
-    '표지 — 제목·이미지·작가 이름','본문 — 장면별 글과 삽화 (한 장면 = 한 페이지)','뒷부분 — 작가의 말 자리 남겨 두기']}],
+    '표지 — 제목·이미지·작가 이름','본문 — 장면별 글과 삽화 (한 장면 = 한 페이지)','뒷부분 — 작가의 말 자리 남겨 두기']},
+  {t:'link', h:'선배 작가들의 완성작 구경하기', items:[
+    {go:"go('links')", b:'📚 책 완성 예시 아카이브 보러 가기', p:'북크리에이터 완성작 5편과 캔바 작업 예시를 링크 탭에 모아 두었어요. 내 책의 힌트를 얻어 보세요!'}]}],
  chat:['흩어진 글과 그림이 드디어 한 권의 책이 돼요!','글과 그림이 같은 감정을 말하게 해 볼까?'],
  me:'중요한 장면엔 큰 삽화!',
  prompt:null,
@@ -873,6 +875,15 @@ const LINKS = [
   {c:'mist', b:'Mizou — 교육용 AI 챗봇', p:'차시·주제별 도우미 챗봇을 만들어 안전하게 운영할 수 있는 교육용 챗봇 플랫폼.', u:'https://mizou.com'},
   {c:'lilac', b:'Canva 교육용', p:'표지 디자인, Magic Media 삽화 생성, 전자책 편집까지. 교육용 무료.', u:'https://www.canva.com/ko_kr/education/'},
   {c:'sage', b:'Book Creator', p:'글·그림·목소리까지 담아 e북을 발간하는 전자책 제작 도구.', u:'https://bookcreator.com/'}]},
+ {g:'책 완성 예시 아카이브 — 북크리에이터 완성작', items:[
+  {c:'mist', b:'우정 이야기', p:'선배 작가의 완성작 — 우정을 주제로 한 동화 예시.', u:'https://read.bookcreator.com/Hr9FHDPjbtWEAh28g5qBTxkGTZB3/eriZTAufR1KlmB0d0exr8Q'},
+  {c:'lilac', b:'판타지', p:'선배 작가의 완성작 — 판타지 동화 예시.', u:'https://read.bookcreator.com/Hr9FHDPjbtWEAh28g5qBTxkGTZB3/aPP8I_CBTk2wlDUB7STBEg'},
+  {c:'sage', b:'야채가 싫어', p:'선배 작가의 완성작 — 일상 소재 동화 예시.', u:'https://read.bookcreator.com/RWsZgZwkU5X0OF80jlu81acOJ6A3/KK5-eCJNS_OEssp-18nQ9A'},
+  {c:'butter', b:'형제간 우애 (악기)', p:'선배 작가의 완성작 — 악기를 통해 형제의 우애를 그린 동화.', u:'https://read.bookcreator.com/PPiC9V8BuYMnpeeN27jsPlajzQd2/4nN-Aeg4Q1Ctc7wWPEmKuQ'},
+  {c:'peach', b:'복수극 (학교폭력 복수)', p:'선배 작가의 완성작 — 학교폭력을 소재로 한 동화.', u:'https://read.bookcreator.com/yYdPoy6YkORYERbFjngVD6pXEMo1/rJyL7LYBTZy7XyVz27wQjw'}]},
+ {g:'책 완성 예시 아카이브 — 캔바 작업', items:[
+  {c:'butter', b:'형제간 우애 (악기) — 캔바 작업', p:'같은 작품의 캔바 편집 화면 예시. 페이지 구성을 참고해요.', u:'https://canva.link/pney0m8dbdz0co1'},
+  {c:'peach', b:'복수극 (학교폭력 복수) — 캔바 작업', p:'같은 작품의 캔바 편집 화면 예시. 페이지 구성을 참고해요.', u:'https://canva.link/7lwqpc469xklnw6'}]},
  {g:'수업 · 출석', items:[
   {c:'sage', b:'경기온라인학교', p:'자기주도학습 콘텐츠 수강. 강의를 들은 날은 캘린더 탭에서 출석도 함께 기록해요.', u:'https://online.goe.go.kr'},
   {c:'peach', b:'스피치타임', p:'원고 분량 계산기 — 말하기 속도 100% 기준으로 학습 분량을 계산해요. (선생님용)', u:'https://www.speechtime.co.kr/'}]},
