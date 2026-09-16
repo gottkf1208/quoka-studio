@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>어떤 결말이 오래 남을까? · AI 동화작가 데뷔 스튜디오</title>
+<title>어떤 결말이 기억에 오래남을까? · AI 동화작가 데뷔 스튜디오</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* ── 컬러 토큰 (donghwa-studio 동일) ───────────────── */
@@ -208,7 +208,7 @@ input::placeholder,textarea::placeholder{color:#BDB9AE}
 <main>
 
   <span class="eyebrow">LESSON 09 · ENDING STUDIO</span>
-  <h1 class="sec">어떤 결말이 오래 남을까?</h1>
+  <h1 class="sec">어떤 결말이 기억에 오래남을까?</h1>
   <div class="title-bar"></div>
   <p class="sec-sub">해피엔딩 · 성장 결말 · 열린 결말 · 반전 결말 · 여운 결말</p>
   <ul class="goal-list">
@@ -406,6 +406,39 @@ input::placeholder,textarea::placeholder{color:#BDB9AE}
     </div>
   </section>
 
+  <!-- ══════════ 전체 원고 점검하기 ══════════ -->
+  <section class="ws-card" id="s-full-check">
+    <div class="sec-head"><h4>전체 원고 점검하기</h4></div>
+    <p class="sec-desc">체크리스트로 전체 원고를 점검해요!</p>
+    <div class="confirm-table">
+      <div class="confirm-row">
+        <span class="confirm-num">1</span>
+        <span class="confirm-text"><span>도입부에서 주인공과 상황이 잘 소개되었나요?</span></span>
+        <span class="confirm-check"><input type="checkbox" class="full-check-cb" data-q="도입부에서 주인공과 상황이 잘 소개되었나요?"></span>
+      </div>
+      <div class="confirm-row">
+        <span class="confirm-num">2</span>
+        <span class="confirm-text"><span>사건이 기-승-전-결의 흐름으로 자연스럽게 이어지나요?</span></span>
+        <span class="confirm-check"><input type="checkbox" class="full-check-cb" data-q="사건이 기-승-전-결의 흐름으로 자연스럽게 이어지나요?"></span>
+      </div>
+      <div class="confirm-row">
+        <span class="confirm-num">3</span>
+        <span class="confirm-text"><span>위기 장면에서 긴장감이 잘 느껴지나요?</span></span>
+        <span class="confirm-check"><input type="checkbox" class="full-check-cb" data-q="위기 장면에서 긴장감이 잘 느껴지나요?"></span>
+      </div>
+      <div class="confirm-row">
+        <span class="confirm-num">4</span>
+        <span class="confirm-text"><span>공감이 담긴 대사가 인물의 마음을 보여주나요?</span></span>
+        <span class="confirm-check"><input type="checkbox" class="full-check-cb" data-q="공감이 담긴 대사가 인물의 마음을 보여주나요?"></span>
+      </div>
+      <div class="confirm-row">
+        <span class="confirm-num">5</span>
+        <span class="confirm-text"><span>결말이 이야기 전체의 주제와 잘 어울리나요?</span></span>
+        <span class="confirm-check"><input type="checkbox" class="full-check-cb" data-q="결말이 이야기 전체의 주제와 잘 어울리나요?"></span>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <script>
@@ -470,6 +503,11 @@ function buildEndingText() {
     t += '- 처음 결말과 비교했을 때 달라진 점:\n   ' + (v('deepen-compare1') || '(작성 안 함)') + '\n';
     t += '- 더 마음에 드는 결말과 이유:\n   ' + (v('deepen-compare2') || '(작성 안 함)') + '\n';
   }
+
+  t += '\n[전체 원고 점검하기]\n';
+  document.querySelectorAll('.full-check-cb').forEach((cb, i) => {
+    t += (i + 1) + '. ' + cb.dataset.q + ' → ' + (cb.checked ? '✔ 확인함' : '☐ 미확인') + '\n';
+  });
 
   return t;
 }
