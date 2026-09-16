@@ -594,6 +594,7 @@ p.sec-sub{color:var(--c-sub);margin-bottom:24px;font-size:15px}
       <button class="nav-btn" data-v="home" onclick="go('home')">홈</button>
       <button class="nav-btn" data-v="lesson" onclick="go('lesson')">실습 스튜디오</button>
       <button class="nav-btn" data-v="book" onclick="go('book')">내 책</button>
+      <button class="nav-btn" data-v="archive" onclick="go('archive')">책 아카이브</button>
       <button class="nav-btn" data-v="shelf" onclick="go('shelf')">작가들의 책장</button>
       <button class="nav-btn" data-v="cal" onclick="go('cal')">캘린더 · 출석</button>
       <button class="nav-btn" data-v="links" onclick="go('links')">링크</button>
@@ -605,6 +606,7 @@ p.sec-sub{color:var(--c-sub);margin-bottom:24px;font-size:15px}
   <section id="v-home" class="view"></section>
   <section id="v-lesson" class="view"></section>
   <section id="v-book" class="view"></section>
+  <section id="v-archive" class="view"></section>
   <section id="v-shelf" class="view"></section>
   <section id="v-cal" class="view"></section>
   <section id="v-links" class="view"></section>
@@ -835,7 +837,7 @@ const LESSONS = [
   {t:'check', h:'책 구조 체크리스트', k:'bookparts', opts:[
     '표지 — 제목·이미지·작가 이름','본문 — 장면별 글과 삽화 (한 장면 = 한 페이지)','뒷부분 — 작가의 말 자리 남겨 두기']},
   {t:'link', h:'선배 작가들의 완성작 구경하기', items:[
-    {go:"go('links')", b:'📚 책 완성 예시 아카이브 보러 가기', p:'북크리에이터 완성작 5편과 캔바 작업 예시를 링크 탭에 모아 두었어요. 내 책의 힌트를 얻어 보세요!'}]}],
+    {go:"go('archive')", b:'📚 책 완성 예시 아카이브 보러 가기', p:'북크리에이터 완성작 5편과 캔바 작업 화면을 책 아카이브 탭에 모아 두었어요. 내 책의 힌트를 얻어 보세요!'}]}],
  chat:['흩어진 글과 그림이 드디어 한 권의 책이 돼요!','글과 그림이 같은 감정을 말하게 해 볼까?'],
  me:'중요한 장면엔 큰 삽화!',
  prompt:null,
@@ -875,15 +877,6 @@ const LINKS = [
   {c:'mist', b:'Mizou — 교육용 AI 챗봇', p:'차시·주제별 도우미 챗봇을 만들어 안전하게 운영할 수 있는 교육용 챗봇 플랫폼.', u:'https://mizou.com'},
   {c:'lilac', b:'Canva 교육용', p:'표지 디자인, Magic Media 삽화 생성, 전자책 편집까지. 교육용 무료.', u:'https://www.canva.com/ko_kr/education/'},
   {c:'sage', b:'Book Creator', p:'글·그림·목소리까지 담아 e북을 발간하는 전자책 제작 도구.', u:'https://bookcreator.com/'}]},
- {g:'책 완성 예시 아카이브 — 북크리에이터 완성작', items:[
-  {c:'mist', b:'우정 이야기', p:'선배 작가의 완성작 — 우정을 주제로 한 동화 예시.', u:'https://read.bookcreator.com/Hr9FHDPjbtWEAh28g5qBTxkGTZB3/eriZTAufR1KlmB0d0exr8Q'},
-  {c:'lilac', b:'판타지', p:'선배 작가의 완성작 — 판타지 동화 예시.', u:'https://read.bookcreator.com/Hr9FHDPjbtWEAh28g5qBTxkGTZB3/aPP8I_CBTk2wlDUB7STBEg'},
-  {c:'sage', b:'야채가 싫어', p:'선배 작가의 완성작 — 일상 소재 동화 예시.', u:'https://read.bookcreator.com/RWsZgZwkU5X0OF80jlu81acOJ6A3/KK5-eCJNS_OEssp-18nQ9A'},
-  {c:'butter', b:'형제간 우애 (악기)', p:'선배 작가의 완성작 — 악기를 통해 형제의 우애를 그린 동화.', u:'https://read.bookcreator.com/PPiC9V8BuYMnpeeN27jsPlajzQd2/4nN-Aeg4Q1Ctc7wWPEmKuQ'},
-  {c:'peach', b:'복수극 (학교폭력 복수)', p:'선배 작가의 완성작 — 학교폭력을 소재로 한 동화.', u:'https://read.bookcreator.com/yYdPoy6YkORYERbFjngVD6pXEMo1/rJyL7LYBTZy7XyVz27wQjw'}]},
- {g:'책 완성 예시 아카이브 — 캔바 작업', items:[
-  {c:'butter', b:'형제간 우애 (악기) — 캔바 작업', p:'같은 작품의 캔바 편집 화면 예시. 페이지 구성을 참고해요.', u:'https://canva.link/pney0m8dbdz0co1'},
-  {c:'peach', b:'복수극 (학교폭력 복수) — 캔바 작업', p:'같은 작품의 캔바 편집 화면 예시. 페이지 구성을 참고해요.', u:'https://canva.link/7lwqpc469xklnw6'}]},
  {g:'수업 · 출석', items:[
   {c:'sage', b:'경기온라인학교', p:'자기주도학습 콘텐츠 수강. 강의를 들은 날은 캘린더 탭에서 출석도 함께 기록해요.', u:'https://online.goe.go.kr'},
   {c:'peach', b:'스피치타임', p:'원고 분량 계산기 — 말하기 속도 100% 기준으로 학습 분량을 계산해요. (선생님용)', u:'https://www.speechtime.co.kr/'}]},
@@ -939,14 +932,14 @@ function doneCount(){ return LESSONS.filter(l=>S.done[l.n]).length; }
 
 /* ═══════════ 라우팅 ═══════════ */
 let CURV = 'home';
-const ORDER = ['home','lesson','book','shelf','cal','links'];
+const ORDER = ['home','lesson','book','archive','shelf','cal','links'];
 function go(v, opt){
   if(v==='shelf' && !QK_SHELF) v = 'home';
   const back = ORDER.indexOf(v) < ORDER.indexOf(CURV);
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('show','back'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('on', b.dataset.v===v));
   const el = document.getElementById('v-'+v);
-  ({home:renderHome, lesson:renderLesson, book:renderBook, shelf:renderShelf, cal:renderCal, links:renderLinks})[v](opt);
+  ({home:renderHome, lesson:renderLesson, book:renderBook, archive:renderArchive, shelf:renderShelf, cal:renderCal, links:renderLinks})[v](opt);
   void el.offsetWidth;
   el.classList.add('show'); if(back) el.classList.add('back');
   CURV = v; window.scrollTo({top:0});
@@ -2013,6 +2006,47 @@ function delEv(k,i){ S.events[k].splice(i,1); if(!S.events[k].length) delete S.e
 function toggleAtt(k){ if(S.att[k]) delete S.att[k]; else S.att[k]='경기온라인학교 수강'; save(); renderCal(); }
 
 /* ═══════════ 링크 ═══════════ */
+/* ═══════════ 책 아카이브 ═══════════ */
+const ARCHIVE = [
+ {t:'우정 이야기', d:'우정을 주제로 한 완성 동화', c:'mist',
+  book:'https://read.bookcreator.com/Hr9FHDPjbtWEAh28g5qBTxkGTZB3/eriZTAufR1KlmB0d0exr8Q',
+  canva:'https://canva.link/8t2zx6and01uimr'},
+ {t:'판타지', d:'상상의 세계를 그린 판타지 동화', c:'lilac',
+  book:'https://read.bookcreator.com/Hr9FHDPjbtWEAh28g5qBTxkGTZB3/aPP8I_CBTk2wlDUB7STBEg',
+  canva:'https://canva.link/xksijxx9jmimdv1'},
+ {t:'야채가 싫어', d:'일상 속 고민을 담은 동화', c:'sage',
+  book:'https://read.bookcreator.com/RWsZgZwkU5X0OF80jlu81acOJ6A3/KK5-eCJNS_OEssp-18nQ9A',
+  canva:'https://canva.link/4cnpofpm5uebefd'},
+ {t:'형제간 우애 (악기)', d:'악기를 통해 형제의 우애를 그린 동화', c:'butter',
+  book:'https://read.bookcreator.com/PPiC9V8BuYMnpeeN27jsPlajzQd2/4nN-Aeg4Q1Ctc7wWPEmKuQ',
+  canva:'https://canva.link/pney0m8dbdz0co1'},
+ {t:'복수극 (학교폭력 복수)', d:'학교폭력을 소재로 마음을 들여다본 동화', c:'peach',
+  book:'https://read.bookcreator.com/yYdPoy6YkORYERbFjngVD6pXEMo1/rJyL7LYBTZy7XyVz27wQjw',
+  canva:'https://canva.link/7lwqpc469xklnw6'}
+];
+function renderArchive(){
+  const el = document.getElementById('v-archive');
+  el.innerHTML = `
+  <h2 class="sec">책 완성 예시 아카이브</h2>
+  <p class="sec-sub">선배 작가들의 완성작이에요. 북크리에이터로 완성된 책을 읽고, 캔바 작업 화면으로 만드는 과정을 엿봐요.</p>
+  <div class="link-grid">
+    ${ARCHIVE.map(a=>`
+      <div class="linkcard" style="cursor:default">
+        <span class="lk-bar" style="background:${CV[a.c].bg}"></span>
+        <b>${a.t}</b><p>${a.d}</p>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <a class="cta ghost" style="flex:1;justify-content:center;font-size:13.5px;padding:10px 12px;min-width:130px" href="${a.book}" target="_blank" rel="noopener">📖 완성된 책 읽기</a>
+          <a class="cta ghost" style="flex:1;justify-content:center;font-size:13.5px;padding:10px 12px;min-width:130px" href="${a.canva}" target="_blank" rel="noopener">🎨 캔바 작업 보기</a>
+        </div>
+      </div>`).join('')}
+  </div>
+  <div class="card" style="margin-top:18px;display:flex;align-items:center;gap:18px">
+    <img class="qk" src="${QUOKKA_FACE}" style="width:56px;height:56px" alt="쿼카">
+    <div><b style="font-size:15.5px">예시는 힌트, 내 이야기는 내 것!</b>
+    <p style="font-size:14px;color:var(--c-sub);margin-top:3px">선배 작품에서 표지·페이지 구성·글과 그림의 어울림을 참고하되, 내 이야기만의 색깔을 담아 완성해요.</p></div>
+  </div>`;
+}
+
 function renderLinks(){
   const el = document.getElementById('v-links');
   el.innerHTML = `
