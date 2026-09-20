@@ -204,7 +204,7 @@
     <div class="steps">
       <div class="step s1">① 내 목소리로 읽기</div>
       <div class="step s2">② 들어보기</div>
-      <div class="step s3">③ 공감 피드백 나누기</div>
+      <div class="step s3">③ 응원 담벼락에서 축하하기</div>
     </div>
   </div>
 
@@ -269,14 +269,6 @@
     <div class="status" id="speakStatus">텍스트를 입력하고 읽어 주세요 버튼을 눌러 보세요.</div>
   </div>
 
-  <!-- 공감 피드백 -->
-  <div class="card">
-    <h2>💌 공감 피드백 문장틀 — 점수 대신 마음</h2>
-    <p class="big">친구의 낭독을 듣고, 마음이 담긴 한 문장을 선물해요.</p>
-    <div class="row-line"><span class="tag">친구에게</span><input id="fb1" placeholder="나는 네 이야기에서 __ 장면이 가장 마음에 남았어"></div>
-    <div class="row-line"><span class="tag">느낀 마음</span><input id="fb2" placeholder="그 부분에서 __ 한 마음이 느껴졌어. 데뷔 축하해!"></div>
-  </div>
-
   <!-- 무엇이 자랐을까 -->
   <div class="card">
     <h2>🌱 AI동화작가 프로젝트, 무엇이 자랐을까</h2>
@@ -324,7 +316,7 @@ function flashSave(){
 }
 {
   const a=stGet();
-  ["fb1","fb2","g1","g2","g3"].forEach(k=>{
+  ["g1","g2","g3"].forEach(k=>{
     const el=document.getElementById(k);
     el.value=a[k]||"";
     el.addEventListener("input",()=>stSet({[k]:el.value}));

@@ -580,6 +580,11 @@ p.sec-sub{color:var(--c-sub);margin-bottom:24px;font-size:15px}
   header,.les-foot,.no-print{display:none!important}
   body{background:#fff}
 }
+
+/* 한글 줄바꿈 — 단어 중간에서 끊기지 않게 */
+body, button, .linkcard b, .linkcard p, .sec-sub, .cta{word-break:keep-all}
+.linkcard .url{word-break:break-all}
+.r-card .ricon{width:34px;height:34px;border-radius:8px;margin-left:auto;flex-shrink:0;align-self:center}
 </style>
 </head>
 <body>
@@ -595,6 +600,7 @@ p.sec-sub{color:var(--c-sub);margin-bottom:24px;font-size:15px}
       <button class="nav-btn" data-v="lesson" onclick="go('lesson')">실습 스튜디오</button>
       <button class="nav-btn" data-v="book" onclick="go('book')">내 책</button>
       <button class="nav-btn" data-v="archive" onclick="go('archive')">책 아카이브</button>
+      <button class="nav-btn" data-v="wall" onclick="go('wall')">응원 담벼락</button>
       <button class="nav-btn" data-v="shelf" onclick="go('shelf')">작가들의 책장</button>
       <button class="nav-btn" data-v="cal" onclick="go('cal')">캘린더 · 출석</button>
       <button class="nav-btn" data-v="links" onclick="go('links')">링크</button>
@@ -607,6 +613,7 @@ p.sec-sub{color:var(--c-sub);margin-bottom:24px;font-size:15px}
   <section id="v-lesson" class="view"></section>
   <section id="v-book" class="view"></section>
   <section id="v-archive" class="view"></section>
+  <section id="v-wall" class="view"></section>
   <section id="v-shelf" class="view"></section>
   <section id="v-cal" class="view"></section>
   <section id="v-links" class="view"></section>
@@ -832,8 +839,8 @@ const LESSONS = [
  goals:['본문과 삽화를 보기 좋게 배치해 책 완성하기','디지털 도구로 동화를 e북으로 발간하기','완성의 경험으로 자기효능감 키우기'],
  ws:[
   {t:'radio', h:'나에게 맞는 전자책 도구 고르기', k:'tool', opts:[
-    {b:'Book Creator', p:'글·그림에 목소리까지 담는 전자책 도구. 학교 프로젝트 수업의 단골'},
-    {b:'Canva', p:'누구나 쉬운 디자인 도구. 여러 페이지를 연결해 전자책처럼'}]},
+    {b:'Canva', p:'누구나 쉬운 디자인 도구. 여러 페이지를 연결해 전자책처럼', icon:'https://www.google.com/s2/favicons?sz=64&domain=canva.com'},
+    {b:'Book Creator', p:'글·그림에 목소리까지 담는 전자책 도구. 학교 프로젝트 수업의 단골', icon:'https://www.google.com/s2/favicons?sz=64&domain=bookcreator.com'}]},
   {t:'check', h:'책 구조 체크리스트', k:'bookparts', opts:[
     '표지 — 제목·이미지·작가 이름','본문 — 장면별 글과 삽화 (한 장면 = 한 페이지)','뒷부분 — 작가의 말 자리 남겨 두기']},
   {t:'link', h:'선배 작가들의 완성작 구경하기', items:[
@@ -859,7 +866,8 @@ const LESSONS = [
  cta:'작가의 말 완성'},
 
 {n:15, title:'출간 파티', sub:'낭독회 · 피드백 · 작가 파티', helper:'출간 파티 도우미',
- tool:'reading-party.html', toolH:2450, toolSub:'내 목소리로 낭독하고, 친구에게 공감 피드백을 남기는 우리 반 출간 파티',
+ tool:'reading-party.html', toolH:2200, toolSub:'내 목소리로 낭독하고, 응원 담벼락에서 서로의 데뷔를 축하하는 출간 파티',
+ wallBtn:'🎉 작가 응원 담벼락에서 출간 파티 열기',
  goals:['내 동화를 자신감 있게 낭독하기','친구 작품에 공감적·구체적 피드백 주기','나와 공동체의 성장 확인하기'],
  ws:[],
  chat:['가장 들려주고 싶은 한 장면은?','친구 글에 어떤 마음을 전할까?'],
@@ -928,18 +936,20 @@ window.addEventListener('message', e=>{
 });
 function A(n){ return S.ans['l'+n] = S.ans['l'+n] || {}; }
 function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+/* 참고 링크에 브랜드 파비콘(로고) 붙이기 */
+function favi(u){ try{ return 'https://www.google.com/s2/favicons?sz=64&domain='+new URL(u).hostname; }catch(e){ return ''; } }
 function doneCount(){ return LESSONS.filter(l=>S.done[l.n]).length; }
 
 /* ═══════════ 라우팅 ═══════════ */
 let CURV = 'home';
-const ORDER = ['home','lesson','book','archive','shelf','cal','links'];
+const ORDER = ['home','lesson','book','archive','wall','shelf','cal','links'];
 function go(v, opt){
   if(v==='shelf' && !QK_SHELF) v = 'home';
   const back = ORDER.indexOf(v) < ORDER.indexOf(CURV);
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('show','back'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('on', b.dataset.v===v));
   const el = document.getElementById('v-'+v);
-  ({home:renderHome, lesson:renderLesson, book:renderBook, archive:renderArchive, shelf:renderShelf, cal:renderCal, links:renderLinks})[v](opt);
+  ({home:renderHome, lesson:renderLesson, book:renderBook, archive:renderArchive, wall:renderWall, shelf:renderShelf, cal:renderCal, links:renderLinks})[v](opt);
   void el.offsetWidth;
   el.classList.add('show'); if(back) el.classList.add('back');
   CURV = v; window.scrollTo({top:0});
@@ -1088,6 +1098,7 @@ function renderLesson(){
     </div>
     ${toolsHtml}
     ${botsHtml}
+    ${L.wallBtn?`<button class="cta" style="width:100%;justify-content:center;margin-top:18px" onclick="go('wall')">${L.wallBtn}</button>`:''}
     <div class="les-foot no-print">
       ${pv?`<button class="cta ghost" onclick="openLesson(${pv.n})">← ${pv.n}차시</button>`:''}
       <span class="spacer"></span>
@@ -1111,7 +1122,7 @@ function renderLesson(){
         ${it.p?`<p class="ws-note" style="margin:0 0 11px">${it.p}</p>`:''}
         ${it.go
           ? `<button class="cta" style="width:100%;justify-content:center" onclick="${it.go}">${it.b}</button>`
-          : `<a class="cta ghost" style="width:100%;justify-content:center" href="${it.u}" target="_blank" rel="noopener">${it.b} ↗</a>`}`).join('')}</div>`;
+          : `<a class="cta ghost" style="width:100%;justify-content:center" href="${it.u}" target="_blank" rel="noopener"><img src="${favi(it.u)}" style="width:18px;height:18px;border-radius:4px" alt="" onerror="this.style.display='none'">${it.b} ↗</a>`}`).join('')}</div>`;
     }
     if(w.t==='pills'){
       const sel = a[w.k]||[];
@@ -1148,7 +1159,7 @@ function renderLesson(){
       return `<div class="ws-card"><h4>${w.h}</h4><div class="radio-cards">${w.opts.map(o=>`
         <button class="r-card ${a[w.k]===o.b?'sel':''}" onclick="setAns(${L.n},'${w.k}','${esc(o.b)}')">
           <span class="rdot"></span>
-          <span><b>${o.b}</b><p>${o.p}</p></span></button>`).join('')}</div></div>`;
+          <span><b>${o.b}</b><p>${o.p}</p></span>${o.icon?`<img class="ricon" src="${o.icon}" alt="" onerror="this.style.display='none'">`:''}</button>`).join('')}</div></div>`;
     }
     if(w.t==='check'){
       const sel = a[w.k]||[];
@@ -2006,6 +2017,18 @@ function delEv(k,i){ S.events[k].splice(i,1); if(!S.events[k].length) delete S.e
 function toggleAtt(k){ if(S.att[k]) delete S.att[k]; else S.att[k]='경기온라인학교 수강'; save(); renderCal(); }
 
 /* ═══════════ 링크 ═══════════ */
+/* ═══════════ 작가 응원 담벼락 ═══════════ */
+const WALL_URL = 'https://quokka-cheer-wall.russet-jay-6490.chatgpt.site/';
+function renderWall(){
+  const el = document.getElementById('v-wall');
+  el.innerHTML = `
+  <h2 class="sec">작가 응원 담벼락 · 출간 파티 🎉</h2>
+  <p class="sec-sub">서로의 데뷔를 축하하고 응원 한 줄을 남기는 우리들의 담벼락이에요. 응원이 다음 작품의 힘이 됩니다!</p>
+  <a class="cta" style="width:100%;justify-content:center;margin-bottom:14px" href="${WALL_URL}" target="_blank" rel="noopener"><img src="${favi(WALL_URL)}" style="width:18px;height:18px;border-radius:4px" alt="" onerror="this.style.display='none'">🎉 응원 담벼락 새 탭에서 크게 열기 ↗</a>
+  <iframe src="${WALL_URL}" style="width:100%;height:78vh;min-height:560px;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:var(--shadow-sm)" title="작가 응원 담벼락"></iframe>
+  <p class="ws-note" style="margin-top:10px">화면이 비어 보이면 위의 빨간 버튼으로 새 탭에서 열어 주세요. '선생님 도구' 메뉴는 선생님용 기능이에요 — 지금은 각자 기기에만 저장되고, 실시간 공유는 준비 중!</p>`;
+}
+
 /* ═══════════ 책 아카이브 ═══════════ */
 const ARCHIVE = [
  {t:'우정 이야기', d:'우정을 주제로 한 완성 동화', c:'mist',
@@ -2035,8 +2058,8 @@ function renderArchive(){
         <span class="lk-bar" style="background:${CV[a.c].bg}"></span>
         <b>${a.t}</b><p>${a.d}</p>
         <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-          <a class="cta ghost" style="flex:1;justify-content:center;font-size:13.5px;padding:10px 12px;min-width:130px" href="${a.book}" target="_blank" rel="noopener">📖 완성된 책 읽기</a>
-          <a class="cta ghost" style="flex:1;justify-content:center;font-size:13.5px;padding:10px 12px;min-width:130px" href="${a.canva}" target="_blank" rel="noopener">🎨 캔바 작업 보기</a>
+          <a class="cta ghost" style="flex:1;justify-content:center;font-size:13.5px;padding:10px 12px;min-width:130px" href="${a.book}" target="_blank" rel="noopener"><img src="${favi(a.book)}" style="width:16px;height:16px;border-radius:4px" alt="" onerror="this.style.display='none'">완성된 책 읽기</a>
+          <a class="cta ghost" style="flex:1;justify-content:center;font-size:13.5px;padding:10px 12px;min-width:130px" href="${a.canva}" target="_blank" rel="noopener"><img src="${favi(a.canva)}" style="width:16px;height:16px;border-radius:4px" alt="" onerror="this.style.display='none'">캔바 작업 보기</a>
         </div>
       </div>`).join('')}
   </div>
@@ -2058,7 +2081,7 @@ function renderLinks(){
       ${g.items.map(it=>`
         <a class="linkcard" href="${it.u}" target="_blank" rel="noopener">
           <span class="lk-bar" style="background:${CV[it.c].bg}"></span>
-          <b>${it.b}</b><p>${it.p}</p><span class="url">${it.u.replace('https://','')}</span>
+          <b><img src="${favi(it.u)}" style="width:20px;height:20px;border-radius:5px;vertical-align:-4px;margin-right:7px" alt="" onerror="this.style.display='none'">${it.b}</b><p>${it.p}</p><span class="url">${it.u.replace('https://','')}</span>
         </a>`).join('')}
     </div></div>`).join('')}
   <div class="card" style="display:flex;align-items:center;gap:18px">
