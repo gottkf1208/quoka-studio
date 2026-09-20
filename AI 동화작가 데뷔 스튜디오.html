@@ -535,7 +535,8 @@ p.sec-sub{color:var(--c-sub);margin-bottom:24px;font-size:15px}
 }
 .linkcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
 .linkcard::after{content:'↗';position:absolute;top:18px;right:20px;font-size:14px;color:var(--c-sub)}
-.linkcard .lk-bar{width:26px;height:4px;border-radius:3px;margin-bottom:8px}
+.lk-num{font-size:12px;font-weight:800;color:var(--c-sub);letter-spacing:.08em}
+.linkcard > .lk-num{display:block;margin-bottom:8px}
 .linkcard b{font-size:15.5px;letter-spacing:-.02em}
 .linkcard p{font-size:13.3px;color:var(--c-sub);line-height:1.55;flex:1}
 .linkcard .url{font-size:11.5px;color:var(--c-mist-d);font-weight:700;word-break:break-all;letter-spacing:.02em}
@@ -586,47 +587,9 @@ body, button, .linkcard b, .linkcard p, .sec-sub, .cta{word-break:keep-all}
 .linkcard .url{word-break:break-all}
 .r-card .ricon{width:34px;height:34px;border-radius:8px;margin-left:auto;flex-shrink:0;align-self:center}
 .lk-head{display:flex;align-items:center;justify-content:space-between;min-height:34px;margin-bottom:6px}
-.lk-head .lk-bar{margin-bottom:0}
 .linkcard .bicon{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:#fff;padding:5px;object-fit:contain}
 .cta .bt-ico{width:18px;height:18px;border-radius:4px;margin-right:7px;flex-shrink:0;vertical-align:-4px}
 .linkcard:has(.bicon)::after{display:none}
-
-/* 응원 담벼락 */
-.wall-hero{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:24px;padding:46px 44px;margin-bottom:14px;min-height:300px;display:flex;align-items:center}
-.wblob{position:absolute;border-radius:50%;filter:blur(46px);pointer-events:none}
-.wb1{width:340px;height:340px;right:-80px;top:-120px;background:rgba(174,198,214,.55)}
-.wb2{width:260px;height:260px;right:180px;bottom:-140px;background:rgba(203,191,220,.5)}
-.wb3{width:170px;height:170px;right:60px;top:110px;background:rgba(255,87,87,.16)}
-.wall-glass{position:relative;z-index:2;max-width:520px;background:rgba(255,255,255,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.85);border-radius:20px;padding:30px 32px;box-shadow:0 10px 30px rgba(61,67,76,.08)}
-.wall-eyebrow{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.22em;color:var(--c-mist-d);background:#EAF0F4;padding:5px 12px;border-radius:999px;margin-bottom:14px}
-.wall-glass h2{font-size:30px;font-weight:900;letter-spacing:-.04em;line-height:1.28;margin-bottom:12px}
-.wall-glass p{font-size:15px;color:var(--c-sub);line-height:1.75;margin-bottom:22px}
-.wall-btns{display:flex;gap:10px;flex-wrap:wrap}
-.wall-btns .cta:not(.ghost){box-shadow:0 8px 20px rgba(255,87,87,.3)}
-.wall-btns .cta.ghost{background:rgba(255,255,255,.7)}
-.wall-visual{position:absolute;z-index:1;right:64px;top:50%;transform:translateY(-50%);width:220px;height:220px;pointer-events:none}
-.wall-visual span{position:absolute;border-radius:22px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 14px 34px rgba(61,67,76,.10);animation:wfloat 6s ease-in-out infinite}
-.wv1{width:150px;height:150px;left:30px;top:12px;transform:rotate(10deg)}
-.wv2{width:92px;height:92px;left:-16px;bottom:0;transform:rotate(-12deg);background:rgba(174,198,214,.35);animation-delay:1.2s}
-.wv3{width:58px;height:58px;right:-6px;bottom:34px;transform:rotate(18deg);background:rgba(255,87,87,.22);animation-delay:2.4s}
-@keyframes wfloat{0%,100%{margin-top:0}50%{margin-top:-12px}}
-.wall-feats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
-.wfc{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px 22px;box-shadow:var(--shadow-sm);transition:transform .2s}
-.wfc:hover{transform:translateY(-3px)}
-.wfc .wf-ico{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;margin-bottom:12px}
-.wfc .wf-ico svg{width:20px;height:20px}
-.wfc b{display:block;font-size:15px;letter-spacing:-.02em;margin-bottom:4px}
-.wfc p{font-size:13.5px;color:var(--c-sub);line-height:1.65}
-.wall-frame{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden}
-.wf-head{display:flex;align-items:center;gap:7px;padding:12px 16px;border-bottom:1px solid var(--line);background:#FBFAF7}
-.wf-dot{width:10px;height:10px;border-radius:50%;background:#E3DED2}
-.wf-head .wf-dot:first-child{background:#F2B8B8}
-.wf-head b{margin-left:8px;font-size:13px;letter-spacing:-.01em}
-.wf-head a{margin-left:auto;font-size:12.5px;font-weight:800;color:var(--c-sub);text-decoration:none}
-.wf-head a:hover{color:var(--c-ink)}
-.wall-frame iframe{display:block;width:100%;height:74vh;min-height:560px;border:0;background:#fff}
-@media (max-width:900px){ .wall-visual{display:none} .wall-glass{max-width:none} }
-@media (max-width:720px){ .wall-feats{grid-template-columns:1fr} .wall-hero{padding:30px 24px} .wall-glass{padding:24px 22px} .wall-glass h2{font-size:24px} }
 </style>
 </head>
 <body>
@@ -929,8 +892,7 @@ const LINKS = [
   {c:'lilac', b:'Canva 교육용', p:'표지 디자인, Magic Media 삽화 생성, 전자책 편집까지. 교육용 무료.', u:'https://www.canva.com/ko_kr/education/', icon:'canva.com'},
   {c:'sage', b:'Book Creator', p:'글·그림·목소리까지 담아 e북을 발간하는 전자책 제작 도구.', u:'https://bookcreator.com/', icon:'bookcreator.com'}]},
  {g:'수업 · 출석', items:[
-  {c:'sage', b:'경기온라인학교', p:'자기주도학습 콘텐츠 수강. 강의를 들은 날은 캘린더 탭에서 출석도 함께 기록해요.', u:'https://online.goe.go.kr', icon:'online.goe.go.kr'},
-  {c:'peach', b:'스피치타임', p:'원고 분량 계산기 — 말하기 속도 100% 기준으로 학습 분량을 계산해요. (선생님용)', u:'https://www.speechtime.co.kr/'}]},
+  {c:'sage', b:'경기온라인학교', p:'자기주도학습 콘텐츠 수강. 강의를 들은 날은 캘린더 탭에서 출석도 함께 기록해요.', u:'https://online.goe.go.kr', icon:'online.goe.go.kr'}]},
  {g:'글쓰기 참고', items:[
   {c:'mist', b:'표준국어대사전', p:'단어의 뜻이 궁금할 때. 국립국어원의 우리말 사전.', u:'https://stdict.korean.go.kr'},
   {c:'butter', b:'국립어린이청소년도서관', p:'어린이 책과 동화를 만나는 국가 도서관. 좋은 동화를 읽는 것이 좋은 동화 쓰기의 시작.', u:'https://www.nlcy.go.kr', icon:'www.nlcy.go.kr'}]},
@@ -2059,33 +2021,15 @@ function toggleAtt(k){ if(S.att[k]) delete S.att[k]; else S.att[k]='경기온라
 
 /* ═══════════ 링크 ═══════════ */
 /* ═══════════ 작가 응원 담벼락 ═══════════ */
-const WALL_URL = 'https://quokka-cheer-wall.russet-jay-6490.chatgpt.site/';
+const WALL_URL = 'https://gottkf1208.github.io/quoka-studio/wall.html';
 function renderWall(){
   const el = document.getElementById('v-wall');
   el.innerHTML = `
-  <div class="wall-hero">
-    <div class="wblob wb1"></div><div class="wblob wb2"></div><div class="wblob wb3"></div>
-    <div class="wall-visual"><span class="wv1"></span><span class="wv2"></span><span class="wv3"></span></div>
-    <div class="wall-glass">
-      <span class="wall-eyebrow">PUBLICATION PARTY</span>
-      <h2>축하가 모이는 곳,<br>작가 응원 담벼락</h2>
-      <p>서로의 데뷔를 축하하고 응원 한 줄을 남겨요.<br>응원 한 줄이 다음 작품을 쓰는 힘이 됩니다.</p>
-      <div class="wall-btns">
-        <button class="cta" onclick="document.querySelector('.wall-frame').scrollIntoView({behavior:'smooth'})">담벼락 입장하기</button>
-        <a class="cta ghost" href="${WALL_URL}" target="_blank" rel="noopener">새 탭에서 크게 열기 ↗</a>
-      </div>
-    </div>
-  </div>
-  <div class="wall-feats">
-    <div class="wfc"><span class="wf-ico" style="background:#EAF0F4;color:var(--c-mist-d)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.3 8.9 8.9 0 0 1-3.2-.6L4 21l1.9-4.6a8.1 8.1 0 0 1-1.4-4.9A8.4 8.4 0 0 1 13 3.2a8.4 8.4 0 0 1 8 8.3z"/></svg></span><b>응원 남기기</b><p>친구의 작품에 따뜻한 응원 한 줄을 붙여요. 점수 대신 마음으로.</p></div>
-    <div class="wfc"><span class="wf-ico" style="background:#FFECEC;color:var(--c-accent-d)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.2-4.6-9.2-9.1A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.2 4.3C19.2 15.4 12 20 12 20z"/></svg></span><b>축하 받기</b><p>내 데뷔 소식에 우리 반 친구들의 축하가 차곡차곡 쌓여요.</p></div>
-    <div class="wfc"><span class="wf-ico" style="background:#F4F1F7;color:var(--c-lilac-d)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9"/><path d="M12 9c0-3.3 2.2-5.5 5.5-5.5C17.5 6.8 15.3 9 12 9z"/><path d="M12 13c0-3.3-2.2-5.5-5.5-5.5C6.5 10.8 8.7 13 12 13z"/></svg></span><b>함께 자라기</b><p>주고받은 응원이 다음 작품을 쓰는 힘이 돼요.</p></div>
-  </div>
-  <div class="wall-frame">
-    <div class="wf-head"><span class="wf-dot"></span><span class="wf-dot"></span><span class="wf-dot"></span><b>우리 반 응원 담벼락</b><a href="${WALL_URL}" target="_blank" rel="noopener">새 탭에서 열기 ↗</a></div>
-    <iframe src="${WALL_URL}" title="작가 응원 담벼락"></iframe>
-  </div>
-  <p class="ws-note" style="margin-top:12px">화면이 비어 보이면 '새 탭에서 크게 열기'를 눌러 주세요. '선생님 도구' 메뉴는 선생님용 기능이에요 — 지금은 각자 기기에만 저장되고, 실시간 공유는 준비 중!</p>`;
+  <h2 class="sec">작가 응원 담벼락 · 출간 파티</h2>
+  <p class="sec-sub">서로의 데뷔를 축하하고 응원 한 줄을 남기는 우리들의 담벼락이에요. 응원 한 줄이 다음 작품을 쓰는 힘이 됩니다.</p>
+  <a class="cta" style="margin-bottom:14px" href="${WALL_URL}" target="_blank" rel="noopener">응원 담벼락 새 탭에서 크게 열기 ↗</a>
+  <iframe src="${WALL_URL}" title="작가 응원 담벼락" style="display:block;width:100%;height:78vh;min-height:560px;border:1px solid var(--line);border-radius:18px;background:#fff"></iframe>
+  <p class="ws-note" style="margin-top:12px">응원은 각 기기에만 저장돼요. '선생님 도구'(담벼락 맨 아래)는 선생님 확인 키가 있어야 쓸 수 있어요.</p>`;
 }
 
 /* ═══════════ 책 아카이브 ═══════════ */
@@ -2102,7 +2046,7 @@ const ARCHIVE = [
  {t:'형제간 우애 (악기)', d:'악기를 통해 형제의 우애를 그린 동화', c:'butter',
   book:'https://read.bookcreator.com/PPiC9V8BuYMnpeeN27jsPlajzQd2/4nN-Aeg4Q1Ctc7wWPEmKuQ',
   canva:'https://canva.link/pney0m8dbdz0co1'},
- {t:'복수극 (학교폭력 복수)', d:'학교폭력을 소재로 마음을 들여다본 동화', c:'peach',
+ {t:'학교폭력 극복 이야기', d:'학교폭력을 이겨 내는 마음을 들여다본 동화', c:'peach',
   book:'https://read.bookcreator.com/yYdPoy6YkORYERbFjngVD6pXEMo1/rJyL7LYBTZy7XyVz27wQjw',
   canva:'https://canva.link/7lwqpc469xklnw6'}
 ];
@@ -2112,9 +2056,9 @@ function renderArchive(){
   <h2 class="sec">책 완성 예시 아카이브</h2>
   <p class="sec-sub">선배 작가들의 완성작이에요. 북크리에이터로 완성된 책을 읽고, 캔바 작업 화면으로 만드는 과정을 엿봐요.</p>
   <div class="link-grid">
-    ${ARCHIVE.map(a=>`
+    ${ARCHIVE.map((a,i)=>`
       <div class="linkcard" style="cursor:default">
-        <span class="lk-bar" style="background:${CV[a.c].bg}"></span>
+        <span class="lk-num">${String(i+1).padStart(2,'0')}</span>
         <b>${a.t}</b><p>${a.d}</p>
         <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
           <a class="cta ghost" style="flex:1;justify-content:center;font-size:13.5px;padding:10px 12px;min-width:130px" href="${a.book}" target="_blank" rel="noopener"><img class="bt-ico" src="${BICON('bookcreator.com')}" alt="" onerror="this.remove()">완성된 책 읽기</a>
@@ -2137,9 +2081,9 @@ function renderLinks(){
   ${LINKS.map(g=>`
     <div class="lk-group"><h3>${g.g}</h3>
     <div class="link-grid">
-      ${g.items.map(it=>`
+      ${g.items.map((it,i)=>`
         <a class="linkcard" href="${it.u}" target="_blank" rel="noopener">
-          <span class="lk-head"><span class="lk-bar" style="background:${CV[it.c].bg}"></span>${it.icon?`<img class="bicon" src="${it.icon==='QK'?QUOKKA_FACE:BICON(it.icon)}" alt="" onerror="this.remove()">`:''}</span>
+          <span class="lk-head"><span class="lk-num">${String(i+1).padStart(2,'0')}</span>${it.icon?`<img class="bicon" src="${it.icon==='QK'?QUOKKA_FACE:BICON(it.icon)}" alt="" onerror="this.remove()">`:''}</span>
           <b>${it.b}</b><p>${it.p}</p><span class="url">${it.u.replace('https://','')}</span>
         </a>`).join('')}
     </div></div>`).join('')}
