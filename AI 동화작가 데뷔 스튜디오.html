@@ -2078,15 +2078,13 @@ function renderLinks(){
   el.innerHTML = `
   <h2 class="sec">동화작가의 책갈피</h2>
   <p class="sec-sub">동화를 쓸 때 참고하는 웹사이트 — 카드를 누르면 새 탭으로 열려요.</p>
-  ${LINKS.map(g=>`
-    <div class="lk-group"><h3>${g.g}</h3>
-    <div class="link-grid">
-      ${g.items.map((it,i)=>`
-        <a class="linkcard" href="${it.u}" target="_blank" rel="noopener">
-          <span class="lk-head"><span class="lk-num">${String(i+1).padStart(2,'0')}</span>${it.icon?`<img class="bicon" src="${it.icon==='QK'?QUOKKA_FACE:BICON(it.icon)}" alt="" onerror="this.remove()">`:''}</span>
-          <b>${it.b}</b><p>${it.p}</p><span class="url">${it.u.replace('https://','')}</span>
-        </a>`).join('')}
-    </div></div>`).join('')}
+  <div class="link-grid" style="margin-bottom:18px">
+    ${LINKS.flatMap(g=>g.items).map((it,i)=>`
+      <a class="linkcard" href="${it.u}" target="_blank" rel="noopener">
+        <span class="lk-head"><span class="lk-num">${String(i+1).padStart(2,'0')}</span>${it.icon?`<img class="bicon" src="${it.icon==='QK'?QUOKKA_FACE:BICON(it.icon)}" alt="" onerror="this.remove()">`:''}</span>
+        <b>${it.b}</b><p>${it.p}</p><span class="url">${it.u.replace('https://','')}</span>
+      </a>`).join('')}
+  </div>
   <div class="card" style="display:flex;align-items:center;gap:18px">
     <img class="qk" src="${QUOKKA_FACE}" style="width:56px;height:56px" alt="쿼카">
     <div><b style="font-size:15.5px">안전 약속, 잊지 않기</b>
