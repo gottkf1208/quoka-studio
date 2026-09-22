@@ -48,9 +48,11 @@ input::placeholder,textarea::placeholder{color:#BDB9AE}
 .bot-card p{font-size:15.5px;color:var(--c-sub);margin-bottom:22px;line-height:1.6;font-weight:500}
 .bot-open{
   display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
-  background:#fff;border:1.5px dashed #C9C5BA;border-radius:14px;
-  padding:16px;font-weight:800;font-size:15.5px;color:var(--c-sub);
+  background:#fff;border:1.5px solid #C9C5BA;border-radius:14px;
+  padding:16px;font-weight:800;font-size:15.5px;color:var(--c-ink);
+  text-decoration:none;transition:background .15s;
 }
+.bot-open:hover{background:#FBFAF7}
 
 /* 세 겹 요약 */
 .recap{background:#FBFAF7;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
@@ -91,7 +93,7 @@ input::placeholder,textarea::placeholder{color:#BDB9AE}
     <div class="bot-emoji">🧶</div>
     <h5>갈등 장면 도우미 '실마리'</h5>
     <p>내 갈등 세 겹(겉으로 벌어진 일 · 그 때 든 감정 · 진짜 바람)을 알려 주면, 장면을 풀어 갈 실마리를 질문으로 건네줘요.</p>
-    <div class="bot-open">🔗 챗봇 링크 준비 중 — 선생님이 안내하는 주소로 접속해요</div>
+    <a class="bot-open" href="https://mizou.com/login-thread?ID=V9R7947RNGNqUKf2W4Rrmwzzw6edJcWJVDJzHz2IiC0-147007" target="_blank" rel="noopener">🧶 실마리 챗봇 열기 (Mizou) ↗</a>
   </section>
 
   <section class="ws-card">
