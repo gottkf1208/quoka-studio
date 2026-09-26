@@ -2050,7 +2050,10 @@ const ARCHIVE = [
   canva:'https://canva.link/pney0m8dbdz0co1'},
  {t:'학교폭력 극복 이야기', d:'학교폭력을 이겨 내는 마음을 들여다본 동화', c:'peach',
   book:'https://read.bookcreator.com/yYdPoy6YkORYERbFjngVD6pXEMo1/rJyL7LYBTZy7XyVz27wQjw',
-  canva:'https://canva.link/7lwqpc469xklnw6'}
+  canva:'https://canva.link/7lwqpc469xklnw6'},
+ {t:'AI 작품', d:'AI와 함께 완성한 동화 작품', c:'mist', bi:'heyzine.com',
+  book:'https://heyzine.com/flip-book/29153ae339.html',
+  canva:'https://www.canva.com/design/DAHWTEm-Zpc/0dj94DkGyF729Qi31dUjCQ/edit?utm_content=DAHWTEm-Zpc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton'}
 ];
 function renderArchive(){
   const el = document.getElementById('v-archive');
@@ -2063,7 +2066,7 @@ function renderArchive(){
         <span class="lk-num">${String(i+1).padStart(2,'0')}</span>
         <b>${a.t}</b><p>${a.d}</p>
         <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-          <a class="cta ghost" style="flex:1;justify-content:center;font-size:13.5px;padding:10px 12px;min-width:130px" href="${a.book}" target="_blank" rel="noopener"><img class="bt-ico" src="${BICON('bookcreator.com')}" alt="" onerror="this.remove()">완성된 책 읽기</a>
+          <a class="cta ghost" style="flex:1;justify-content:center;font-size:13.5px;padding:10px 12px;min-width:130px" href="${a.book}" target="_blank" rel="noopener"><img class="bt-ico" src="${BICON(a.bi||'bookcreator.com')}" alt="" onerror="this.remove()">완성된 책 읽기</a>
           <a class="cta ghost" style="flex:1;justify-content:center;font-size:13.5px;padding:10px 12px;min-width:130px" href="${a.canva}" target="_blank" rel="noopener"><img class="bt-ico" src="${BICON('canva.com')}" alt="" onerror="this.remove()">캔바 작업 보기</a>
         </div>
       </div>`).join('')}
