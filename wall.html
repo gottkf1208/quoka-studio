@@ -107,6 +107,8 @@ section{margin-bottom:50px}
 .like:hover{transform:scale(1.08)}
 .like svg{width:12px;height:12px}
 .like.on{background:#FFECEC;border-style:solid}
+.note .del{position:absolute;top:5px;right:7px;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.92);border:1.5px solid #E5B8B8;color:var(--accent-d);font-weight:900;font-size:15px;line-height:1;display:none;align-items:center;justify-content:center;padding:0}
+body.tmode .note .del{display:flex}
 .empty{text-align:center;color:var(--sub);font-size:14.5px;padding:34px 0;line-height:1.8}
 
 .feats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
@@ -259,6 +261,14 @@ footer{border-top:1.5px solid var(--line);background:rgba(255,253,247,.6);paddin
     {id:"s4", to:"모든 어린이 작가에게", txt:"데뷔를 축하해요, 작가님! 다음 이야기도 기다릴게요.", likes:6, ts:0}
   ];
   var TINTS = ["#FFFEFA","#FDF6EC","#F7FAF5","#FAF7FC"];
+  var TMODE = false;
+  var BAD = ["시발","씨발","시팔","씨팔","씹","ㅅㅂ","ㅆㅂ","병신","븅신","ㅄ","ㅂㅅ","새끼","색기","개새","개같","지랄","ㅈㄹ","존나","졸라","좆","닥쳐","꺼져","죽어","죽여","뒤져","디져","미친","미틴","또라이","돌아이","멍청","바보","등신","찐따","한심","재수없","쓰레기","못생","뚱뚱","극혐","혐오","fuck","shit","bitch","asshole","sex","섹스"];
+  function isClean(t){
+    var a = t.toLowerCase();
+    var b = a.replace(/[^가-힣ㄱ-ㅣa-z]/g, "");
+    for(var i = 0; i < BAD.length; i++){ if(a.indexOf(BAD[i]) >= 0 || b.indexOf(BAD[i]) >= 0) return false; }
+    return true;
+  }
 
   function load(k, fb){ try{ var r = localStorage.getItem(k); return r ? JSON.parse(r) : fb; }catch(e){ return fb; } }
   function store(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
@@ -287,12 +297,23 @@ footer{border-top:1.5px solid var(--line);background:rgba(255,253,247,.6);paddin
         "<p class=\"txt\">" + esc(c.txt) + "</p>" +
         "<div class=\"foot\"><span class=\"date\">" + fmt(c.ts) + "</span>" +
         "<button class=\"like" + (on ? " on" : "") + "\" data-id=\"" + c.id + "\" type=\"button\">" +
-        "<svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M12 20s-7.2-4.6-9.2-9.1A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.2 4.3C19.2 15.4 12 20 12 20z\"/></svg>" + c.likes + "</button></div>";
+        "<svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M12 20s-7.2-4.6-9.2-9.1A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.2 4.3C19.2 15.4 12 20 12 20z\"/></svg>" + c.likes + "</button></div>" +
+        "<button class=\"del\" data-id=\"" + c.id + "\" type=\"button\" title=\"쪽지 삭제 (선생님)\">×</button>";
       grid.appendChild(card);
     }
   }
 
   grid.addEventListener("click", function(e){
+    var d = e.target.closest(".del");
+    if(d){
+      if(!TMODE) return;
+      if(confirm("이 쪽지를 삭제할까요?")){
+        var did = d.getAttribute("data-id");
+        cheers = cheers.filter(function(c){ return c.id !== did; });
+        store(KEY, cheers); render();
+      }
+      return;
+    }
     var b = e.target.closest(".like"); if(!b) return;
     var id = b.getAttribute("data-id");
     if(liked.indexOf(id) >= 0) return;
@@ -304,6 +325,7 @@ footer{border-top:1.5px solid var(--line);background:rgba(255,253,247,.6);paddin
   document.getElementById("post").addEventListener("click", function(){
     var t = msg.value.trim();
     if(!t){ msg.focus(); return; }
+    if(!isClean(t)){ alert("사용할 수 없는 표현이 있어요.\n고운 말로 응원을 남겨 주세요!"); return; }
     cheers.push({id:"c" + Date.now(), to:to.value, txt:t, likes:0, ts:Date.now()});
     store(KEY, cheers);
     msg.value = ""; cntCh.textContent = "0";
@@ -324,13 +346,19 @@ footer{border-top:1.5px solid var(--line);background:rgba(255,253,247,.6);paddin
   }
 
   document.getElementById("teacher").addEventListener("click", function(){
-    var k = prompt("선생님 확인 키를 입력해 주세요.");
-    if(k === null) return;
-    if(k !== ADMIN){ alert("키가 맞지 않아요. 선생님께 문의해 주세요."); return; }
-    if(confirm("이 기기의 응원을 모두 지우고 처음 상태로 되돌릴까요?")){
-      cheers = SEEDS.slice(); liked = [];
-      store(KEY, cheers); store(LIKED, liked); render();
-      alert("게시판을 처음 상태로 되돌렸어요.");
+    if(!TMODE){
+      var k = prompt("선생님 확인 키를 입력해 주세요.");
+      if(k === null) return;
+      if(k !== ADMIN){ alert("키가 맞지 않아요. 선생님께 문의해 주세요."); return; }
+      TMODE = true; document.body.classList.add("tmode");
+      alert("선생님 모드가 켜졌어요.\n쪽지 오른쪽 위 × 버튼으로 하나씩 삭제할 수 있어요.\n[선생님 도구]를 다시 누르면 전체 초기화 또는 모드 종료를 선택합니다.");
+    } else {
+      if(confirm("게시판을 전체 초기화할까요?\n[확인] 전체 초기화 · [취소] 선생님 모드만 종료")){
+        cheers = SEEDS.slice(); liked = [];
+        store(KEY, cheers); store(LIKED, liked); render();
+        alert("게시판을 처음 상태로 되돌렸어요.");
+      }
+      TMODE = false; document.body.classList.remove("tmode");
     }
   });
 
