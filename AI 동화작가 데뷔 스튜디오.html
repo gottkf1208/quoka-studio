@@ -557,6 +557,11 @@ p.sec-sub{color:var(--c-sub);margin-bottom:24px;font-size:15px}
 .book-sec h4{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--c-sub);margin-bottom:10px}
 .book-sec .bt{font-size:15px;line-height:1.85;white-space:pre-wrap}
 .book-sec .empty{color:#BDB9AE;font-size:14px}
+.book-cover.has-img{padding:0;background:#fff}
+.book-cover.has-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.book-sec .bt.draft-bt{max-height:300px;overflow:auto}
+.book-sec textarea.hero-in{width:100%;border:1.5px solid var(--line);border-radius:12px;background:#FBFAF7;padding:12px 14px;font-family:inherit;font-size:15px;line-height:1.7;color:var(--c-ink);outline:none;resize:vertical;min-height:74px}
+.book-sec textarea.hero-in:focus{border-color:var(--c-mist)}
 .cert{
   position:relative;background:#fff;border:1px solid var(--c-butter);border-radius:20px;
   box-shadow:var(--shadow);padding:44px;text-align:center;overflow:hidden;margin-top:22px;
@@ -580,6 +585,8 @@ p.sec-sub{color:var(--c-sub);margin-bottom:24px;font-size:15px}
 @media print{
   header,.les-foot,.no-print{display:none!important}
   body{background:#fff}
+  .book-sec .bt.draft-bt{max-height:none!important;overflow:visible!important}
+  .book-sec textarea.hero-in{border:0;background:#fff;padding:0;resize:none}
 }
 
 /* 한글 줄바꿈 — 단어 중간에서 끊기지 않게 */
@@ -1548,12 +1555,31 @@ function ctInput(n, el){ const rs = ensureCt(n); const i = +el.dataset.ci; while
 function ctAdd(n){ ensureCt(n).push({}); save(); renderLesson(); }
 
 /* ═══════════ 내 책 ═══════════ */
+function bookCover(){ try{ return localStorage.getItem('quokka_book_cover_v1') || ''; }catch(e){ return ''; } }
+function setBookCover(d){ try{ if(d) localStorage.setItem('quokka_book_cover_v1', d); else localStorage.removeItem('quokka_book_cover_v1'); }catch(e){ toast('이미지가 너무 커서 저장하지 못했어요'); } renderBook(); }
+function upCover(inp){
+  const f = inp.files && inp.files[0]; if(!f) return;
+  const img = new Image();
+  img.onload = ()=>{
+    const M = 1000, r = Math.min(1, M/Math.max(img.width, img.height));
+    const cv = document.createElement('canvas');
+    cv.width = Math.round(img.width*r); cv.height = Math.round(img.height*r);
+    cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+    setBookCover(cv.toDataURL('image/jpeg', .86));
+    toast('표지를 등록했어요! 인쇄할 때도 함께 나와요');
+  };
+  img.src = URL.createObjectURL(f);
+  inp.value = '';
+}
+function heroSave(v){ S.ans.bk = S.ans.bk || {}; S.ans.bk.hero = v; save(); }
 function renderBook(){
   syncToolAns();
   const el = document.getElementById('v-book');
   const a1=A(1), a3=A(3), a4=A(4), a5=A(5), a6=A(6), a9=A(9), a10=A(10), a14=A(14);
   const title = a10.title || '(10차시에서 제목을 정해요)';
   const author = a1.penname || '나의 필명';
+  const cov = bookCover();
+  const hero = (S.ans.bk && S.ans.bk.hero) || [a4.hname,a4.str&&('강점: '+a4.str),a4.weak&&('약점: '+a4.weak),a4.grow&&('성장포인트: '+a4.grow)].filter(Boolean).join('\n') || '';
   const val = (v,msg)=> v ? `<div class="bt">${esc(v)}</div>` : `<div class="empty">${msg}</div>`;
   const story4 = ['gi','seung','jeon','gyeol'].map((k,i)=> a5[k]?`<b style="color:var(--c-mist-d)">${['기','승','전','결'][i]}</b> ${esc(a5[k])}`:null).filter(Boolean).join('<br>');
   const authorNote = ['awhy','afeel','asay'].map(k=>a14[k]).filter(Boolean).join('\n');
@@ -1561,24 +1587,28 @@ function renderBook(){
   const allDone = doneCount()===15;
   el.innerHTML = `
   <h2 class="sec">내 책 미리보기</h2>
-  <p class="sec-sub">실습에서 쓴 내용이 자동으로 모여 한 권의 책이 됩니다. 인쇄하거나 Book Creator · Canva로 옮겨 완성하세요.</p>
+  <p class="sec-sub">실습에서 쓴 내용이 자동으로 모여 한 권의 책이 됩니다. 캔바에서 만든 표지를 올리고, 인쇄하거나 Book Creator · Canva로 옮겨 완성하세요.</p>
   <div class="book-grid">
     <div>
-      <div class="book-cover">
+      <div class="book-cover${cov?' has-img':''}">${cov?`<img src="${cov}" alt="내 책 표지">`:`
         <span class="pill" style="background:rgba(255,255,255,.6);color:var(--c-mist-d);align-self:flex-start">${emos||'나의 핵심 감정'}</span>
         <div class="bc-title" style="margin-top:18px">${esc(title)}</div>
         <div class="bc-img-desc">${esc(a10.coverimg||'')}</div>
-        <div class="bc-author">글 · ${esc(author)}</div>
+        <div class="bc-author">글 · ${esc(author)}</div>`}
       </div>
-      <div class="no-print" style="display:flex;gap:10px;margin-top:14px">
+      <div class="no-print" style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+        <label class="cta ghost" style="flex:1;justify-content:center;cursor:pointer;min-width:150px">${cov?'표지 바꾸기':'캔바 표지 올리기'}<input type="file" accept="image/*" style="display:none" onchange="upCover(this)"></label>
+        ${cov?`<button class="cta ghost" style="flex:1;justify-content:center;min-width:110px" onclick="setBookCover('')">표지 빼기</button>`:''}
+      </div>
+      <div class="no-print" style="display:flex;gap:10px;margin-top:10px">
         <button class="cta ghost" style="flex:1;justify-content:center" onclick="window.print()">인쇄</button>
         <button class="cta ghost" style="flex:1;justify-content:center" onclick="copyBook()">전체 복사</button>
       </div>
     </div>
     <div>
-      <div class="book-sec"><h4>주인공</h4>${val([a4.hname,a4.str&&('강점: '+a4.str),a4.weak&&('약점: '+a4.weak),a4.grow&&('성장포인트: '+a4.grow)].filter(Boolean).join('\n'),'4차시 캐릭터 생성기에서 만든 주인공을 적어 두세요')}</div>
+      <div class="book-sec"><h4>주인공</h4><textarea class="hero-in" placeholder="주인공 이름을 적어 두세요 (예: 용감한 토끼 초롱이)" oninput="heroSave(this.value)">${esc(hero)}</textarea></div>
       <div class="book-sec"><h4>이야기 뼈대 · 기승전결</h4>${story4?`<div class="bt">${story4}</div>`:'<div class="empty">5차시에서 기승전결을 설계해요</div>'}</div>
-      <div class="book-sec"><h4>본문 · 초고</h4>${val(a6.draft,'6차시에서 초고를 써요')}</div>
+      <div class="book-sec"><h4>본문 · 초고</h4>${a6.draft?`<div class="bt draft-bt">${esc(a6.draft)}</div>`:'<div class="empty">6차시에서 초고를 써요</div>'}</div>
       <div class="book-sec"><h4>결말</h4>${val([a9.ending,a9.lastline&&('마지막 문장: '+a9.lastline)].filter(Boolean).join('\n'),'9차시에서 결말을 선택해요')}</div>
       <div class="book-sec"><h4>작가의 말</h4>${val(authorNote,'14차시에서 작가의 말을 써요')}</div>
     </div>
@@ -1600,7 +1630,7 @@ function copyBook(){
   const t = [
    '『'+(a10.title||'제목 미정')+'』 — 글 '+(a1.penname||''),
    '핵심 감정: '+((a3.emos||[]).join(', ')),
-   '', '[주인공] '+(a4.hname||''), '강점: '+(a4.str||''), '약점: '+(a4.weak||''), '성장포인트: '+(a4.grow||''),
+   '', '[주인공]', (S.ans.bk&&S.ans.bk.hero)||[a4.hname,a4.str&&('강점: '+a4.str),a4.weak&&('약점: '+a4.weak),a4.grow&&('성장포인트: '+a4.grow)].filter(Boolean).join('\n')||'',
    '', '[기승전결]', '기: '+(a5.gi||''), '승: '+(a5.seung||''), '전: '+(a5.jeon||''), '결: '+(a5.gyeol||''),
    '', '[본문 초고]', a6.draft||'',
    '', '[결말] '+(a9.ending||''), '마지막 문장: '+(a9.lastline||''),
